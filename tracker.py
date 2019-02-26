@@ -53,11 +53,11 @@ def count_nonblack_np(img):
 
 def detect_team(image, show = False):
     # define the list of boundaries
-    boundaries = [
-    ([17, 15, 100], [50, 56, 200]), #red
-    ([25, 146, 190], [96, 174, 250]) #yellow
-    ]
     i = 0
+    boundaries = [
+      ([17, 15, 100], [50, 56, 200]), #red
+      ([86, 31, 4], [220, 88, 50]) #blue
+    ]
     for (lower, upper) in boundaries:
         # create NumPy arrays from the boundaries
         lower = np.array(lower, dtype = "uint8")
@@ -74,7 +74,7 @@ def detect_team(image, show = False):
         if ratio > 0.01 and i == 0:
             return 'red'
         elif ratio > 0.01 and i == 1:
-            return 'yellow'
+          return 'blue'
 
         i += 1
 
@@ -97,7 +97,7 @@ detect_team(resize, show=True)
 fourcc = cv2.cv.CV_FOURCC('M', 'J', 'P', 'G')
 out = cv2.VideoWriter('./soccer_out.avi', fourcc, 10, (640,360))
 
-filename = './soccer_small.mp4'
+filename = './five-a-side.mp4'
 cap = cv2.VideoCapture(filename)
 
 # Running the tensorflow session
@@ -142,7 +142,7 @@ with detection_graph.as_default():
           frame_number = counter
           loc = {}
           for n in range(len(scores[0])):
-             if scores[0][n] > 0.60:
+             if scores[0][n] > 0.30:
                 # Calculate position
                 ymin = int(boxes[0][n][0] * h)
                 xmin = int(boxes[0][n][1] * w)
@@ -162,9 +162,9 @@ with detection_graph.as_default():
                     if color != 'not_sure':
                         coords = (xmin, ymin)
                         if color == 'red':
-                             loc[coords] = 'PERU'
+                            loc[coords] = 'TEAM_1'
                         else:
-                            loc[coords] = 'AUS'
+                            loc[coords] = 'TEAM_2'
 
         ## print color next to the person
           for key in loc.keys():
