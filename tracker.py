@@ -86,7 +86,7 @@ def detect_team(image, show = False):
 
 
 ## To View Color Mask
-filename = './image2.jpg'
+filename = './five-a-side.jpg'
 image = cv2.imread(filename)
 resize = cv2.resize(image, (640,360))
 detect_team(resize, show=True)
