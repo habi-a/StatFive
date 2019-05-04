@@ -15,7 +15,7 @@ from PIL import Image
 import cv2
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-OBJECT_DETECTION_PATH = './tensorflow/models/research/object_detection/'
+OBJECT_DETECTION_PATH = '/tensorflow/models/research/object_detection/'
 sys.path.append(OBJECT_DETECTION_PATH)
 from utils import label_map_util
 from utils import visualization_utils as vis_util
