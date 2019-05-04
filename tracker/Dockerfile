@@ -42,4 +42,6 @@ ENV PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
 # Get application source codes
 COPY . /app
 RUN cp -r /app/rsc/ssd_mobilenet_v1_coco_11_06_2017 /tensorflow/models/research/object_detection
+
+# Test installation
 CMD python object_detection/builders/model_builder_test.py
