@@ -17,12 +17,13 @@ import cv2
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 OBJECT_DETECTION_PATH = '/tensorflow/models/research/object_detection/'
 sys.path.append(OBJECT_DETECTION_PATH)
+
 from utils import label_map_util
 from utils import visualization_utils as vis_util
 
 
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
-MODEL_NAME = 'ssd_mobilenet_v1_coco_11_06_2017'
+MODEL_NAME = 'ssdlite_mobilenet_v2_coco_2018_05_09'
 PATH_TO_CKPT = OBJECT_DETECTION_PATH + MODEL_NAME + '/frozen_inference_graph.pb'
 
 # List of the strings that is used to add correct label for each box.
@@ -31,6 +32,7 @@ PATH_TO_LABELS = OBJECT_DETECTION_PATH + 'data/mscoco_label_map.pbtxt'
 NUM_CLASSES = 90
 
 
+# Load model
 detection_graph = tf.Graph()
 with detection_graph.as_default():
   od_graph_def = tf.GraphDef()
@@ -39,6 +41,7 @@ with detection_graph.as_default():
     od_graph_def.ParseFromString(serialized_graph)
     tf.import_graph_def(od_graph_def, name='')
 
+# Load labels
 label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
 categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
 category_index = label_map_util.create_category_index(categories)
@@ -90,7 +93,6 @@ filename = './five-a-side.jpg'
 image = cv2.imread(filename)
 resize = cv2.resize(image, (640,360))
 detect_team(resize, show=True)
-
 
 
 # Video Recorder

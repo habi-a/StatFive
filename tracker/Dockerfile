@@ -24,7 +24,6 @@ RUN pip install Cython
 RUN pip install contextlib2
 RUN pip install jupyter
 RUN pip install matplotlib
-RUN cp -r /usr/local/lib/python2.7/dist-packages/tensorflow
 
 # Tensorflow models
 RUN git clone https://github.com/tensorflow/models /tensorflow/models
@@ -37,11 +36,15 @@ RUN cp -r /tmp/cocoapi/PythonAPI/pycocotools /tensorflow/models/research
 # Protbuf compilation
 WORKDIR /tensorflow/models/research
 RUN protoc object_detection/protos/*.proto --python_out=.
-ENV PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
+ENV PYTHONPATH $PYTHONPATH:/tensorflow/models/research:/tensorflow/models/research/slim
 
 # Get application source codes
-COPY . /app
-RUN cp -r /app/rsc/ssd_mobilenet_v1_coco_11_06_2017 /tensorflow/models/research/object_detection
+RUN mkdir -p /tensorflow/models/research/object_detection/tracker
+COPY . /tensorflow/models/research/object_detection/tracker
+RUN mv /tensorflow/models/research/object_detection/tracker/ssdlite_mobilenet_v2_coco_2018_05_09 /tensorflow/models/research/object_detection
 
-# Test installation
-CMD python object_detection/builders/model_builder_test.py
+# Install Jupyter Notebook
+RUN jupyter notebook --generate-config --allow-root
+RUN echo "c.NotebookApp.password = u'sha1:3b8bc52d8df6:90f9ce15265259a7be39faeca36fd0cc4c7a98bd'" >> /root/.jupyter/jupyter_notebook_config.py
+EXPOSE 8888
+CMD ["jupyter", "notebook", "--allow-root", "--notebook-dir=/tensorflow/models/research/object_detection/tracker", "--ip=0.0.0.0", "--port=8888", "--no-browser"]
