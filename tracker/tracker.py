@@ -48,47 +48,72 @@ category_index = label_map_util.create_category_index(categories)
 
 
 def count_nonblack_np(img):
-    """Return the number of pixels in img that are not black.
-    img must be a Numpy array with colour values along the last axis.
+  """Return the number of pixels in img that are not black.
+  img must be a Numpy array with colour values along the last axis.
 
-    """
-    return img.any(axis=-1).sum()
+  """
+  return img.any(axis=-1).sum()
 
 def detect_team(image, show = False):
-    # define the list of boundaries
-    i = 0
-    boundaries = [
-      ([17, 15, 100], [50, 56, 200]), #red
-      ([86, 31, 4], [220, 88, 50]) #blue
-    ]
-    for (lower, upper) in boundaries:
-        # create NumPy arrays from the boundaries
-        lower = np.array(lower, dtype = "uint8")
-        upper = np.array(upper, dtype = "uint8")
+  # define the list of boundaries
+  i = 0
+  boundaries = [
+    ([17, 15, 100], [50, 56, 200]), #red
+    ([86, 31, 4], [220, 88, 50]) #blue
+  ]
 
-        # find the colors within the specified boundaries and apply
-        # the mask
-        mask = cv2.inRange(image, lower, upper)
-        output = cv2.bitwise_and(image, image, mask = mask)
-        tot_pix = count_nonblack_np(image)
-        color_pix = count_nonblack_np(output)
-        ratio = color_pix/tot_pix
-#         print("ratio is:", ratio)
-        if ratio > 0.01 and i == 0:
-            return 'red'
-        elif ratio > 0.01 and i == 1:
-          return 'blue'
+  for (lower, upper) in boundaries:
+    # create NumPy arrays from the boundaries
+    lower = np.array(lower, dtype = "uint8")
+    upper = np.array(upper, dtype = "uint8")
 
-        i += 1
+    # find the colors within the specified boundaries and apply the mask
+    mask = cv2.inRange(image, lower, upper)
+    output = cv2.bitwise_and(image, image, mask = mask)
+    tot_pix = count_nonblack_np(image)
+    color_pix = count_nonblack_np(output)
 
-        if show == True:
-            cv2.imshow("images", np.hstack([image, output]))
-            if cv2.waitKey(0) & 0xFF == ord('q'):
-              cv2.destroyAllWindows()
-    return 'not_sure'
+    ratio = color_pix/tot_pix    
+    if ratio > 0.01 and i == 0:
+      return 'red'
+    elif ratio > 0.01 and i == 1:
+      return 'blue'
+
+    i += 1
+
+    # for debugging
+    if show == True:
+      cv2.imshow("images", np.hstack([image, output]))
+      if cv2.waitKey(0) & 0xFF == ord('q'):
+        cv2.destroyAllWindows()
+  return 'not_sure'
 
 
-## To View Color Mask
+# Functions to find owner of ball
+def distance(pt_1, pt_2):
+  pt_1 = np.array((pt_1[0], pt_1[1]))
+  pt_2 = np.array((pt_2[0], pt_2[1]))
+  return np.linalg.norm(pt_1-pt_2)
+def closest_node(node, nodes):
+  pt = []
+  dist = 9999999
+  for n in nodes:
+    if distance(node, n) <= dist:
+      dist = distance(node, n)
+      pt = n
+  return pt
+def find_team_nearest_ball(loc_ball, loc_foot):
+  closest_coord = closest_node(loc_ball, loc_foot)
+  for x, y, team in loc_ball:
+    if x == closest_coord[0] and y == closest_coord[1]:
+      return team
+  return 'TEAM_1'
+
+def get_pourcent_array_occurence(array, element):
+  return (int)array.count(element) / len(array) * 100
+
+
+## [Debug] to view Color Mask
 filename = './five-a-side.jpg'
 image = cv2.imread(filename)
 resize = cv2.resize(image, (640,360))
@@ -98,85 +123,127 @@ detect_team(resize, show=True)
 # Video Recorder
 fourcc = cv2.cv.CV_FOURCC('M', 'J', 'P', 'G')
 out = cv2.VideoWriter('./soccer_out.avi', fourcc, 10, (640,360))
-
 filename = './five-a-side.mp4'
 cap = cv2.VideoCapture(filename)
+
+
+# Init stats
+team_owner_of_ball = []
+pourcent_possesion_ball_t1 = 50
+pourcent_possesion_ball_t2 = 50
+
 
 # Running the tensorflow session
 with detection_graph.as_default():
   with tf.Session(graph=detection_graph) as sess:
-   counter = 0
-   while (True):
+    counter = 0
+    while (True):
       ret, image_np = cap.read()
       counter += 1
       if ret:
-          h = image_np.shape[0]
-          w = image_np.shape[1]
+        h = image_np.shape[0]
+        w = image_np.shape[1]
 
       if not ret:
         break
       if counter % 1 == 0:
-          # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-          image_np_expanded = np.expand_dims(image_np, axis=0)
-          image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
-          # Each box represents a part of the image where a particular object was detected.
-          boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
-          # Each score represent how level of confidence for each of the objects.
-          # Score is shown on the result image, together with the class label.
-          scores = detection_graph.get_tensor_by_name('detection_scores:0')
-          classes = detection_graph.get_tensor_by_name('detection_classes:0')
-          num_detections = detection_graph.get_tensor_by_name('num_detections:0')
-          # Actual detection.
-          (boxes, scores, classes, num_detections) = sess.run(
-              [boxes, scores, classes, num_detections],
-              feed_dict={image_tensor: image_np_expanded})
-          # Visualization of the results of a detection.
-          vis_util.visualize_boxes_and_labels_on_image_array(
-              image_np,
-              np.squeeze(boxes),
-              np.squeeze(classes).astype(np.int32),
-              np.squeeze(scores),
-              category_index,
-              use_normalized_coordinates=True,
-              line_thickness=3,
-              min_score_thresh=0.6)
+        # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
+        image_np_expanded = np.expand_dims(image_np, axis=0)
+        image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
+        
+        # Each box represents a part of the image where a particular object was detected.
+        boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
+        
+        # Each score represent how level of confidence for each of the objects.
+        # Score is shown on the result image, together with the class label.
+        scores = detection_graph.get_tensor_by_name('detection_scores:0')
+        classes = detection_graph.get_tensor_by_name('detection_classes:0')
+        num_detections = detection_graph.get_tensor_by_name('num_detections:0')
+        
+        # Actual detection.
+        (boxes, scores, classes, num_detections) = sess.run(
+          [boxes, scores, classes, num_detections],
+          feed_dict={image_tensor: image_np_expanded})
+        # Visualization of the results of a detection.
+        vis_util.visualize_boxes_and_labels_on_image_array(
+          image_np,
+          np.squeeze(boxes),
+          np.squeeze(classes).astype(np.int32),
+          np.squeeze(scores),
+          category_index,
+          use_normalized_coordinates=True,
+          line_thickness=3,
+          min_score_thresh=0.6)
 
-          frame_number = counter
-          loc = {}
-          for n in range(len(scores[0])):
-             if scores[0][n] > 0.30:
-                # Calculate position
-                ymin = int(boxes[0][n][0] * h)
-                xmin = int(boxes[0][n][1] * w)
-                ymax = int(boxes[0][n][2] * h)
-                xmax = int(boxes[0][n][3] * w)
+        frame_number = counter
 
-                # Find label corresponding to that class
-                for cat in categories:
-                    if cat['id'] == classes[0][n]:
-                        label = cat['name']
+        ## Variables helper stats
+        loc = {}
+        loc_ball = []
+        loc_foot = []
+        ball_visible = False
 
-                ## extract every person
-                if label == 'person':
-                    #crop them
-                    crop_img = image_np[ymin:ymax, xmin:xmax]
-                    color = detect_team(crop_img)
-                    if color != 'not_sure':
-                        coords = (xmin, ymin)
-                        if color == 'red':
-                            loc[coords] = 'TEAM_1'
-                        else:
-                            loc[coords] = 'TEAM_2'
+        for n in range(len(scores[0])):
+          if scores[0][n] > 0.50:
+            # Calculate position
+            ymin = int(boxes[0][n][0] * h)
+            xmin = int(boxes[0][n][1] * w)
+            ymax = int(boxes[0][n][2] * h)
+            xmax = int(boxes[0][n][3] * w)
+            yaverage = int((ymin + ymax) / 2)
+            xaverage = int((xmin + xmax) / 2)
+
+            # Find label corresponding to that class
+            for cat in categories:
+              if cat['id'] == classes[0][n]:
+                label = cat['name']
+
+            ## extract every item
+              if label == 'person':
+                #crop them
+                crop_img = image_np[ymin:ymax, xmin:xmax]
+                color = detect_team(crop_img)
+                if color != 'not_sure':
+                  coords = (xmin, ymin)
+                  if color == 'red':
+                    loc[coords] = 'TEAM_1'
+                    loc_foot.append(tuple(xaverage, ymax, 'TEAM_1'))
+                  else:
+                    loc[coords] = 'TEAM_2'
+                    loc_foot.append(tuple(xaverage, ymax, 'TEAM_2'))
+                  ## Draw foot boxes
+                  cv2.rectangle(image_np, (xmin, yaverage), (xmax, ymax), (0, 255, 0), 10)
+              
+              if label == 'sports ball':
+                loc_ball = ((xaverage, yaverage))
+                ball_visible = True
+
 
         ## print color next to the person
-          for key in loc.keys():
-            text_pos = str(loc[key])
-            cv2.putText(image_np, text_pos, (key[0], key[1]-20), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (255, 0, 0), 2) # Text in black
+        for key in loc.keys():
+          text_pos = str(loc[key])
+          cv2.putText(image_np, text_pos, (key[0], key[1]-20), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (255, 0, 0), 2) # Text in black
+
+        ## find the team in possession of the ball 
+        if ball_visible == True:
+          team_owner_of_ball.append(find_team_nearest_ball(loc_ball, loc_foot))
+        else:
+          # take the ex team owner
+          if team_owner_of_ball:
+            team_owner_of_ball.append(team_owner_of_ball[-1])
+
 
       cv2.imshow('image', image_np)
       out.write(image_np)
 
       if cv2.waitKey(10) & 0xFF == ord('q'):
-          cv2.destroyAllWindows()
-          cap.release()
-          break
+        cv2.destroyAllWindows()
+        cap.release()
+        break
+
+## Calcul stats
+pourcent_possesion_ball_t1 = get_pourcent_array_occurence(team_owner_of_ball, 'TEAM_1')
+pourcent_possesion_ball_t2 = get_pourcent_array_occurence(team_owner_of_ball, 'TEAM_2')
+
+## Print stats
+print("possesion team1:", pourcent_possesion_ball_t1, "%\npossession team2:", pourcent_possesion_ball_t2, "%\n")
