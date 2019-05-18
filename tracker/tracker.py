@@ -73,7 +73,7 @@ def detect_team(image, show = False):
     tot_pix = count_nonblack_np(image)
     color_pix = count_nonblack_np(output)
 
-    ratio = color_pix/tot_pix    
+    ratio = color_pix/tot_pix
     if ratio > 0.01 and i == 0:
       return 'red'
     elif ratio > 0.01 and i == 1:
@@ -110,7 +110,7 @@ def find_team_nearest_ball(loc_ball, loc_foot):
   return 'TEAM_1'
 
 def get_pourcent_array_occurence(array, element):
-  return (int)array.count(element) / len(array) * 100
+  return int(array.count(element) / len(array) * 100)
 
 
 ## [Debug] to view Color Mask
