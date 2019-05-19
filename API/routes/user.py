@@ -6,7 +6,12 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, Api, reqparse, inputs
 from flaskext.mysql import MySQL
 
+<<<<<<< HEAD
 class user(Resource):   
+=======
+class user(Resource):
+    
+>>>>>>> 993db78dcaa7e5683db8964e36067d7def262f6f
     def post(self):
         try:
             parser = reqparse.RequestParser()
@@ -24,6 +29,7 @@ class user(Resource):
             if password == password2:
                 conn = mysql.connect()
                 cursor = conn.cursor(pymysql.cursors.DictCursor)
+<<<<<<< HEAD
                 sqlQuery= 'SELECT lastname, firstname FROM users WHERE mail = "{}"'.format(email)
                 cursor.execute(sqlQuery)
                 rows = cursor.fetchall()
@@ -34,6 +40,13 @@ class user(Resource):
                     return jsonify({'Email': args['email'], 'Firstame':args['firstname'], 'Lastame':args['lastname'], 'status':200})
                 else:
                     return jsonify({'about':'Mail exist'})
+=======
+                sqlQuery = 'INSERT INTO users ( mail, lastname, firstname, password) VALUES ("{}", "{}", "{}", "{}")'.format(email, lastname, firstname, password)
+                cursor.execute(sqlQuery)
+                conn.commit()
+                return jsonify({'Email': args['email'], 'Firstame':args['firstname'], 'Lastame':args['lastname'], 'created':'Ok'})
+            
+>>>>>>> 993db78dcaa7e5683db8964e36067d7def262f6f
             return jsonify({'about':'Password invalid'})
             
         except Exception as e:
@@ -49,6 +62,7 @@ class AllUser(Resource):
         resp.status_code = 200
         return resp
 
+<<<<<<< HEAD
 class userByName(Resource):
     def get(self, name):
         conn = mysql.connect()
@@ -64,6 +78,13 @@ class userById(Resource):
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         cursor.execute('SELECT firstname, lastname, mail FROM users WHERE id ={}').format(id)
+=======
+class UserStat(Resource):
+    def get(self):
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("Select mail, name, firstname, stats.kilometre, stats.passe, stats.but FROM users INNER JOIN stats ON user_id = 1")
+>>>>>>> 993db78dcaa7e5683db8964e36067d7def262f6f
         rows = cursor.fetchall()
         resp = jsonify(rows)
         resp.status_code = 200
