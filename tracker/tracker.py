@@ -104,13 +104,13 @@ def closest_node(node, nodes):
   return pt
 def find_team_nearest_ball(loc_ball, loc_foot):
   closest_coord = closest_node(loc_ball, loc_foot)
-  for x, y, team in loc_ball:
+  for x, y, team in loc_foot:
     if x == closest_coord[0] and y == closest_coord[1]:
       return team
   return 'TEAM_1'
 
 def get_pourcent_array_occurence(array, element):
-  return int(array.count(element) / len(array) * 100)
+  return array.count(element) / len(array) * 100
 
 
 ## [Debug] to view Color Mask
@@ -207,12 +207,12 @@ with detection_graph.as_default():
                   coords = (xmin, ymin)
                   if color == 'red':
                     loc[coords] = 'TEAM_1'
-                    loc_foot.append(tuple(xaverage, ymax, 'TEAM_1'))
+                    loc_foot.append((xaverage, ymax, 'TEAM_1'))
                   else:
                     loc[coords] = 'TEAM_2'
-                    loc_foot.append(tuple(xaverage, ymax, 'TEAM_2'))
+                    loc_foot.append((xaverage, ymax, 'TEAM_2'))
                   ## Draw foot boxes
-                  cv2.rectangle(image_np, (xmin, yaverage), (xmax, ymax), (0, 255, 0), 10)
+                  cv2.rectangle(image_np, (xmin, yaverage), (xmax, ymax), (238, 120, 42), 2)
               
               if label == 'sports ball':
                 loc_ball = ((xaverage, yaverage))
@@ -246,4 +246,5 @@ pourcent_possesion_ball_t1 = get_pourcent_array_occurence(team_owner_of_ball, 'T
 pourcent_possesion_ball_t2 = get_pourcent_array_occurence(team_owner_of_ball, 'TEAM_2')
 
 ## Print stats
-print("possesion team1:", pourcent_possesion_ball_t1, "%\npossession team2:", pourcent_possesion_ball_t2, "%\n")
+print('possesion team1:', int(round(pourcent_possesion_ball_t1)), '%')
+print('possession team2:', int(round(pourcent_possesion_ball_t2)), '%')

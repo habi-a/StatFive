@@ -42,6 +42,7 @@ ENV PYTHONPATH $PYTHONPATH:/tensorflow/models/research:/tensorflow/models/resear
 RUN mkdir -p /tensorflow/models/research/object_detection/tracker
 COPY . /tensorflow/models/research/object_detection/tracker
 RUN mv /tensorflow/models/research/object_detection/tracker/ssdlite_mobilenet_v2_coco_2018_05_09 /tensorflow/models/research/object_detection
+WORKDIR /tensorflow/models/research/object_detection/tracker
 
 # Install Jupyter Notebook
 RUN jupyter notebook --generate-config --allow-root
