@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  tensorflow:
+    build: ./tracker
+    ports:
+     - "8888:8888"
