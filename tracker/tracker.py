@@ -63,11 +63,11 @@ def detect_team(image, show = False):
   ]
 
   for (lower, upper) in boundaries:
-    # create NumPy arrays from the boundaries
+    ## create NumPy arrays from the boundaries
     lower = np.array(lower, dtype = "uint8")
     upper = np.array(upper, dtype = "uint8")
 
-    # find the colors within the specified boundaries and apply the mask
+    ## find the colors within the specified boundaries and apply the mask
     mask = cv2.inRange(image, lower, upper)
     output = cv2.bitwise_and(image, image, mask = mask)
     tot_pix = count_nonblack_np(image)
@@ -81,13 +81,23 @@ def detect_team(image, show = False):
 
     i += 1
 
-    # for debugging
+    ## for debugging
     if show == True:
       cv2.imshow("images", np.hstack([image, output]))
       if cv2.waitKey(0) & 0xFF == ord('q'):
         cv2.destroyAllWindows()
   return 'not_sure'
 
+
+# Functions to find who scored
+def ball_is_in_the_goal(loc_ball, loc_goal, ball_visible):
+  if not ball_visible:
+    return False
+  
+  if loc_ball[0] > loc_goal['xmin'] and loc_ball[0] < loc_goal['xmax'] and loc_ball[1] > loc_goal['ymin'] and loc_ball[1] < loc_goal['ymax']:
+    return True
+  return False
+  
 
 # Functions to find owner of ball
 def distance(pt_1, pt_2):
@@ -113,7 +123,7 @@ def get_pourcent_array_occurence(array, element):
   return array.count(element) / len(array) * 100
 
 
-## [Debug] to view Color Mask
+# [Debug] to view Color Mask
 filename = './five-a-side.jpg'
 image = cv2.imread(filename)
 resize = cv2.resize(image, (640,360))
@@ -129,8 +139,11 @@ cap = cv2.VideoCapture(filename)
 
 # Init stats
 team_owner_of_ball = []
-pourcent_possesion_ball_t1 = 50
-pourcent_possesion_ball_t2 = 50
+nb_goals_t1 = 0
+nb_goals_t2 = 0
+already_scored = False
+pourcent_possession_ball_t1 = 50
+pourcent_possession_ball_t2 = 50
 
 
 # Running the tensorflow session
@@ -177,11 +190,23 @@ with detection_graph.as_default():
 
         frame_number = counter
 
-        ## Variables helper stats
+        # Variables helper stats
         loc = {}
         loc_ball = []
         loc_foot = []
         ball_visible = False
+
+        # Position goals
+        loc_goal_t1 = {}
+        loc_goal_t2 = {}
+        loc_goal_t1['ymin'] = int(h * 0.22)
+        loc_goal_t1['xmin'] = int(w * 0.46)
+        loc_goal_t1['ymax'] = int(h * 0.255)
+        loc_goal_t1['xmax'] = int(w * 0.53)
+        loc_goal_t2['ymin'] = int(h * 0.75)
+        loc_goal_t2['xmin'] = int(w * 0.01)
+        loc_goal_t2['ymax'] = int(h * 1)
+        loc_goal_t2['xmax'] = int(w * 0.92)
 
         for n in range(len(scores[0])):
           if scores[0][n] > 0.50:
@@ -198,9 +223,9 @@ with detection_graph.as_default():
               if cat['id'] == classes[0][n]:
                 label = cat['name']
 
-            ## extract every item
+              ## Extract every item
               if label == 'person':
-                #crop them
+                ### Crop them
                 crop_img = image_np[ymin:ymax, xmin:xmax]
                 color = detect_team(crop_img)
                 if color != 'not_sure':
@@ -211,7 +236,7 @@ with detection_graph.as_default():
                   else:
                     loc[coords] = 'TEAM_2'
                     loc_foot.append((xaverage, ymax, 'TEAM_2'))
-                  ## Draw foot boxes
+                  #### Draw foot boxes
                   cv2.rectangle(image_np, (xmin, yaverage), (xmax, ymax), (238, 120, 42), 2)
               
               if label == 'sports ball':
@@ -219,18 +244,32 @@ with detection_graph.as_default():
                 ball_visible = True
 
 
-        ## print color next to the person
+        # Print color next to the person
         for key in loc.keys():
           text_pos = str(loc[key])
           cv2.putText(image_np, text_pos, (key[0], key[1]-20), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (255, 0, 0), 2) # Text in black
 
-        ## find the team in possession of the ball 
+        # Find the team in possession of the ball 
         if ball_visible == True:
           team_owner_of_ball.append(find_team_nearest_ball(loc_ball, loc_foot))
         else:
-          # take the ex team owner
+          ## Take the latest team seen with the ball
           if team_owner_of_ball:
             team_owner_of_ball.append(team_owner_of_ball[-1])
+
+        # Draw goals
+        cv2.rectangle(image_np, (loc_goal_t1['xmin'], loc_goal_t1['ymin']), (loc_goal_t1['xmax'], loc_goal_t1['ymax']), (255, 153, 255), 2)
+        cv2.rectangle(image_np, (loc_goal_t2['xmin'], loc_goal_t2['ymin']), (loc_goal_t2['xmax'], loc_goal_t2['ymax']), (255, 153, 255), 2)
+
+        # Detect if there is a goal
+        if not already_scored and ball_is_in_the_goal(loc_ball, loc_goal_t1, ball_visible):
+          nb_goals_t2 += 1
+          already_scored = True
+        elif not already_scored and ball_is_in_the_goal(loc_ball, loc_goal_t2, ball_visible):
+          nb_goals_t1 += 1
+          already_scored = True
+        elif already_scored and ball_visible and not ball_is_in_the_goal(loc_ball, loc_goal_t1, ball_visible) and not ball_is_in_the_goal(loc_ball, loc_goal_t2, ball_visible):
+          already_scored = False
 
 
       cv2.imshow('image', image_np)
@@ -241,10 +280,13 @@ with detection_graph.as_default():
         cap.release()
         break
 
-## Calcul stats
-pourcent_possesion_ball_t1 = get_pourcent_array_occurence(team_owner_of_ball, 'TEAM_1')
-pourcent_possesion_ball_t2 = get_pourcent_array_occurence(team_owner_of_ball, 'TEAM_2')
+# Calcul stats
+pourcent_possession_ball_t1 = get_pourcent_array_occurence(team_owner_of_ball, 'TEAM_1')
+pourcent_possession_ball_t2 = get_pourcent_array_occurence(team_owner_of_ball, 'TEAM_2')
 
-## Print stats
-print('possesion team1:', int(round(pourcent_possesion_ball_t1)), '%')
-print('possession team2:', int(round(pourcent_possesion_ball_t2)), '%')
+# Print stats
+print('Score:')
+print('RedTeam', nb_goals_t1, '-', nb_goals_t2, 'BlueTeam')
+print()
+print('Possession:')
+print('RedTeam', int(round(pourcent_possession_ball_t1)), '% -', int(round(pourcent_possession_ball_t2)), '% BlueTeam')
