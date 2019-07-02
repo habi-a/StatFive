@@ -38,6 +38,7 @@ api.add_resource(StatTeamById, '/team/stat/<int:id>')
 
 #Routes POST for Team & Score
 api.add_resource(StatTeam, '/team/results')
+api.add_resource(postVideo, '/video')
 
 #Home
 api.add_resource(Home, '/')
