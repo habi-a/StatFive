@@ -9,6 +9,7 @@ sys.path.insert(0, './routes')
 from team import *
 from user import *
 from stats import *
+from video import *
 
 api = Api(app)
 
@@ -34,8 +35,11 @@ api.add_resource(StatUserById, '/stat/user/<int:id>')
 api.add_resource(AllStatUser, '/stat/user')
 api.add_resource(AllStatTeam, '/stat/team')
 api.add_resource(StatTeamById, '/team/stat/<int:id>')
+
+#Routes POST for Team & Score
 api.add_resource(StatTeam, '/team/results')
 
+#Home
 api.add_resource(Home, '/')
 
 if __name__ == '__main__':

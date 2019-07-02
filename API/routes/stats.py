@@ -49,6 +49,7 @@ class StatTeamById(Resource):
 class StatTeam(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('result', type=list, location='json')
+        parser.add_argument('result', type=dict, location='json')
         args = parser.parse_args()
+        
         return args
