@@ -45,3 +45,10 @@ class StatTeamById(Resource):
         resp = jsonify(rows)
         resp.status_code = 200
         return resp
+
+class StatTeam(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('result', type=list, location='json')
+        args = parser.parse_args()
+        return args

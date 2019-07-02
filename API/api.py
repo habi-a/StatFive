@@ -34,6 +34,7 @@ api.add_resource(StatUserById, '/stat/user/<int:id>')
 api.add_resource(AllStatUser, '/stat/user')
 api.add_resource(AllStatTeam, '/stat/team')
 api.add_resource(StatTeamById, '/team/stat/<int:id>')
+api.add_resource(StatTeam, '/team/results')
 
 api.add_resource(Home, '/')
 
