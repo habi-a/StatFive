@@ -5,6 +5,8 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, Api, reqparse, inputs
 from flaskext.mysql import MySQL
 import sys
+import werkzeug
+
 sys.path.insert(0, './routes')
 from team import *
 from user import *
@@ -19,22 +21,23 @@ class Home(Resource):
 
 #Route for log
 
-#Routes for Team
+#Routes GET for Team
 api.add_resource(allTeam, '/team')
 api.add_resource(teamById, '/team/<int:id>')
 api.add_resource(teamByName, '/team/<string:name>')
 
-#Routes for Users
+#Routes GET AND POST for Users
 api.add_resource(user, '/addUser')
 api.add_resource(userById, '/user/<int:id>')
 api.add_resource(userByName, '/user/<string:name>')
 api.add_resource(AllUser, '/users')
 
-#Routes for Stats
+#Routes GET for Stats
 api.add_resource(StatUserById, '/stat/user/<int:id>')
 api.add_resource(AllStatUser, '/stat/user')
 api.add_resource(AllStatTeam, '/stat/team')
 api.add_resource(StatTeamById, '/team/stat/<int:id>')
+api.add_resource(statMatchById, '/match/<int:id>')
 
 #Routes POST for Team & Score
 api.add_resource(StatTeam, '/team/results')

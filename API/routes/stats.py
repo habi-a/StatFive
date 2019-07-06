@@ -46,10 +46,20 @@ class StatTeamById(Resource):
         resp.status_code = 200
         return resp
 
+class statMatchById(Resource):
+    def get(self, id):
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        sql = 'SELECT team_has_match_played.goals, team_has_match_played.possesion, team_has_match_played.color, team.name, match_played.duration FROM team_has_match_played INNER JOIN match_played ON team_has_match_played.match_id = match_played.id INNER JOIN team ON team_has_match_played.team_id = team.id WHERE team_has_match_played.match_id ={}'.format(id)
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        resp = jsonify(rows)
+        resp.status_code = 200
+        return resp
+
 class StatTeam(Resource):
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('result', type=dict, location='json')
         args = parser.parse_args()
-        
         return args
