@@ -4,6 +4,7 @@ from __future__ import division
 import numpy as np
 import os
 import six.moves.urllib as urllib
+import requests
 import sys
 import tarfile
 import tensorflow as tf
@@ -21,6 +22,29 @@ sys.path.append(OBJECT_DETECTION_PATH)
 from utils import label_map_util
 from utils import visualization_utils as vis_util
 
+
+# Command-line argument
+if len(sys.argv != 2):
+  print("Match id needed")
+  sys.exit(0)
+match_id = sys.argv[1]
+
+# HTTP Request info (To submit chronos)
+SERVER_URL = 'http://localhost:5000'
+API_ENDPOINT = '/team/results'
+data = {
+  "result": {
+    "id": match_id, 
+    "red": {
+      "score": 0,
+      "possession": 50
+    },
+    "blue": {
+      "score": 0,
+      "possession": 50
+    }
+  }
+}
 
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
 MODEL_NAME = 'ssdlite_mobilenet_v2_coco_2018_05_09'
@@ -82,10 +106,10 @@ def detect_team(image, show = False):
     i += 1
 
     ## for debugging
-    if show == True:
-      cv2.imshow("images", np.hstack([image, output]))
-      if cv2.waitKey(0) & 0xFF == ord('q'):
-        cv2.destroyAllWindows()
+#    if show == True:
+#      cv2.imshow("images", np.hstack([image, output]))
+#      if cv2.waitKey(0) & 0xFF == ord('q'):
+#        cv2.destroyAllWindows()
   return 'not_sure'
 
 
@@ -139,11 +163,8 @@ cap = cv2.VideoCapture(filename)
 
 # Init stats
 team_owner_of_ball = []
-nb_goals_t1 = 0
-nb_goals_t2 = 0
 already_scored = False
-pourcent_possession_ball_t1 = 50
-pourcent_possession_ball_t2 = 50
+
 
 
 # Running the tensorflow session
@@ -263,30 +284,34 @@ with detection_graph.as_default():
 
         # Detect if there is a goal
         if not already_scored and ball_is_in_the_goal(loc_ball, loc_goal_t1, ball_visible):
-          nb_goals_t2 += 1
+          data["result"]["blue"]["score"] += 1
           already_scored = True
         elif not already_scored and ball_is_in_the_goal(loc_ball, loc_goal_t2, ball_visible):
-          nb_goals_t1 += 1
+          data["result"]["red"]["score"] += 1
           already_scored = True
         elif already_scored and ball_visible and not ball_is_in_the_goal(loc_ball, loc_goal_t1, ball_visible) and not ball_is_in_the_goal(loc_ball, loc_goal_t2, ball_visible):
           already_scored = False
 
 
-      cv2.imshow('image', image_np)
-      out.write(image_np)
+#      cv2.imshow('image', image_np)
+#      out.write(image_np)
 
-      if cv2.waitKey(10) & 0xFF == ord('q'):
+      if cv2.waitKey(1) & 0xFF == ord('q'):
         cv2.destroyAllWindows()
         cap.release()
         break
 
 # Calcul stats
-pourcent_possession_ball_t1 = get_pourcent_array_occurence(team_owner_of_ball, 'TEAM_1')
-pourcent_possession_ball_t2 = get_pourcent_array_occurence(team_owner_of_ball, 'TEAM_2')
+data["result"]["red"]["possession"] = get_pourcent_array_occurence(team_owner_of_ball, 'TEAM_1')
+data["result"]["blue"]["possession"] = get_pourcent_array_occurence(team_owner_of_ball, 'TEAM_2')
 
 # Print stats
 print('Score:')
-print('RedTeam', nb_goals_t1, '-', nb_goals_t2, 'BlueTeam')
+print('RedTeam', data["result"]["red"]["score"], '-', data["result"]["blue"]["score"], 'BlueTeam')
 print()
 print('Possession:')
-print('RedTeam', int(round(pourcent_possession_ball_t1)), '% -', int(round(pourcent_possession_ball_t2)), '% BlueTeam')
+print('RedTeam', int(round(data["result"]["red"]["possession"])), '% -', int(round(data["result"]["blue"]["possession"])), '% BlueTeam')
+
+# Send stats
+print("[HTTP] Sending data...")
+resp = requests.post(SERVER_URL + API_ENDPOINT, data = data)
