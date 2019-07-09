@@ -24,10 +24,11 @@ from utils import visualization_utils as vis_util
 
 
 # Command-line argument
-if len(sys.argv != 2):
-  print("Match id needed")
+if len(sys.argv != 3):
+  print("Match id and video needed")
   sys.exit(0)
 match_id = sys.argv[1]
+video_match = str(sys.argv[2])
 
 # HTTP Request info (To submit chronos)
 SERVER_URL = 'http://localhost:5000'
@@ -157,7 +158,7 @@ detect_team(resize, show=True)
 # Video Recorder
 fourcc = cv2.cv.CV_FOURCC('M', 'J', 'P', 'G')
 out = cv2.VideoWriter('./soccer_out.avi', fourcc, 10, (640,360))
-filename = './five-a-side.mp4'
+filename = video_match
 cap = cv2.VideoCapture(filename)
 
 
