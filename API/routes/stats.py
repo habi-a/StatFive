@@ -74,7 +74,9 @@ class addStatTeam(Resource):
         args = parser.parse_args()
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        sql = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES({},{},{},{},{},{})'.format()
-        cursor.execute(sql)
+        sqlRed = 'INSERT INTO `team_has_match_played`(`match_id`, `goals`, `possesion`, `color`, `ended`) VALUES({},{},{},{},{},{})'.format(args['result']['id'], args['result']['red']['score'], args['result']['red']['possession'], 'red', 1)
+        sqlBlue = 'INSERT INTO `team_has_match_played`(`match_id`, `goals`, `possesion`, `color`, `ended`) VALUES({},{},{},{},{},{})'.format(args['result']['id'], args['result']['blue']['score'], args['result']['blue']['possession'], 'blue', 1)
+        cursor.execute(sqlRed)
+        cursor.execute(sqlBlue)
         conn.commit()
         return "Created"
