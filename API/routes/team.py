@@ -17,7 +17,18 @@ class allTeam(Resource):
 
 class createTeam(Resource):
     def post(self):
-        return jsonify({'insert':'team'})
+        parser = reqparse.RequestParser()
+        parser.add_argument('red', type=dict, location='json')
+        parser.add_argument('blue', type=dict, location='json')
+        args = parser.parse_args()
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        sqlRed = 'INSERT INTO `team`(`name`) VALUES({})'.format()
+        sqlBlue = 'INSERT INTO `team`(`name`) VALUES({})'.format()
+        cursor.execute(sqlRed)
+        cursor.execute(sqlBlue)
+        conn.commit()
+        return jsonify({'Teams':'created'})
 
 class teamById(Resource):
     def get(self, id):

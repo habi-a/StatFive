@@ -9,9 +9,7 @@ import werkzeug
 class postVideo(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        #parser.add_argument('video', type=werkzeug.datastructures.FileStorage, location='files')
-        parser.add_argument('red', type=dict, location='json')
-        parser.add_argument('blue', type=dict, location='json')
+        parser.add_argument('video', type=werkzeug.datastructures.FileStorage, location='files')
         args = parser.parse_args()
         print(args)
         return args

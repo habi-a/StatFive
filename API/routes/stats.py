@@ -72,4 +72,9 @@ class addStatTeam(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('result', type=dict, location='json')
         args = parser.parse_args()
-        return args
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        sql = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES({},{},{},{},{},{})'.format()
+        cursor.execute(sql)
+        conn.commit()
+        return "Created"
