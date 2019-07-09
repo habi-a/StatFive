@@ -12,6 +12,8 @@ class allTeam(Resource):
         cursor.execute("SELECT * FROM team")
         rows = cursor.fetchall()
         resp = jsonify(rows)
+        if not rows:
+            return jsonify({'about':'no teams found'})
         resp.status_code = 200
         return resp
 
@@ -23,8 +25,8 @@ class createTeam(Resource):
         args = parser.parse_args()
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        sqlRed = 'INSERT INTO `team`(`name`) VALUES({})'.format()
-        sqlBlue = 'INSERT INTO `team`(`name`) VALUES({})'.format()
+        sqlRed = 'INSERT INTO `team`(`name`) VALUES({})'.format(args['red']['name'])
+        sqlBlue = 'INSERT INTO `team`(`name`) VALUES({})'.format(args['blue']['name'])
         cursor.execute(sqlRed)
         cursor.execute(sqlBlue)
         conn.commit()

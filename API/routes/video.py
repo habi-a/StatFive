@@ -11,5 +11,4 @@ class postVideo(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('video', type=werkzeug.datastructures.FileStorage, location='files')
         args = parser.parse_args()
-        print(args)
         return args

@@ -22,7 +22,7 @@ class Home(Resource):
 #Route for log
 
 #Routes GET for Team
-api.add_resource(allTeam, '/team')
+api.add_resource(allTeam, '/teams')
 api.add_resource(teamById, '/team/<int:id>')
 api.add_resource(teamByName, '/team/<string:name>')
 
@@ -32,14 +32,17 @@ api.add_resource(userById, '/user/<int:id>')
 api.add_resource(userByName, '/user/<string:name>')
 api.add_resource(AllUser, '/users')
 
-#Routes GET for Stats
+#Routes GET for Stats for user or team
 api.add_resource(StatUserById, '/stat/user/<int:id>')
 api.add_resource(AllStatUser, '/stat/user')
 api.add_resource(AllStatTeam, '/stat/team')
 api.add_resource(StatTeamById, '/team/stat/<int:id>')
+
+#Match Stat
 api.add_resource(statMatchById, '/match/<int:id>')
 
 #Routes POST for Team & Score
+api.add_resource(createTeam, '/team')
 api.add_resource(addStatTeam, '/team/results')
 api.add_resource(postVideo, '/video')
 
