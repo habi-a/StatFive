@@ -5,7 +5,7 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, Api, reqparse, inputs
 from flaskext.mysql import MySQL
 import sys
-import werkzeug
+import werkzeug, os
 
 sys.path.insert(0, './routes')
 from team import *
