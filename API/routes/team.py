@@ -12,12 +12,25 @@ class allTeam(Resource):
         cursor.execute("SELECT * FROM team")
         rows = cursor.fetchall()
         resp = jsonify(rows)
+        if not rows:
+            return jsonify({'about':'no teams found'})
         resp.status_code = 200
         return resp
 
 class createTeam(Resource):
     def post(self):
-        return jsonify({'insert':'team'})
+        parser = reqparse.RequestParser()
+        parser.add_argument('red', type=dict, location='json')
+        parser.add_argument('blue', type=dict, location='json')
+        args = parser.parse_args()
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        sqlRed = 'INSERT INTO `team`(`name`) VALUES({})'.format(args['red']['name'])
+        sqlBlue = 'INSERT INTO `team`(`name`) VALUES({})'.format(args['blue']['name'])
+        cursor.execute(sqlRed)
+        cursor.execute(sqlBlue)
+        conn.commit()
+        return jsonify({'Teams':'created'})
 
 class teamById(Resource):
     def get(self, id):
