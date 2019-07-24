@@ -7,6 +7,7 @@ from flask_restful import Resource, Api, reqparse, inputs
 import werkzeug, os
 from subprocess import check_output, CalledProcessError, STDOUT
 import time
+from datetime import date
 
 def getDuration(filename):
         command = [
@@ -24,6 +25,7 @@ def getDuration(filename):
             output = check_output( command, stderr=STDOUT ).decode()
             temps = output.split('\n')
             final = time.strftime("%M:%S", time.gmtime(float(temps[0])))
+            print(final)
             return final
 
         except CalledProcessError as e:
@@ -38,17 +40,18 @@ class postVideo(Resource):
         args = parser.parse_args()
         if args:
             video = args['video']
-            filename = "myMatch.mp4"
+            filename = "myMatch"+str(date.today())+".mp4"
+            matchName = "Match"+ str(date.today())
             video.save(os.path.join(destpath,filename))
             filepath = destpath+"/"+filename
             duration = getDuration(filepath)
             conn = mysql.connect()
             cursor = conn.cursor(pymysql.cursors.DictCursor)
-            sql = 'INSERT INTO `match_played`(`duration`,`path`) VALUES("{}", "{}")'.format(str(duration) ,filepath)
+            sql = 'INSERT INTO `match_played`(`name`, `duration`,`path`) VALUES("{}", "{}", "{}")'.format( matchName, str(duration) ,filepath)
             cursor.execute(sql)
             conn.commit()
             return jsonify({'about':'Uploaded'})
         else:
             print(args['video'])
             print(args)
-            return args
+            return jsonify({'about':'no file uploaded'})
