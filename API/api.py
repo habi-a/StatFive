@@ -14,6 +14,7 @@ from team import *
 from user import *
 from stats import *
 from video import *
+from match import *
 
 api = Api(app)
 
@@ -27,6 +28,9 @@ class Home(Resource):
 api.add_resource(allTeam, '/teams')
 api.add_resource(teamById, '/team/<int:id>')
 api.add_resource(teamByName, '/team/<string:name>')
+
+#Route for match 
+api.add_resource(AllMatchByDate, '/matchs')
 
 #Routes GET AND POST for Users
 api.add_resource(user, '/addUser')

@@ -28,7 +28,7 @@ class user(Resource):
                 cursor.execute(sqlQuery)
                 rows = cursor.fetchall()
                 if rows is None:
-                    sqlQuery = 'INSERT INTO users ( mail, lastname, firstname, password) VALUES ("{}", "{}", "{}", "{}")'.format(email, lastname, firstname, password)
+                    sqlQuery = 'INSERT INTO users ( mail, name, firstname, password) VALUES ("{}", "{}", "{}", "{}")'.format(email, lastname, firstname, password)
                     cursor.execute(sqlQuery)
                     conn.commit()
                     return jsonify({'Email': args['email'], 'Firstame':args['firstname'], 'Lastame':args['lastname'], 'status':200})
