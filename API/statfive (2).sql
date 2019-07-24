@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le :  mar. 23 juil. 2019 à 20:09
+-- Généré le :  mer. 24 juil. 2019 à 17:48
 -- Version du serveur :  10.1.40-MariaDB
 -- Version de PHP :  7.3.5
 
@@ -30,6 +30,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `match_played` (
   `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `duration` varchar(255) NOT NULL,
   `ground` int(11) NOT NULL,
   `path` varchar(255) NOT NULL
@@ -39,10 +40,11 @@ CREATE TABLE `match_played` (
 -- Déchargement des données de la table `match_played`
 --
 
-INSERT INTO `match_played` (`id`, `duration`, `ground`, `path`) VALUES
-(1, '00:00:00', 1, ''),
-(2, '12:00:00', 2, 'chemin'),
-(3, '14:25', 0, '/mnt/c/Users/nour/Documents/ProjetLib/Git/StatFive/video/myMatch.mp4');
+INSERT INTO `match_played` (`id`, `name`, `duration`, `ground`, `path`) VALUES
+(1, '', '00:00:00', 1, ''),
+(2, '', '12:00:00', 2, 'chemin'),
+(3, '', '14:25', 0, '/mnt/c/Users/nour/Documents/ProjetLib/Git/StatFive/video/myMatch.mp4'),
+(4, 'Match2019-07-24', '10:41', 0, '/mnt/c/Users/nour/Documents/ProjetLib/Git/StatFive/video/myMatch2019-07-24.mp4');
 
 -- --------------------------------------------------------
 
@@ -97,10 +99,8 @@ CREATE TABLE `team_has_match_played` (
 --
 
 INSERT INTO `team_has_match_played` (`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES
-(1, 1, 0, 0, '', 0),
-(1, 2, 0, 0, '', 0),
-(1, 1, 2, 50, 'red', 1),
-(1, 2, 3, 50, 'blue', 1);
+(4, 1, 2, 50, 'blue', 1),
+(4, 2, 3, 50, 'red', 1);
 
 -- --------------------------------------------------------
 
@@ -209,7 +209,7 @@ ALTER TABLE `user_has_team`
 -- AUTO_INCREMENT pour la table `match_played`
 --
 ALTER TABLE `match_played`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT pour la table `stats`
