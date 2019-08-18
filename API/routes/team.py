@@ -9,8 +9,21 @@ class allTeam(Resource):
     def get(self):
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT * FROM team")
+        cursor.execute("SELECT name FROM team")
         rows = cursor.fetchall()
+        resp = jsonify(rows)
+        if not rows:
+            return jsonify({'about':'no teams found'})
+        resp.status_code = 200
+        return resp
+
+class averageTeam(Resource):
+    def get(self):
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("SELECT team.name, CAST(ROUND(AVG(team_has_match_played.goals)) AS INT) AS `moyenne_goal`, ROUND(AVG(team_has_match_played.possesion)) AS `moyenne_possesion` FROM team INNER JOIN team_has_match_played ON team_has_match_played.team_id = team.id GROUP BY team.name")
+        rows = cursor.fetchall()
+        print(rows)
         resp = jsonify(rows)
         if not rows:
             return jsonify({'about':'no teams found'})
