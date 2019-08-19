@@ -1,7 +1,51 @@
 version: '3'
 
+networks:
+  statfive-network:
+
+volumes:
+  mariadb_data:
+
 services:
-  tensorflow:
-    build: ./tracker
+  mariadb:
+    image: mariadb
+    tty: true
+    restart: always
     ports:
-     - "8888:8888"
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: statfive
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: statfive_user
+      MYSQL_PASSWORD: statfive_password
+    networks:
+      - statfive-network
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d
+  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - mariadb
+    depends_on:
+      - mariadb
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: mariadb
+      MYSQL_ROOT_PASSWORD: root 
+    networks:
+      - statfive-network
+    restart: always
+
+  api:
+    build: .
+    links:
+      - mariadb
+    depends_on:
+      - mariadb
+    ports:
+      - 5000:5000
+    networks:
+      - statfive-network

@@ -57,4 +57,4 @@ api.add_resource(postVideo, '/video')
 api.add_resource(Home, '/')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=False, host='0.0.0.0')

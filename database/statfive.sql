@@ -4,14 +4,8 @@
 --
 -- Hôte : 127.0.0.1
 -- Généré le :  mer. 24 juil. 2019 à 17:48
--- Version du serveur :  10.1.40-MariaDB
+-- Version du serveur :  10.1.40-mysql
 -- Version de PHP :  7.3.5
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
-SET time_zone = "+00:00";
-
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -23,7 +17,6 @@ SET time_zone = "+00:00";
 --
 
 -- --------------------------------------------------------
-
 --
 -- Structure de la table `match_played`
 --
