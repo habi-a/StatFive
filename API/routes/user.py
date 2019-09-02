@@ -24,14 +24,14 @@ class user(Resource):
             if password == password2:
                 conn = mysql.connect()
                 cursor = conn.cursor(pymysql.cursors.DictCursor)
-                sqlQuery= 'SELECT lastname, firstname FROM users WHERE mail = "{}"'.format(email)
+                sqlQuery= 'SELECT firstname FROM users WHERE mail = "{}"'.format(email)
                 cursor.execute(sqlQuery)
                 rows = cursor.fetchall()
-                if rows is None:
-                    sqlQuery = 'INSERT INTO users ( mail, lastname, firstname, password) VALUES ("{}", "{}", "{}", "{}")'.format(email, lastname, firstname, password)
+                if len(rows) == 0:
+                    sqlQuery = 'INSERT INTO users ( mail, name, firstname, password) VALUES ("{}", "{}", "{}", "{}")'.format(email, lastname, firstname, password)
                     cursor.execute(sqlQuery)
                     conn.commit()
-                    return jsonify({'Email': args['email'], 'Firstame':args['firstname'], 'Lastame':args['lastname'], 'status':200})
+                    return jsonify({'Email': args['email'], 'Firstame':args['firstname'], 'Lastname':args['lastname'], 'status':200})
                 else:
                     return jsonify({'about':'Mail exist'})
             return jsonify({'about':'Password invalid'})
