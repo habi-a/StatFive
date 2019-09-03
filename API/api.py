@@ -29,9 +29,13 @@ class Home(Resource):
 api.add_resource(allTeam, '/teams')
 api.add_resource(teamById, '/team/<int:id>')
 api.add_resource(teamByName, '/team/<string:name>')
+api.add_resource(averageTeam, '/teams/average')
 
 #Route for match 
 api.add_resource(AllMatchByDate, '/matchs')
+
+#Match Stat
+api.add_resource(statMatchById, '/match/<int:id>')
 
 #Routes GET AND POST for Users
 api.add_resource(user, '/addUser')
@@ -44,9 +48,6 @@ api.add_resource(StatUserById, '/stat/user/<int:id>')
 api.add_resource(AllStatUser, '/stat/user')
 api.add_resource(AllStatTeam, '/stat/team')
 api.add_resource(StatTeamById, '/team/stat/<int:id>')
-
-#Match Stat
-api.add_resource(statMatchById, '/match/<int:id>')
 
 #Routes POST for Team & Score
 api.add_resource(createTeam, '/team')

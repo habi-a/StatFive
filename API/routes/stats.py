@@ -45,7 +45,7 @@ class StatTeamById(Resource):
     def get(self, id):
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        sql = 'SELECT team.name, team_stats.but, team_stats.passe, team_stats.km, team_stats.possesion, team_stats.date FROM team INNER JOIN team_stats ON team_stats.team_id=team.id AND team.id={} ORDER BY team_stats.date'.format(id)
+        sql = 'SELECT team.name, team_stats.but, team_stats.passe, team_stats.km, team_stats.possesion FROM team INNER JOIN team_stats ON team_stats.team_id=team.id AND team.id={}'.format(id)
         cursor.execute(sql)
         rows = cursor.fetchall()
         if not rows:
