@@ -49,3 +49,14 @@ services:
       - 5000:5000
     networks:
       - statfive-network
+
+  web:
+    build: ./Dashboard
+    command: python manage.py runserver 0.0.0.0:80
+    volumes:
+      - ./Dashboard:/app
+    ports:
+      - 80:80
+    depends_on:
+      - mariadb
+      - api

@@ -25,7 +25,7 @@ SECRET_KEY = 'xs$f$eg!k&f7u*@(f-)-=1g-6+r&8*&(**9o$433mxb66cnp3z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -81,9 +81,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'django',
-        'USER': 'nour',
-        'PASSWORD': '',
-        'HOST':'127.0.0.1',
+        'USER': 'statfive_user',
+        'PASSWORD': 'statfive_password',
+        'HOST':'mariadb',
         'PORT':'3306'
     }
 }

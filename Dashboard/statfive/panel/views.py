@@ -23,7 +23,7 @@ def upload(request):
     response = ""
     if request.method == 'POST' and request.FILES['video']:
         video = request.FILES['video']
-        url = "http://127.0.0.1:5000/video"
+        url = "http://163.5.245.188:5000/video"
         requests.post(url, video)
         print(request.FILES['video'])
         response = "Le fichier a été upload"
