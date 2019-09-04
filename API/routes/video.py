@@ -8,14 +8,25 @@ import werkzeug, os
 from subprocess import check_output, CalledProcessError, STDOUT
 import time, json
 from datetime import date
-import pybase64
 
 class traitemant():
     def checkExist(team):
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         sql = "SELECT id FROM team WHERE name = {}".format(team)
-        return "lol"
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        if not rows:
+            sql = 'INSERT INTO `team`(`name`) VALUES ("{}")'.format(team)
+            cursor.execute(sql)
+            conn.commit()
+            team_id = cursor.lastrowid
+            return team_id
+        id_team = rows['id']
+        return id_team
+
+    def insertMatch():
+        return test
 
 
 def getDuration(filename):
