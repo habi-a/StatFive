@@ -8,7 +8,6 @@ import werkzeug, os
 from subprocess import check_output, CalledProcessError, STDOUT
 import time, json
 from datetime import date
-import pybase64
 
 class traitemant():
     def checkExist(team):

@@ -24,14 +24,15 @@ RUN pip3 install pymysql
 RUN pip3 install flask-mysql
 
 # Tensorflow
-RUN pip install tensorflow
+RUN python -m pip install tensorflow
 
 # Tensorflow object detection API
 RUN apt-get install -y protobuf-compiler python-pil python-lxml python-tk
-RUN pip install Cython
-RUN pip install contextlib2
-RUN pip install jupyter
-RUN pip install matplotlib
+RUN python -m pip install Cython
+RUN python -m pip install contextlib2
+RUN python -m pip install jupyter
+RUN python -m pip install matplotlib
+RUN python -m pip install requests
 
 # Tensorflow models
 RUN git clone https://github.com/tensorflow/models /tensorflow/models
@@ -53,7 +54,7 @@ RUN mv /tensorflow/models/research/object_detection/tracker/ssdlite_mobilenet_v2
 WORKDIR /tensorflow/models/research/object_detection/tracker
 
 # Run API
-COPY ./API /app
 WORKDIR /app
+COPY ./API /app
 ENTRYPOINT [ "python3" ]
 CMD [ "api.py" ]
