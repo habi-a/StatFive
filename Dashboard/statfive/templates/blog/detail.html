@@ -103,23 +103,21 @@
     
         </div>
     </div>  		</div>
-        <div class="col-md-10 content">
-          <h2 class="display-1" style="text-align: center;">Match</h2>
+        <div class="col-md-10 content bg-success">
             {% for match in matchs %} 
-            <div class="panel panel-default">
-                <div class="container" id="{{match.match_id}}" style="margin-top: 2%;">
-                    <div class="col-md-4">
-                            <img src="{% static 'img/logo.png' %}" alt="logo" />
-                    </div>
-                    <div style="position: relative; top: 40px;" class="col-md-4">
-                            <h4><b>{{match.match_name}}</b></h4>
-                            <p><b>Durée du match:</b> {{match.durée}} minutes</p>
-                            <p><b>Numéro de match:</b> {{match.match_id}}</p>
-                    </div>
-                    <div class="col-md-4">
-                            <button style="position: relative; top: 40px;" type="button" class="btn btn-success"><a href="/detail/{{match.match_id}}">Détail</a></button>
-                    </div>
-                </div>          
+            <h2 class="display-1" style="text-align: center;"><b>{{match.match_name}}</b></h2>
+            <div class="">
+                <p><b>Numéro de match:</b> {{match.match_id}}</p>
+                <p><b>Durée:</b> {{match.durée}} minutes</p>
+                <h4 style="text-align: center;"><b>Équipes:</b></h4>
+                <p style="text-align: center;"> {{match.red.team_name}} - {{match.blue.team_name}}</p></br>
+                <h4 style="text-align: center;"><b>Score:</b></h4>
+                <p style="text-align: center;">{{match.red.goals}} - {{match.blue.goals}}</p>     
+            </div>
+            <div class="">
+                <h4 style="text-align: center;"><b>Statistique:</b></h4>
+                <label>Possession:</label>
+                <p>Camenbert</p>
             </div>
             {% endfor %}
     </div>
