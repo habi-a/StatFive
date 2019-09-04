@@ -24,7 +24,7 @@ from utils import visualization_utils as vis_util
 
 
 # Command-line argument
-if len(sys.argv != 3):
+if len(sys.argv) != 3:
   print("Match id and video needed")
   sys.exit(0)
 match_id = sys.argv[1]
@@ -35,7 +35,7 @@ SERVER_URL = 'http://localhost:5000'
 API_ENDPOINT = '/team/results'
 data = {
   "result": {
-    "id": match_id, 
+    "id": match_id,
     "red": {
       "score": 0,
       "possession": 50
@@ -118,11 +118,11 @@ def detect_team(image, show = False):
 def ball_is_in_the_goal(loc_ball, loc_goal, ball_visible):
   if not ball_visible:
     return False
-  
+
   if loc_ball[0] > loc_goal['xmin'] and loc_ball[0] < loc_goal['xmax'] and loc_ball[1] > loc_goal['ymin'] and loc_ball[1] < loc_goal['ymax']:
     return True
   return False
-  
+
 
 # Functions to find owner of ball
 def distance(pt_1, pt_2):
@@ -149,18 +149,19 @@ def get_pourcent_array_occurence(array, element):
 
 
 # [Debug] to view Color Mask
-filename = './five-a-side.jpg'
-image = cv2.imread(filename)
-resize = cv2.resize(image, (640,360))
-detect_team(resize, show=True)
+#filename = './five-a-side.jpg'
+#image = cv2.imread(filename)
+#resize = cv2.resize(image, (640,360))
+#detect_team(resize, show=True)
 
 
 # Video Recorder
-fourcc = cv2.cv.CV_FOURCC('M', 'J', 'P', 'G')
-out = cv2.VideoWriter('./soccer_out.avi', fourcc, 10, (640,360))
 filename = video_match
 cap = cv2.VideoCapture(filename)
-
+frame_width = int(cap.get(3))
+frame_height = int(cap.get(4))
+fourcc = cv2.cv.CV_FOURCC('X', 'V', 'I', 'D')
+out = cv2.VideoWriter('./output/' + id_match + '.avi', fourcc, 10, (frame_width,frame_height))
 
 # Init stats
 team_owner_of_ball = []
@@ -185,16 +186,16 @@ with detection_graph.as_default():
         # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
         image_np_expanded = np.expand_dims(image_np, axis=0)
         image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
-        
+
         # Each box represents a part of the image where a particular object was detected.
         boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
-        
+
         # Each score represent how level of confidence for each of the objects.
         # Score is shown on the result image, together with the class label.
         scores = detection_graph.get_tensor_by_name('detection_scores:0')
         classes = detection_graph.get_tensor_by_name('detection_classes:0')
         num_detections = detection_graph.get_tensor_by_name('num_detections:0')
-        
+
         # Actual detection.
         (boxes, scores, classes, num_detections) = sess.run(
           [boxes, scores, classes, num_detections],
@@ -260,7 +261,7 @@ with detection_graph.as_default():
                     loc_foot.append((xaverage, ymax, 'TEAM_2'))
                   #### Draw foot boxes
                   cv2.rectangle(image_np, (xmin, yaverage), (xmax, ymax), (238, 120, 42), 2)
-              
+
               if label == 'sports ball':
                 loc_ball = ((xaverage, yaverage))
                 ball_visible = True
@@ -271,7 +272,7 @@ with detection_graph.as_default():
           text_pos = str(loc[key])
           cv2.putText(image_np, text_pos, (key[0], key[1]-20), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (255, 0, 0), 2) # Text in black
 
-        # Find the team in possession of the ball 
+        # Find the team in possession of the ball
         if ball_visible == True:
           team_owner_of_ball.append(find_team_nearest_ball(loc_ball, loc_foot))
         else:
@@ -294,13 +295,15 @@ with detection_graph.as_default():
           already_scored = False
 
 
-#      cv2.imshow('image', image_np)
-#      out.write(image_np)
+#     cv2.imshow('image', image_np)
+      out.write(image_np)
 
       if cv2.waitKey(1) & 0xFF == ord('q'):
-        cv2.destroyAllWindows()
-        cap.release()
         break
+
+cap.release()
+out.release()
+cv2.destroyAllWindows()
 
 # Calcul stats
 data["result"]["red"]["possession"] = get_pourcent_array_occurence(team_owner_of_ball, 'TEAM_1')
