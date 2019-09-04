@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('team', views.team),
     path('matchs', views.match),
+    path('detail/<int:id>', views.matchById),
     path('panel/login', panel.login),
     path('panel/home', panel.panel),
     path('panel/upload', panel.upload)
