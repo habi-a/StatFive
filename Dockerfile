@@ -54,7 +54,7 @@ RUN mv /tensorflow/models/research/object_detection/tracker/ssdlite_mobilenet_v2
 WORKDIR /tensorflow/models/research/object_detection/tracker
 
 # Run API
-COPY ./API /app
 WORKDIR /app
+COPY ./API /app
 ENTRYPOINT [ "python3" ]
 CMD [ "api.py" ]
