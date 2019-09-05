@@ -50,6 +50,3 @@ class AllMatchByDate(Resource):
         resp = jsonify(matchs)
         resp.status_code = 200
         return resp
-
-#Recuperer le dernier id s
-#cursor.lastrowid

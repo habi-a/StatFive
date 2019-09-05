@@ -22,7 +22,7 @@ def panel(request):
 
 def upload(request):
     response = "TESt"
-    url = "http://127.0.0.1:5000/test"
+    url = "http://127.0.0.1:5000/video"
     if request.method == 'POST':
         if request.FILES['video'] and request.POST['teamA'] and request.POST['teamB']:
             video = request.FILES['video']
@@ -30,7 +30,7 @@ def upload(request):
             teamB =  request.POST['teamB']
             data = {'video': video,'teamA':teamA, 'teamB': teamB}
             print(data)
-            requests.post(url, data=data)
+            requests.post(url, files=video, data=data).prepare().body.decode('ascii')
             response = "Le fichier a été upload"
             return render(request, 'panel/upload.html', {'data': response})
         else:
