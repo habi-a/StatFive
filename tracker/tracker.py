@@ -15,7 +15,8 @@ from io import StringIO
 from PIL import Image
 import cv2
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 OBJECT_DETECTION_PATH = '/tensorflow/models/research/object_detection/'
 sys.path.append(OBJECT_DETECTION_PATH)
 
@@ -158,10 +159,10 @@ def get_pourcent_array_occurence(array, element):
 # Video Recorder
 filename = video_match
 cap = cv2.VideoCapture(filename)
-frame_width = int(cap.get(3))
-frame_height = int(cap.get(4))
-fourcc = cv2.cv.CV_FOURCC('X', 'V', 'I', 'D')
-out = cv2.VideoWriter('./output/' + id_match + '.avi', fourcc, 10, (frame_width,frame_height))
+#frame_width = int(cap.get(3))
+#frame_height = int(cap.get(4))
+#fourcc = cv2.cv.CV_FOURCC('X', 'V', 'I', 'D')
+#out = cv2.VideoWriter('./output/' + match_id + '.avi', fourcc, 10, (frame_width,frame_height))
 
 # Init stats
 team_owner_of_ball = []
@@ -295,8 +296,8 @@ with detection_graph.as_default():
           already_scored = False
 
 
-#     cv2.imshow('image', image_np)
-      out.write(image_np)
+#      cv2.imshow('image', image_np)
+#      out.write(image_np)
 
       if cv2.waitKey(1) & 0xFF == ord('q'):
         break
@@ -310,12 +311,8 @@ data["result"]["red"]["possession"] = get_pourcent_array_occurence(team_owner_of
 data["result"]["blue"]["possession"] = get_pourcent_array_occurence(team_owner_of_ball, 'TEAM_2')
 
 # Print stats
-print('Score:')
-print('RedTeam', data["result"]["red"]["score"], '-', data["result"]["blue"]["score"], 'BlueTeam')
-print()
-print('Possession:')
-print('RedTeam', int(round(data["result"]["red"]["possession"])), '% -', int(round(data["result"]["blue"]["possession"])), '% BlueTeam')
+print data
 
 # Send stats
-print("[HTTP] Sending data...")
-resp = requests.post(SERVER_URL + API_ENDPOINT, data = data)
+#print("[HTTP] Sending data...")
+#resp = requests.post(SERVER_URL + API_ENDPOINT, data = data)
