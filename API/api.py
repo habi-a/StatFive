@@ -24,6 +24,7 @@ class Home(Resource):
         return {'message':'Welcome Friends'}
 
 #Route for log
+api.add_resource(login, '/login')
 
 #Routes GET for Team
 api.add_resource(allTeam, '/teams')

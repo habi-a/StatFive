@@ -26,7 +26,10 @@ class traitemant():
         return id_team
 
     def insertMatch():
-        return test
+        return "coming"
+    
+    def lunch():
+        return "coming"
 
 
 def getDuration(filename):
