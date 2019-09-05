@@ -30,9 +30,7 @@ class Json():
         while i < len(fake):
             if fake[i]['match_id'] == fake[i+1]['match_id']:
                 dico1 = fake[i]
-                print(dico1)
                 dico2 = fake[i+1]
-                print(dico2)
                 dico1.update(dico2)
                 final.append(dico1)
                 i += 1

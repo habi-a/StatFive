@@ -57,6 +57,5 @@ export default {
         fontWeight: 'bold',
         fontSize: 26,
         color: 'white',
-      },
-      
+      },   
 }

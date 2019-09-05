@@ -1,0 +1,18 @@
+
+h2{
+    text-align: center;
+    margin-top: 5%;
+    margin-bottom: 2%;
+}
+
+#page{
+    margin-top: 5%;
+}
+
+.team{
+    position: relative;
+    left: 25%;
+    border: 3px solid #73AD21;
+    width: 58%;
+    margin-top: 2%;
+}

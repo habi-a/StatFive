@@ -68,3 +68,23 @@ class userById(Resource):
         resp = jsonify(rows)
         resp.status_code = 200
         return resp
+
+class login(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('email', type=inputs.regex('^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$'), required=True, help='Email address to login')
+        parser.add_argument('password', type=str, required=True, help='Password to login')
+        args = parser.parse_args()
+        email = args['email']
+        password = hashlib.sha256(args['password'].encode()).hexdigest()
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        sql ='SELECT firstname, name, mail FROM users WHERE  mail= "{}" AND password = "{}"'.format(email, password)
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        if not rows:
+            error = {'about': 'Error Connection', 'Connected':False}
+            return jsonify(error)
+        co= {'Connected':True}
+        resp = jsonify(co)
+        return resp
