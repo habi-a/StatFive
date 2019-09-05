@@ -23,7 +23,11 @@ class Home(Resource):
     def get(self):
         return {'message':'Welcome Friends'}
 
+#Route to test many class
+api.add_resource(test, '/test')
+
 #Route for log
+api.add_resource(login, '/login')
 
 #Routes GET for Team
 api.add_resource(allTeam, '/teams')
