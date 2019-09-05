@@ -94,9 +94,7 @@ class statMatchById(Resource):
         sql = 'SELECT team_has_match_played.match_id ,team_has_match_played.goals, team_has_match_played.possesion, team_has_match_played.color, team.name, match_played.duration, match_played.name AS `match_name` FROM team_has_match_played INNER JOIN match_played ON team_has_match_played.match_id = match_played.id INNER JOIN team ON team_has_match_played.team_id = team.id WHERE team_has_match_played.match_id ={}'.format(id)
         cursor.execute(sql)
         rows = cursor.fetchall()
-        print(rows)
         match = parsing.create(rows)
-        print(match)
         if not rows:
             return jsonify({'about':'no match found'})
         resp = jsonify(match)
