@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 import requests, json
 from forms.forms import UploadForm
-from django.core.files.storage import FileSystemStorage 
+from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 def test(request):
@@ -13,13 +15,18 @@ def test(request):
         <p>Les stats comme sur FIFA !</p>
     """)
 
+
+@login_required(login_url="/user/login")
 def login(request):
     return render(request, 'panel/login.html', {'data': 'Register pour un Five'})
 
 
+@login_required(login_url="/user/login")
 def panel(request):
     return render(request, 'panel/panel.html', {'data': 'Bonjour'})
 
+
+@login_required(login_url="/user/login")
 def upload(request):
     response = ""
     url = "http://127.0.0.1:5000/video"
