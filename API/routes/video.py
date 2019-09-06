@@ -93,11 +93,10 @@ class postVideo(Resource):
 class postStat(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('result', location= 'json')
+        parser.add_argument('result', type=dict, location= 'json')
         args = parser.parse_args()
-        return args['result']
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        sql = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},blue,1)'.format(id_match, id_blue, lunch['result']['blue']['score'], lunch['result']['blue']['possession'])
-        sql2 = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},red,1)'.format(id_match, id_blue, lunch['result']['red']['score'], lunch['result']['red']['possession'])
+        sql = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},blue,1)'.format(args["result"]["id"], args["result"]["blue"]["id"], args["result"]["blue"]["score"], args["result"]["blue"]["possession"])
+        sql2 = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},red,1)'.format(args["result"]["id"], args["result"]["red"]["id"], args["result"]["red"]["score"], args["result"]["red"]["possession"])
         return jsonify({'about':'Les stats sont uploads'})
