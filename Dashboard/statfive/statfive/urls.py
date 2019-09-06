@@ -18,8 +18,10 @@ from django.urls import path, include
 from blog import views
 from panel import views as panel
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('user/', include('user.urls')),
     path('team', views.team),
     path('matchs', views.match),
     path('detail/<int:id>', views.matchById),

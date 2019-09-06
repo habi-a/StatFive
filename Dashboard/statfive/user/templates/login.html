@@ -1,0 +1,13 @@
+{% extends 'panel/base.html' %}
+
+{% block body %}
+
+<div class="container">
+    <h2>Connexion</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="button" class="btn btn-success">Connexion</button>
+    </form>
+</div>
+{% endblock %}
