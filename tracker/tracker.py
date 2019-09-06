@@ -165,10 +165,10 @@ def get_pourcent_array_occurence(array, element):
 # Video Recorder
 filename = video_match
 cap = cv2.VideoCapture(filename)
-frame_width = int(cap.get(3))
-frame_height = int(cap.get(4))
-fourcc = cv2.cv.CV_FOURCC('X', 'V', 'I', 'D')
-out = cv2.VideoWriter('/video/' + match_id + '.avi', fourcc, 10, (frame_width,frame_height))
+#frame_width = int(cap.get(3))
+#frame_height = int(cap.get(4))
+#fourcc = cv2.cv.CV_FOURCC('X', 'V', 'I', 'D')
+#out = cv2.VideoWriter('/video/' + match_id + '.avi', fourcc, 10, (frame_width,frame_height))
 
 # Init stats
 team_owner_of_ball = []
@@ -303,13 +303,13 @@ with detection_graph.as_default():
 
 
 #      cv2.imshow('image', image_np)
-      out.write(image_np)
+#      out.write(image_np)
 
       if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 cap.release()
-out.release()
+#out.release()
 cv2.destroyAllWindows()
 
 # Calcul stats

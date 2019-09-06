@@ -74,7 +74,7 @@ class traitement():
         return path
 
     def lunch(self, match_id, filepath, id_blue, id_red):
-        result = subprocess.run(["python","/tensorflow/models/research/object_detection/tracker/tracker.py",str(match_id),str(id_red),str(id_blue),filepath,1], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = subprocess.run(["python","/tensorflow/models/research/object_detection/tracker/tracker.py",str(match_id),str(id_red),str(id_blue),filepath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         return result
 
 class postVideo(Resource):
