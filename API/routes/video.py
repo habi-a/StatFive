@@ -73,11 +73,8 @@ class traitement():
         return path
     
     def lunch(self, match_id, filepath):
-        myCmd = os.popen('python3 /tensorflow/models/research/object_detection/tracker/tracker.py' + match_id + ' '+ filepath).read()
+        myCmd = os.popen('python /tensorflow/models/research/object_detection/tracker/tracker.py'+' '+ match_id + ' '+ filepath).read()
         return myCmd
-        #{'result': {'blue': {'possession': 87.91946308724832, 'score': 0}, 'id': '1', 'red': {'possession': 12.080536912751679, 'score': 1}}}
-        #INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ([value-1],[value-2],[value-3],[value-4],[value-5],[value-6])
-
 class postVideo(Resource):
     def post(self):
         parser = reqparse.RequestParser()

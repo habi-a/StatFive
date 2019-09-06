@@ -29,8 +29,9 @@ def upload(request):
             teamA =  request.POST['teamA']
             teamB =  request.POST['teamB']
             data = {'video': video,'teamA':teamA, 'teamB': teamB}
+            header = {'Content-Type':'multipart/form-data'}
             print(data)
-            requests.post(url, files=video, data=data).prepare().body.decode('ascii')
+            requests.post(url, data=data, headers=header)
             response = "Le fichier a été upload"
             return render(request, 'panel/upload.html', {'data': response})
         else:
