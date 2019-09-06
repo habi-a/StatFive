@@ -52,12 +52,12 @@ class traitement():
         destpath="/app/video"
         filename = "myMatch"+str(date.today())+".mp4"
         matchName = "Match"+ str(date.today())
-        video.save(os.path.join(destpath,filename))
-        filepath = destpath+'/'+filename
-        duration = self.getDuration(filepath)
+        video.save(os.path.join(app.instance_path, destpath,filename))
+        filepath = destpath+"/"+filename
+        #duration = self.getDuration(filepath)
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        sql = 'INSERT INTO `match_played`(`name`, `duration`,`path`) VALUES("{}", "{}", "{}")'.format( matchName, str(duration), filepath)
+        sql = 'INSERT INTO `match_played`(`name`, `duration`,`path`) VALUES("{}", "{}", "{}")'.format( matchName, "40:00" ,filepath)
         cursor.execute(sql)
         conn.commit()
         match_id = cursor.lastrowid
