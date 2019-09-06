@@ -57,7 +57,7 @@ class traitement():
         #duration = self.getDuration(filepath)
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        sql = 'INSERT INTO `match_played`(`name`, `duration`,`path`) VALUES("{}", "{}", "{}")'.format( matchName, "40:00" ,filepath)
+        sql = 'INSERT INTO `match_played`(`name`, `duration`,`ground`,`path`) VALUES("{}", "{}",{}, "{}")'.format( matchName, "40:00" , 1, filepath)
         cursor.execute(sql)
         conn.commit()
         match_id = cursor.lastrowid
@@ -66,14 +66,14 @@ class traitement():
     def getFilepath(self, id):
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        sql = 'SELECT  FROM match_played WHERE id = {}'.format(id)
+        sql = 'SELECT path FROM match_played WHERE id = {}'.format(id)
         cursor.execute(sql)
         rows = cursor.fetchall()
         path = rows[0]['path']
         return path
     
     def lunch(self, match_id, filepath):
-        myCmd = os.popen('python /tensorflow/models/research/object_detection/tracker/tracker.py'+' '+ match_id + ' '+ filepath).read()
+        myCmd = os.popen('python /tensorflow/models/research/object_detection/tracker/tracker.py'+' '+ str(match_id) + ' ' + str(id_red) +' '+ str(id_blue) + ' ' +filepath).read()
         return myCmd
 
 class postVideo(Resource):
@@ -88,11 +88,18 @@ class postVideo(Resource):
         id_blue = test.checkExist(args['teamA'])
         id_red = test.checkExist(args['teamB'])
         path = test.getFilepath(id_match)
-        lunch = test.lunch(id_match, path)
+        lunch = test.lunch(id_match, path, id_blue, id_red)
+
+class postStat(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('result', type=dict, location= 'json')
+        args = parser.parse_args()
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        sql = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},blue,1)'.format(id_match, id_blue, lunch['result']['blue']['score'], lunch['result']['blue']['possession'])
-        sql2 = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},red,1)'.format(id_match, id_blue, lunch['result']['red']['score'], lunch['result']['red']['possession'])
-        cursor.execute(sql)
+        sql = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},blue,1)'.format(args["result"]["id"], args["result"]["blue"]["id"], args["result"]["blue"]["score"], args["result"]["blue"]["possession"])
+        sql2 = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},red,1)'.format(args["result"]["id"], args["result"]["red"]["id"], args["result"]["red"]["score"], args["result"]["red"]["possession"])
+	cursor.execute(sql)
+	cursor.execute(sql2)
         conn.commit()
         return jsonify({'about':'Les stats sont uploads'})

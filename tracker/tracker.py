@@ -25,23 +25,28 @@ from utils import visualization_utils as vis_util
 
 
 # Command-line argument
-if len(sys.argv) != 3:
-  print("Match id and video needed")
+if len(sys.argv) != 5:
+  print "Match id and video needed"
   sys.exit(0)
 match_id = sys.argv[1]
-video_match = str(sys.argv[2])
+id_red = sys.argv[2]
+id_blue = sys.argv[3]
+video_match = str(sys.argv[4])
+print "[TRACKER] Starting tracker..."
 
 # HTTP Request info (To submit chronos)
 SERVER_URL = 'http://localhost:5000'
-API_ENDPOINT = '/team/results'
+API_ENDPOINT = '/video/stat'
 data = {
   "result": {
-    "id": match_id,
+    "id": int(match_id),
     "red": {
+      "id": int(id_red),
       "score": 0,
       "possession": 50
     },
     "blue": {
+      "id": int(id_blue),
       "score": 0,
       "possession": 50
     }
@@ -314,5 +319,5 @@ data["result"]["blue"]["possession"] = get_pourcent_array_occurence(team_owner_o
 print data
 
 # Send stats
-#print("[HTTP] Sending data...")
-#resp = requests.post(SERVER_URL + API_ENDPOINT, data = data)
+print "[HTTP] Sending data..."
+resp = requests.post(SERVER_URL + API_ENDPOINT, data = data)

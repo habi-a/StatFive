@@ -55,6 +55,7 @@ api.add_resource(StatTeamById, '/team/stat/<int:id>')
 api.add_resource(createTeam, '/team')
 api.add_resource(addStatTeam, '/team/results')
 api.add_resource(postVideo, '/video')
+api.add_resource(postStat, '/video/stat')
 
 #Home
 api.add_resource(Home, '/')
