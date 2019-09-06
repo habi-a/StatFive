@@ -17,10 +17,13 @@ from django.contrib import admin
 from django.urls import path, include
 from blog import views
 from panel import views as panel
+from user.views.login_redirect import login_redirect as lr
+
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', lr, name="login_redirect"),
     path('user/', include('user.urls')),
     path('team', views.team),
     path('matchs', views.match),
