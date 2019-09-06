@@ -25,12 +25,12 @@ def upload(request):
     url = "http://127.0.0.1:5000/video"
     if request.method == 'POST':
         if request.FILES['video'] and request.POST['teamA'] and request.POST['teamB']:
-            video = request.FILES['video']
+            video1 = request.FILES['video']
             teamA =  request.POST['teamA']
             teamB =  request.POST['teamB']
-            data = {'video': video,'teamA':teamA, 'teamB': teamB}
-            print(data)
-            requests.post(url, files=video, data=data).prepare().body.decode('ascii')
+            video = {'video': video1}
+            data = {'teamA':teamA, 'teamB': teamB}
+            requests.post(url,files=video, data=data)
             response = "Le fichier a été upload"
             return render(request, 'panel/upload.html', {'data': response})
         else:
