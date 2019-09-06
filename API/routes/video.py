@@ -75,6 +75,7 @@ class traitement():
     def lunch(self, match_id, filepath):
         myCmd = os.popen('python /tensorflow/models/research/object_detection/tracker/tracker.py'+' '+ match_id + ' '+ filepath).read()
         return myCmd
+
 class postVideo(Resource):
     def post(self):
         parser = reqparse.RequestParser()
