@@ -99,4 +99,7 @@ class postStat(Resource):
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         sql = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},blue,1)'.format(args["result"]["id"], args["result"]["blue"]["id"], args["result"]["blue"]["score"], args["result"]["blue"]["possession"])
         sql2 = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},red,1)'.format(args["result"]["id"], args["result"]["red"]["id"], args["result"]["red"]["score"], args["result"]["red"]["possession"])
+        cursor.execute(sql)
+        cursor.execute(sql2)
+        conn.commit()
         return jsonify({'about':'Les stats sont uploads'})
