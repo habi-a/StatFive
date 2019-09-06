@@ -83,8 +83,6 @@ class postVideo(Resource):
         parser.add_argument('teamA', type=str, required=True, help='name blue team')
         parser.add_argument('teamB', type=str, required=True, help='name red team')
         args = parser.parse_args()
-        print(args)
-        return "FINI"
         test = traitement()
         id_match = test.insertMatch(args['video'])
         id_blue = test.checkExist(args['teamA'])
