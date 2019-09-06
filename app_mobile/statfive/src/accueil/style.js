@@ -23,7 +23,7 @@ export default {
         color: 'white'
     },
     HeaderGenerique: {
-        backgroundColor: '#3897f1',
+        backgroundColor: 'rgba(0,0,0,0.40)',
     },
     body:{
         marginTop:40,

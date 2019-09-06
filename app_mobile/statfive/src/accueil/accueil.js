@@ -25,11 +25,18 @@ export default class AccueilScreen extends Component {
     constructor(props){
         super(props)
         this.state={
-            data_prive: ["Bad", "Basket","Tennis"],
-            data_public: ["Piscine", "Vélo"],
-            user: {name: ''},
+            user: "",
             refreshing: false,
+            Matchs: [],
         }
+    }
+
+    AllMatch = () => {
+        fetch(annexe.ip+"matchs")
+        .then(res => res.json())
+        .then(res => {
+            this.setState({Matchs: res})
+        }).catch((error) => console.error("Erreur AllMatch: " ,error));
     }
 
     _onRefresh = () => {
@@ -48,10 +55,9 @@ export default class AccueilScreen extends Component {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer '+ this.state.user.token
             },
         };
-        fetch(annexe.ip+"ATTENTEAPIICI", header)
+        fetch(annexe.ip+"matchs", header)
         .then(res => res.json())
         .then(res => {console.log(res.public_games)
         this.setState({data_public: res.public_games})
@@ -94,19 +100,18 @@ export default class AccueilScreen extends Component {
     }
 
     componentDidMount = async () => {
-        const user = await this._recupUser()
-        this.getPublicGame()
+        this.AllMatch()
     }
 
   render() {
     return (
-    <ImageBackground blurRadius={2} source={require('../../assets/background-home.png')} style={{width: '100%', height: '100%', opacity: 0.95}}>
+    <ImageBackground source={require('../../assets/gazon.jpg')} style={{width: '100%', height: '100%', opacity: 0.95}}>
         <KeyboardAvoidingView style={styles.containerView} behavior="padding">
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.HeaderGenerique}>
                     <Text style={styles.logoText}>
                         <Text style={{color:'white'}}>Match - </Text>
-                        <Text style={{color:'white', fontSize: 24}} onPress={() => this.onLogout()} >Fr4nck</Text>                    
+                        <Text style={{color:'white', fontSize: 24}} onPress={() => this.onLogout()} >Déconnexion</Text>
                     </Text>
                 </View>
             </TouchableWithoutFeedback>
@@ -121,9 +126,9 @@ export default class AccueilScreen extends Component {
                         <ListItem>
                             <Text style={styles.FirstLetter}>Historique de Matchs</Text>
                         </ListItem>
-                        {  this.state.data_public.map(data => ( <ListItem >
-                            <TouchableOpacity onPress={() =>  this.props.navigation.navigate('StatGame', {id: data.id})} title="0">
-                                <Text  style={styles.listItems}>{data.title} # C'est un léger test pour voir la transparence {data.id}</Text>
+                        { this.state.Matchs.map(data => ( <ListItem >
+                            <TouchableOpacity key={data.match_id} onPress={() =>  this.props.navigation.navigate('StatGame', {id: data.match_id})} title="0">
+                                <Text  style={styles.listItems}>{data.match_name} | ID : {data.match_id}</Text>
                             </TouchableOpacity>
                         </ListItem>
                         ) ) }

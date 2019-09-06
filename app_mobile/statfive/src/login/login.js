@@ -11,6 +11,8 @@ import {Keyboard,
         ImageBackground} from 'react-native';
 import { Button } from 'react-native-elements';
 
+import annexe from '../../annexe.js';
+
 export default class LoginScreen extends Component {
 
   static navigationOptions = {
@@ -25,17 +27,15 @@ export default class LoginScreen extends Component {
     }
 }
   onLoginPress = async () => {
+    let body_login = new FormData();
+    body_login.append("email", this.state.email)
+    body_login.append("password", this.state.password)
     const login = {
       method: "POST",
-      headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: this.state.email,
-        password: this.state.password
-        })
-      };
+      'Content-Type': 'multipart/form-data',
+      body:body_login,
+    };
     if(this.state.password == "" || this.state.email == "" ) {
         Alert.alert(
           'Champs manquants',
@@ -43,21 +43,21 @@ export default class LoginScreen extends Component {
         );
     }
     else {
-        fetch("http://172.16.1.71:3000/login", login)
+        fetch(annexe.ip+"login", login)
         .then(res => res.json()).then((result) => {
-          if(result.error == true) {
-            Alert.alert(
-              'Erreur',
-              'E-mail ou Utilisateur invalide',
-            );
+          console.log(result)
+          if(result.Connected == true) {
+            console.log(result)
+            this.props.navigation.navigate('Accueil')
           }
           else {
-            console.log('pushing');
-            this.props.navigation.navigate('tabBar', {
-              token: result.token
-            })
+            Alert.alert(
+              'Erreur',
+              'E-mail ou Password invalide',
+            );
           }
-        });
+        }).catch((error) => console.log("Erreur Login: " ,error)
+        );
       };
   };
 

@@ -8,6 +8,7 @@ import werkzeug, os
 from subprocess import check_output, CalledProcessError, STDOUT
 import time, json
 from datetime import date
+import os
 
 class traitement():
     def checkExist(self, team):
@@ -62,25 +63,18 @@ class traitement():
         match_id = cursor.lastrowid
         return match_id
     
-    def lunch(self):
-        return "coming"
-
-class test(Resource):
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('video', type=werkzeug.datastructures.FileStorage, location='files')
-        parser.add_argument('teamA', type=str, required=True, help='name blue team')
-        parser.add_argument('teamB', type=str, required=True, help='name red team')
-        args = parser.parse_args()
-        print(args)
-        test = traitement()
-        id_match = test.insertMatch(args['video'])
-        id_a = test.checkExist(args['teamA'])
-        id_b = test.checkExist(args['teamB'])
-        print(id_a)
-        print(id_b)
-        print(id_match)
-        return "test finish"
+    def getFilepath(self, id):
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        sql = 'SELECT  FROM match_played WHERE id = {}'.format(id)
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        path = rows[0]['path']
+        return path
+    
+    def lunch(self, match_id, filepath):
+        myCmd = os.popen('python /tensorflow/models/research/object_detection/tracker/tracker.py'+' '+ match_id + ' '+ filepath).read()
+        return myCmd
 
 class postVideo(Resource):
     def post(self):
@@ -89,23 +83,16 @@ class postVideo(Resource):
         parser.add_argument('teamA', type=str, required=True, help='name blue team')
         parser.add_argument('teamB', type=str, required=True, help='name red team')
         args = parser.parse_args()
-        video = args['video']
-        print(args)
-        return "TEst"
-        if args:
-            video = args['video']
-            filename = "myMatch"+str(date.today())+".mp4"
-            matchName = "Match"+ str(date.today())
-            video.save(os.path.join(destpath,filename))
-            filepath = destpath+"/"+filename
-            duration = getDuration(filepath)
-            conn = mysql.connect()
-            cursor = conn.cursor(pymysql.cursors.DictCursor)
-            sql = 'INSERT INTO `match_played`(`name`, `duration`,`path`) VALUES("{}", "{}", "{}")'.format( matchName, str(duration) ,filepath)
-            cursor.execute(sql)
-            conn.commit()
-            return jsonify({'about':'Uploaded'})
-        else:
-            print(args['video'])
-            print(args)
-            return jsonify({'about':'no file uploaded'})
+        test = traitement()
+        id_match = test.insertMatch(args['video'])
+        id_blue = test.checkExist(args['teamA'])
+        id_red = test.checkExist(args['teamB'])
+        path = test.getFilepath(id_match)
+        lunch = test.lunch(id_match, path)
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        sql = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},blue,1)'.format(id_match, id_blue, lunch['result']['blue']['score'], lunch['result']['blue']['possession'])
+        sql2 = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},red,1)'.format(id_match, id_blue, lunch['result']['red']['score'], lunch['result']['red']['possession'])
+        cursor.execute(sql)
+        conn.commit()
+        return jsonify({'about':'Les stats sont uploads'})

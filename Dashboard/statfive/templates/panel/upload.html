@@ -113,7 +113,7 @@
                         <p>Chaque vidéo est indépendante et correspond à un match et sera enregistré comme un match.</p>
                         <p>C'est pour cela que nous vous conseillons de pas mettre que des morceaux de match.</p>
                 </article>
-                <form enctype="multipart/form-data" method="POST" action="/panel/upload">{% csrf_token %}
+                <form method="POST" action="/panel/upload" enctype="multipart/form-data">{% csrf_token %}
                     <div class=" form-group">
                         
                         <label for="exampleFormControlInput1">Nom Equipe bleu</label>
@@ -130,9 +130,9 @@
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
-                {%if response%}
-                <p>{{response}}</p>
-            {% endif %}
+                {% for d in data %}
+                <h1 class="bg-success">{{d.response}}</h1>
+                {% endfor%}
                   </div>
             </div>
                   </div>

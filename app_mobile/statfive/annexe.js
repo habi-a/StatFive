@@ -26,6 +26,6 @@ export default {
             return false
     },
 
-    ip: 'http://127.0.0.1:5000/',
+    ip: 'http://163.5.245.188:5000/',
 
 }

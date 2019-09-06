@@ -25,18 +25,16 @@ def upload(request):
     url = "http://163.5.245.188:5000/video"
     if request.method == 'POST':
         if request.FILES['video'] and request.POST['teamA'] and request.POST['teamB']:
-            video = request.FILES['video']
+            video1 = request.FILES['video']
             teamA =  request.POST['teamA']
             teamB =  request.POST['teamB']
-            data = {'video': video,'teamA':teamA, 'teamB': teamB}
-            headers = {'Content-type': 'application/x-www-form-urlencoded'}
-            print()
-            print(video)
-            print(data)
-            print()
-            requests.post(url,files=video, data= data, headers=headers)
+            video = {'video': video1}
+            data = {'teamA':teamA, 'teamB': teamB}
+            requests.post(url,files=video, data=data)
             response = "Le fichier a été upload"
             return render(request, 'panel/upload.html', {'data': response})
         else:
             response = "Rien de posté"
-    return render(request, 'panel/upload.html', {'data': response})
+            return render(request, 'panel/upload.html', {'data': response})
+    else:
+        return render(request, 'panel/upload.html', {'data': response})

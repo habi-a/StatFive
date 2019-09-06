@@ -23,7 +23,7 @@ const RootStack = createStackNavigator({
   StatGame : { screen: StatGameScreen},
   
 },{
-  initialRouteName: 'Accueil',
+  initialRouteName: 'Login',
   headerMode: 'none',
 });
 

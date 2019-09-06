@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import styles from "./style";
 import {Keyboard, 
-        Text, 
+        Text,
+        Alert, 
         View, 
         TextInput, 
         TouchableWithoutFeedback, 
@@ -29,40 +30,19 @@ export default class RegisterScreen extends Component {
         }
     }
 
-    onLogin() {
-        const login = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: this.state.email,
-                password: this.state.password,
-            }),
-        };
-        fetch("login", login)
-        .then(res => res.json())
-        .then(res => {
-            this._storeData(JSON.stringify(res))
-            this.props.navigation.navigate('Accueil')
-        }).catch((error) => console.error("Erreur Log: " ,error));
-    }
-
     onRegister() {
+        let body = new FormData();
+        body.append("email", this.state.email)
+        body.append("firstname", this.state.firstname)
+        body.append("lastname", this.state.lastname)
+        body.append("password", this.state.password)
+        body.append("c_password", this.state.c_password)
         const register = {
             method: 'POST',
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
+                'Content-Type': 'multipart/form-data',
             },
-            body: JSON.stringify({
-                firstname: this.state.firstname,
-                lastname: this.state.lastname,
-                email: this.state.email,
-                password: this.state.password,
-                c_password: this.state.c_password,
-            }),
+            body: body,
         };
         if (annexe.checkInput1(this.state) == false) {
             Alert.alert(
@@ -74,25 +54,26 @@ export default class RegisterScreen extends Component {
             fetch(annexe.ip+"addUser", register)
             .then(res => res.json())
             .then(res => {
-                if(res.message == "Email déjà prise") {
+                if(res.about == "Mail exist") {
                     Alert.alert(
                         'Erreur',
                         'Email déjà utilisé!!',
                     );
-                }
-                if(res.message == "error, user is null, contact an administrator") {
-                    Alert.alert(
-                        'Erreur',
-                        'Email déjà utilisé!!',
-                    );
-                }
-                else {
-                    Alert.alert(
-                        'Congratulation',
-                        'You create a account',
-                    );
-                    console.log(res)
-                    this.props.navigation.navigate('Login')
+                } else {
+                    if (res.error) {
+                        Alert.alert(
+                            'Erreur!',
+                            'ERREUR',
+                        );
+                        console.log(res)
+                    } else {
+                        Alert.alert(
+                            'Félicitation!',
+                            'Vous avez créer un compte.',
+                        );
+                        console.log(res.Firstame)
+                        this.props.navigation.navigate('Accueil')
+                    }
                 }
             }).catch((error) => console.error("Erreur Register: " ,error));
         }
