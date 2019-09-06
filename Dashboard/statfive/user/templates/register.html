@@ -1,11 +1,36 @@
 {% extends 'panel/base.html' %}
 
 {% block body %}
-<div class="container">
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Inscription</button>
-    </form>
-</div>
+    {% load staticfiles %}
+    <div class="container h-100 ">
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-md-6 p-3 mb-2 bg-light text-dark rounded">
+                <div class="text-center">
+                <h2>Créer un compte</h2>
+                    </div>
+                <br>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <div class="text-center">
+                        <h6>Déjà un compte ? Connectez-vous <a href="/user/login"> ici !</a></h6>
+                        <br>
+                    </div>
+                    <div class="text-center">
+                    <button type="submit" class="btn btn-success">Inscription</button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style type="text/css">
+        body {
+            background: url('{% static "image/background.png" %}') no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+</style>
 {% endblock %}

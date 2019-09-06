@@ -80,10 +80,10 @@ WSGI_APPLICATION = 'statfive.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'django',
-        'USER': 'nour',
-        'PASSWORD': '',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'statfive',
+        'USER': 'Firass',
+        'PASSWORD': 'tjpeSMG2',
         'HOST':'127.0.0.1',
         'PORT':'3306'
     }
