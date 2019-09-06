@@ -75,6 +75,7 @@ class traitement():
     def lunch(self, match_id, filepath, id_blue, id_red):
         os.system('python /tensorflow/models/research/object_detection/tracker/tracker.py'+' '+ str(match_id) + ' ' + str(id_red) +' '+ str(id_blue) + ' ' +filepath)
         return True
+
 class postVideo(Resource):
     def post(self):
         parser = reqparse.RequestParser()
@@ -96,8 +97,8 @@ class postStat(Resource):
         args = parser.parse_args()
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        sql = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},blue,1)'.format(args["result"]["id"], args["result"]["blue"]["id"], args["result"]["blue"]["score"], args["result"]["blue"]["possession"])
-        sql2 = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},red,1)'.format(args["result"]["id"], args["result"]["red"]["id"], args["result"]["red"]["score"], args["result"]["red"]["possession"])
+        sql = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},"blue",1)'.format(args["result"]["id"], args["result"]["blue"]["id"], args["result"]["blue"]["score"], args["result"]["blue"]["possession"])
+        sql2 = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},"red",1)'.format(args["result"]["id"], args["result"]["red"]["id"], args["result"]["red"]["score"], args["result"]["red"]["possession"])
         cursor.execute(sql)
         cursor.execute(sql2)
         conn.commit()
