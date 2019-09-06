@@ -16,7 +16,7 @@ from PIL import Image
 import cv2
 
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 OBJECT_DETECTION_PATH = '/tensorflow/models/research/object_detection/'
 sys.path.append(OBJECT_DETECTION_PATH)
 
@@ -25,13 +25,14 @@ from utils import visualization_utils as vis_util
 
 
 # Command-line argument
-if len(sys.argv) != 5:
+if len(sys.argv) != 6:
   print "Match id and video needed"
   sys.exit(0)
 match_id = sys.argv[1]
 id_red = sys.argv[2]
 id_blue = sys.argv[3]
 video_match = str(sys.argv[4])
+send_data = sys.argv[5]
 print "[TRACKER] Starting tracker..."
 
 # HTTP Request info (To submit chronos)
@@ -164,10 +165,10 @@ def get_pourcent_array_occurence(array, element):
 # Video Recorder
 filename = video_match
 cap = cv2.VideoCapture(filename)
-#frame_width = int(cap.get(3))
-#frame_height = int(cap.get(4))
-#fourcc = cv2.cv.CV_FOURCC('X', 'V', 'I', 'D')
-#out = cv2.VideoWriter('./output/' + match_id + '.avi', fourcc, 10, (frame_width,frame_height))
+frame_width = int(cap.get(3))
+frame_height = int(cap.get(4))
+fourcc = cv2.cv.CV_FOURCC('X', 'V', 'I', 'D')
+out = cv2.VideoWriter('/video/' + match_id + '.avi', fourcc, 10, (frame_width,frame_height))
 
 # Init stats
 team_owner_of_ball = []
@@ -302,7 +303,7 @@ with detection_graph.as_default():
 
 
 #      cv2.imshow('image', image_np)
-#      out.write(image_np)
+      out.write(image_np)
 
       if cv2.waitKey(1) & 0xFF == ord('q'):
         break
@@ -319,5 +320,6 @@ data["result"]["blue"]["possession"] = get_pourcent_array_occurence(team_owner_o
 print data
 
 # Send stats
-print "[HTTP] Sending data..."
-resp = requests.post(SERVER_URL + API_ENDPOINT, data = data)
+if send_data == 1:
+  print "[HTTP] Sending data..."
+  resp = requests.post(SERVER_URL + API_ENDPOINT, data = data)

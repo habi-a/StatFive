@@ -9,6 +9,7 @@ from subprocess import check_output, CalledProcessError, STDOUT
 import time, json
 from datetime import date
 import os
+import subprocess
 
 class traitement():
     def checkExist(self, team):
@@ -28,13 +29,13 @@ class traitement():
 
     def getDuration(self, filename):
         command = [
-            'ffprobe', 
-            '-v', 
-            'error', 
-            '-show_entries', 
-            'format=duration', 
-            '-of', 
-            'default=noprint_wrappers=1:nokey=1', 
+            'ffprobe',
+            '-v',
+            'error',
+            '-show_entries',
+            'format=duration',
+            '-of',
+            'default=noprint_wrappers=1:nokey=1',
             filename
             ]
 
@@ -47,7 +48,7 @@ class traitement():
         except CalledProcessError as e:
             output = e.output.decode()
             return output
-    
+
     def insertMatch(self, video):
         destpath="/app/video"
         filename = "myMatch"+str(date.today())+".mp4"
@@ -62,7 +63,7 @@ class traitement():
         conn.commit()
         match_id = cursor.lastrowid
         return match_id
-    
+
     def getFilepath(self, id):
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
@@ -71,10 +72,10 @@ class traitement():
         rows = cursor.fetchall()
         path = rows[0]['path']
         return path
-    
-    def lunch(self, match_id, filepath):
-        myCmd = os.popen('python /tensorflow/models/research/object_detection/tracker/tracker.py'+' '+ str(match_id) + ' ' + str(id_red) +' '+ str(id_blue) + ' ' +filepath).read()
-        return myCmd
+
+    def lunch(self, match_id, filepath, id_blue, id_red):
+        result = subprocess.run(["python","/tensorflow/models/research/object_detection/tracker/tracker.py",str(match_id),str(id_red),str(id_blue),filepath,1], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        return result
 
 class postVideo(Resource):
     def post(self):
@@ -93,13 +94,13 @@ class postVideo(Resource):
 class postStat(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('result', type=dict, location= 'json')
+        parser.add_argument('result', type=dict, location='json')
         args = parser.parse_args()
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        sql = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},blue,1)'.format(args["result"]["id"], args["result"]["blue"]["id"], args["result"]["blue"]["score"], args["result"]["blue"]["possession"])
-        sql2 = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},red,1)'.format(args["result"]["id"], args["result"]["red"]["id"], args["result"]["red"]["score"], args["result"]["red"]["possession"])
-	cursor.execute(sql)
-	cursor.execute(sql2)
+        sql = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},"blue",1)'.format(args["result"]["id"], args["result"]["blue"]["id"], args["result"]["blue"]["score"], args["result"]["blue"]["possession"])
+        sql2 = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},"red",1)'.format(args["result"]["id"], args["result"]["red"]["id"], args["result"]["red"]["score"], args["result"]["red"]["possession"])
+        cursor.execute(sql)
+        cursor.execute(sql2)
         conn.commit()
-        return jsonify({'about':'Les stats sont uploads'})
+        return jsonify({'about':'stats uploaded'})

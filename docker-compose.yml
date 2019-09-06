@@ -49,6 +49,9 @@ services:
       - 5000:5000
     networks:
       - statfive-network
+    environment:
+      - PYTHONUNBUFFERED=0
+    restart: always
 
   web:
     build: ./Dashboard
@@ -57,6 +60,21 @@ services:
       - ./Dashboard:/app
     ports:
       - 80:80
+    networks:
+      - statfive-network
     depends_on:
       - mariadb
       - api
+
+  test-tracker:
+    build: ./tracker
+    links:
+      - mariadb
+    depends_on:
+      - mariadb
+    ports:
+      - 3000:3000
+    networks:
+      - statfive-network
+    environment:
+      - PYTHONUNBUFFERED=0
