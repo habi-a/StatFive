@@ -91,6 +91,11 @@ class postVideo(Resource):
         lunch = test.lunch(id_match, path, id_blue, id_red)
 
 class postStat(Resource):
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('result', location= 'json')
+        args = parser.parse_args()
+        return args['result']
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         sql = 'INSERT INTO `team_has_match_played`(`match_id`, `team_id`, `goals`, `possesion`, `color`, `ended`) VALUES ({},{},{},{},blue,1)'.format(id_match, id_blue, lunch['result']['blue']['score'], lunch['result']['blue']['possession'])
