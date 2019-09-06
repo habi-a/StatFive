@@ -21,7 +21,7 @@ def panel(request):
     return render(request, 'panel/panel.html', {'data': 'Bonjour'})
 
 def upload(request):
-    response = ""
+    response = "TESt"
     url = "http://127.0.0.1:5000/video"
     if request.method == 'POST':
         if request.FILES['video'] and request.POST['teamA'] and request.POST['teamB']:
@@ -29,14 +29,12 @@ def upload(request):
             teamA =  request.POST['teamA']
             teamB =  request.POST['teamB']
             data = {'video': video,'teamA':teamA, 'teamB': teamB}
-            headers = {'Content-type': 'application/x-www-form-urlencoded'}
-            print()
-            print(video)
             print(data)
-            print()
-            requests.post(url,files=video, data= data, headers=headers)
+            requests.post(url, files=video, data=data).prepare().body.decode('ascii')
             response = "Le fichier a été upload"
             return render(request, 'panel/upload.html', {'data': response})
         else:
-            response = "Rien de posté"   
-    return render(request, 'panel/upload.html', {'data': response})
+            response = "Rien de posté"
+            return render(request, 'panel/upload.html', {'data': response})  
+    else:
+        return render(request, 'panel/upload.html', {'data': response})

@@ -130,9 +130,9 @@
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
-                {%if response%}
-                <p>{{response}}</p>
-            {% endif %}
+                {% for d in data %}
+                <h1 class="bg-success">{{d.response}}</h1>
+                {% endfor%}
                   </div>
             </div>
                   </div>
