@@ -72,7 +72,7 @@ class traitement():
         path = rows[0]['path']
         return path
     
-    def lunch(self, match_id, filepath):
+    def lunch(self, match_id, filepath, id_blue, id_red):
         myCmd = os.popen('python /tensorflow/models/research/object_detection/tracker/tracker.py'+' '+ str(match_id) + ' ' + str(id_red) +' '+ str(id_blue) + ' ' +filepath).read()
         return myCmd
 
