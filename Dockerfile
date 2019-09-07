@@ -55,7 +55,7 @@ WORKDIR /tensorflow/models/research/object_detection/tracker
 
 # Run API
 WORKDIR /app
-COPY ./API /app
 RUN mkdir video
+COPY ./API /app
 ENTRYPOINT [ "python3" ]
 CMD [ "api.py" ]
