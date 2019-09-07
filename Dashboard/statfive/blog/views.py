@@ -26,3 +26,15 @@ def matchById(request, id):
         return render(request, 'blog/detail.html', {
         'matchs' : matchs
         })
+
+def search(request):
+    if request.method == 'GET':
+        if request.GET['id']:
+                url = "http://127.0.0.1:5000/match/" + request.GET['id']
+                response = requests.get(url)
+                matchs = response.json()
+                return render(request, 'blog/detail.html', { 
+                'matchs' : matchs
+                })
+
+                
