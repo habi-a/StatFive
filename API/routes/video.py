@@ -104,8 +104,4 @@ class postStat(Resource):
         cursor.execute(sql)
         cursor.execute(sql2)
         conn.commit()
-<<<<<<< HEAD
         return jsonify({'about':'stats uploaded'})
-=======
-        return jsonify({'about':'Les stats sont uploads'})
->>>>>>> 5ebb87a94bb92b740fd0a7a6ef3fcd3cb992635c
