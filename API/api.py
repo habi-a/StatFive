@@ -61,4 +61,4 @@ api.add_resource(postStat, '/video/stat')
 api.add_resource(Home, '/')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=False, host='0.0.0.0')

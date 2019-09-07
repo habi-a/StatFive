@@ -9,6 +9,7 @@ from subprocess import check_output, CalledProcessError, STDOUT
 import time, json
 from datetime import date
 import os
+import subprocess
 
 class traitement():
     def checkExist(self, team):
@@ -28,13 +29,13 @@ class traitement():
 
     def getDuration(self, filename):
         command = [
-            'ffprobe', 
-            '-v', 
-            'error', 
-            '-show_entries', 
-            'format=duration', 
-            '-of', 
-            'default=noprint_wrappers=1:nokey=1', 
+            'ffprobe',
+            '-v',
+            'error',
+            '-show_entries',
+            'format=duration',
+            '-of',
+            'default=noprint_wrappers=1:nokey=1',
             filename
             ]
 
@@ -47,9 +48,9 @@ class traitement():
         except CalledProcessError as e:
             output = e.output.decode()
             return output
-    
+
     def insertMatch(self, video):
-        destpath="/mnt/c/Users/nour/Documents/ProjetLib/Git/StatFive/video"
+        destpath="/app/video"
         filename = "myMatch"+str(date.today())+".mp4"
         matchName = "Match"+ str(date.today())
         video.save(os.path.join(app.instance_path, destpath,filename))
@@ -62,7 +63,7 @@ class traitement():
         conn.commit()
         match_id = cursor.lastrowid
         return match_id
-    
+
     def getFilepath(self, id):
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
@@ -71,10 +72,11 @@ class traitement():
         rows = cursor.fetchall()
         path = rows[0]['path']
         return path
-    
+
     def lunch(self, match_id, filepath, id_blue, id_red):
-        os.system('python /tensorflow/models/research/object_detection/tracker/tracker.py'+' '+ str(match_id) + ' ' + str(id_red) +' '+ str(id_blue) + ' ' +filepath)
-        return True
+        result = subprocess.run(["python","/tensorflow/models/research/object_detection/tracker/tracker.py",str(match_id),str(id_red),str(id_blue),filepath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        return result
+
 
 class postVideo(Resource):
     def post(self):
@@ -93,7 +95,7 @@ class postVideo(Resource):
 class postStat(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('result', type=dict, location= 'json')
+        parser.add_argument('result', type=dict, location='json')
         args = parser.parse_args()
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
@@ -102,4 +104,4 @@ class postStat(Resource):
         cursor.execute(sql)
         cursor.execute(sql2)
         conn.commit()
-        return jsonify({'about':'Les stats sont uploads'})
+        return jsonify({'about':'stats uploaded'})

@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 import requests, json
 from forms.forms import UploadForm
-from django.core.files.storage import FileSystemStorage 
+from django.core.files.storage import FileSystemStorage
 
 # Create your views here.
 def test(request):
@@ -21,8 +21,8 @@ def panel(request):
     return render(request, 'panel/panel.html', {'data': 'Bonjour'})
 
 def upload(request):
-    response = "TESt"
-    url = "http://127.0.0.1:5000/video"
+    response = ""
+    url = "http://163.5.245.188:5000/video"
     if request.method == 'POST':
         if request.FILES['video'] and request.POST['teamA'] and request.POST['teamB']:
             video1 = request.FILES['video']
@@ -35,6 +35,6 @@ def upload(request):
             return render(request, 'panel/upload.html', {'data': response})
         else:
             response = "Rien de posté"
-            return render(request, 'panel/upload.html', {'data': response})  
+            return render(request, 'panel/upload.html', {'data': response})
     else:
         return render(request, 'panel/upload.html', {'data': response})
