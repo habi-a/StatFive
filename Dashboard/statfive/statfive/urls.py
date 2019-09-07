@@ -23,6 +23,7 @@ urlpatterns = [
     path('team', views.team),
     path('matchs', views.match),
     path('detail/<int:id>', views.matchById),
+    path('blog/search?id=<int:id>', views.search),
     path('panel/login', panel.login),
     path('panel/home', panel.panel),
     path('panel/upload', panel.upload)
