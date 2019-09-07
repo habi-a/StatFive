@@ -4,6 +4,10 @@ from django.shortcuts import render, redirect
 import requests, json
 
 # Create your views here.
+def home(request):
+    return render(request, 'blog/home.html', {
+        'data':'lol'
+        })
 
 def team(request):
     response = requests.get('http://127.0.0.1:5000/teams/average')
