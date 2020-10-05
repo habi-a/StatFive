@@ -31,7 +31,7 @@ services:
     depends_on:
       - mariadb
     ports:
-      - 8080:80
+      - 80
     environment:
       PMA_HOST: mariadb
       MYSQL_ROOT_PASSWORD: root 
@@ -46,7 +46,7 @@ services:
     depends_on:
       - mariadb
     ports:
-      - 5000:5000
+      - 5000
     networks:
       - statfive-network
     environment:
@@ -69,7 +69,9 @@ services:
   nginx:
     image: nginx
     volumes:
-      - ./nginx/sites-enabled:/etc/nginx/sites-enabled
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl_statfive.conf:/etc/nginx/ssl_statfive.conf
+      - /etc/letsencrypt:/etc/letsencrypt
     ports:
       - 80:80
       - 443:443
