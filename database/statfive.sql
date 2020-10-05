@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Hôte : 127.0.0.1
--- Généré le :  mer. 04 sep. 2019 à 15:44
--- Version du serveur :  10.1.40-MariaDB
--- Version de PHP :  7.3.5
+-- Hôte : mariadb
+-- Généré le : lun. 05 oct. 2020 à 13:48
+-- Version du serveur :  10.5.5-MariaDB-1:10.5.5+maria~focal
+-- Version de PHP : 7.4.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -19,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données :  `statfive`
+-- Base de données : `statfive`
 --
 
 -- --------------------------------------------------------
@@ -41,9 +40,6 @@ CREATE TABLE `match_played` (
 --
 
 INSERT INTO `match_played` (`id`, `name`, `duration`, `ground`, `path`) VALUES
-(1, '', '00:00:00', 1, ''),
-(2, '', '12:00:00', 2, 'chemin'),
-(3, '', '14:25', 0, '/mnt/c/Users/nour/Documents/ProjetLib/Git/StatFive/video/myMatch.mp4'),
 (4, 'Match2019-07-24', '10:41', 0, '/mnt/c/Users/nour/Documents/ProjetLib/Git/StatFive/video/myMatch2019-07-24.mp4'),
 (5, 'Deuxieme Match', '30', 0, 'aucun'),
 (6, 'TRoisieme match', '40', 0, 'aucun'),
@@ -140,6 +136,7 @@ INSERT INTO `team_stats` (`id`, `team_id`, `but`, `passe`, `km`, `possesion`) VA
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
+  `role` tinyint(1) NOT NULL,
   `mail` varchar(255) DEFAULT NULL,
   `name` varchar(45) DEFAULT NULL,
   `firstname` varchar(45) DEFAULT NULL,
