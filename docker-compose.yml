@@ -55,26 +55,29 @@ services:
 
   web:
     build: ./Dashboard
-    command: python manage.py runserver 0.0.0.0:80
+    command: npm run dev
     volumes:
       - ./Dashboard:/app
     ports:
-      - 80:80
+      - 8081:8081
     networks:
       - statfive-network
     depends_on:
       - mariadb
       - api
 
-  test-tracker:
-    build: ./tracker
-    links:
-      - mariadb
-    depends_on:
-      - mariadb
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx/sites-enabled:/etc/nginx/sites-enabled
     ports:
-      - 3000:3000
+      - 80:80
+      - 443:443
     networks:
       - statfive-network
-    environment:
-      - PYTHONUNBUFFERED=0
+    links:
+      - web
+      - api
+    depends_on:
+      - web
+      - api

@@ -1,9 +1,8 @@
-FROM python:3
+FROM debian:buster
 
-ENV PYTHONUNBUFFERED 1
-RUN mkdir /app
-RUN pip install Django==2.2.4
-RUN pip install requests
-COPY ./ /app/
-WORKDIR /app/statfive
-RUN python manage.py migrate
+RUN apt-get update -y && apt-get install -y wget gcc g++ make
+RUN wget -qO- https://deb.nodesource.com/setup_14.x | bash -
+RUN apt install -y nodejs
+COPY ./ /app
+WORKDIR /app
+RUN npm install
