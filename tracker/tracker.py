@@ -36,8 +36,8 @@ send_data = sys.argv[5]
 print "[TRACKER] Starting tracker..."
 
 # HTTP Request info (To submit chronos)
-SERVER_URL = 'http://localhost:5000'
-API_ENDPOINT = '/video/stat'
+SERVER_URL = 'https://api.statfive.fr/'
+API_ENDPOINT = 'video/stat'
 data = {
   "result": {
     "id": int(match_id),
@@ -155,7 +155,6 @@ def get_pourcent_array_occurence(array, element):
   return array.count(element) / len(array) * 100
 
 
-# [Debug] to view Color Mask
 #filename = './five-a-side.jpg'
 #image = cv2.imread(filename)
 #resize = cv2.resize(image, (640,360))
