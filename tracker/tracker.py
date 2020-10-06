@@ -110,14 +110,8 @@ def detect_team(image, show = False):
       return 'red'
     elif ratio > 0.01 and i == 1:
       return 'blue'
-
     i += 1
 
-    ## for debugging
-#    if show == True:
-#      cv2.imshow("images", np.hstack([image, output]))
-#      if cv2.waitKey(0) & 0xFF == ord('q'):
-#        cv2.destroyAllWindows()
   return 'not_sure'
 
 
