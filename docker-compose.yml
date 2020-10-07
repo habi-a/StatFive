@@ -58,8 +58,9 @@ services:
     command: npm run dev
     volumes:
       - ./Dashboard:/app
+      - /app/node_modules
     ports:
-      - 8081:8081
+      - 8080
     networks:
       - statfive-network
     depends_on:
