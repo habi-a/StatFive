@@ -1,13 +1,18 @@
 import pymysql
+
 from app import app
 from db_config import mysql
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api, reqparse, inputs
+from flask_cors import CORS
 from flaskext.mysql import MySQL
+
 import sys
 import werkzeug, os
+
 from subprocess import check_output, CalledProcessError, STDOUT
 import time
+
 from datetime import date
 
 sys.path.insert(0, './routes')
@@ -16,6 +21,8 @@ from user import *
 from stats import *
 from video import *
 from match import *
+
+CORS(app)
 
 api = Api(app)
 

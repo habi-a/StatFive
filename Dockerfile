@@ -17,7 +17,7 @@ RUN pip3 install --upgrade pip
 RUN apt-get install -y python-opencv
 
 # Flask
-RUN pip3 install flask flask-restful
+RUN pip3 install flask flask-restful flask-cors
 
 # Dependencies API
 RUN pip3 install pymysql
