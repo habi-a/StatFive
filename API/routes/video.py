@@ -90,7 +90,7 @@ class postVideo(Resource):
         id_blue = test.checkExist(args['teamA'])
         id_red = test.checkExist(args['teamB'])
         path = test.getFilepath(id_match)
-        #lunch = test.lunch(id_match, path, id_blue, id_red)
+        lunch = test.lunch(id_match, path, id_blue, id_red)
         return jsonify({'about':'video uploaded'})
 
 class postStat(Resource):
