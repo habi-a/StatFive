@@ -32,13 +32,13 @@ class averageTeam(Resource):
 class createTeam(Resource):
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('red', type=dict, location='json')
-        parser.add_argument('blue', type=dict, location='json')
+        parser.add_argument('red', type=str, required=True)
+        parser.add_argument('blue', type=str, required=True)
         args = parser.parse_args()
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        sqlRed = 'INSERT INTO `team`(`name`) VALUES({})'.format(args['red']['name'])
-        sqlBlue = 'INSERT INTO `team`(`name`) VALUES({})'.format(args['blue']['name'])
+        sqlRed = 'INSERT INTO team (name) VALUES("{}")'.format(args['red'])
+        sqlBlue = 'INSERT INTO team (name) VALUES("{}")'.format(args['blue'])
         cursor.execute(sqlRed)
         cursor.execute(sqlBlue)
         conn.commit()

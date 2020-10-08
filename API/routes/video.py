@@ -7,7 +7,7 @@ from flask_restful import Resource, Api, reqparse, inputs
 import werkzeug, os
 from subprocess import check_output, CalledProcessError, STDOUT
 import time, json
-from datetime import date
+from datetime import datetime
 import os
 import subprocess
 
@@ -51,8 +51,8 @@ class traitement():
 
     def insertMatch(self, video):
         destpath="/app/video"
-        filename = "myMatch"+str(date.today())+".mp4"
-        matchName = "Match"+ str(date.today())
+        filename = "myMatch"+str(datetime.today())+".mp4"
+        matchName = "Match"+ str(datetime.today())
         video.save(os.path.join(app.instance_path, destpath,filename))
         filepath = destpath+"/"+filename
         #duration = self.getDuration(filepath)
@@ -90,7 +90,8 @@ class postVideo(Resource):
         id_blue = test.checkExist(args['teamA'])
         id_red = test.checkExist(args['teamB'])
         path = test.getFilepath(id_match)
-        lunch = test.lunch(id_match, path, id_blue, id_red)
+        #lunch = test.lunch(id_match, path, id_blue, id_red)
+        return jsonify({'about':'video uploaded'})
 
 class postStat(Resource):
     def post(self):
