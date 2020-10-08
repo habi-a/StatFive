@@ -76,6 +76,11 @@
                   </v-btn>
               </div>
               </template>
+                <v-form
+                ref="form"
+                v-model="valid"
+                lazy-validation
+                >
               <v-card>
                 <v-card-title>
                   <span class="headline">Connexion</span>
@@ -84,21 +89,23 @@
                   <v-container>
                     <v-row>
                       <v-col cols="12">
-                        <v-text-field
-                        color="indigo"
-                        label="Email*"
-                        required
-                        v-model="email"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                        color="indigo"
-                        label="Mot de passe*"
-                        required
-                        v-model="password"
-                        type="password"
-                        ></v-text-field>
+                          <v-text-field
+                          color="indigo"
+                          label="Email*"
+                          required
+                          :rules="emailRules"
+                          v-model="email"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12">
+                          <v-text-field
+                          color="indigo"
+                          label="Mot de passe*"
+                          required
+                          :rules="passwordRules"
+                          v-model="password"
+                          type="password"
+                          ></v-text-field>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -114,10 +121,12 @@
                   <v-btn
                   color="indigo"
                   text
+                  :disabled="!valid"
                   @click="auth()"
                   >Connexion</v-btn>
                 </v-card-actions>
               </v-card>
+              </v-form>
               <v-snackbar
                 v-model="snackbar"
                 :multi-line="multiLine"
@@ -156,6 +165,11 @@
                   </v-btn>
               </div>
               </template>
+                <v-form
+                ref="form"
+                v-model="valid"
+                lazy-validation
+                >
               <v-card>
                 <v-card-title>
                   <span class="headline">Inscription</span>
@@ -168,6 +182,7 @@
                         label="Email*"
                         color="indigo"
                         required
+                        :rules="emailRules"
                         v-model="email"
                         ></v-text-field>
                       </v-col>
@@ -176,6 +191,7 @@
                         color="indigo"
                         label="Nom*"
                         required
+                        :rules="nameRules"
                         v-model="lastname"
                         ></v-text-field>
                       </v-col>
@@ -184,6 +200,7 @@
                         color="indigo"
                         label="Prénom*"
                         required
+                        :rules="nameRules"
                         v-model="firstname"
                         ></v-text-field>
                       </v-col>
@@ -192,6 +209,7 @@
                         color="indigo"
                         label="Mot de passe*"
                         required
+                        :rules="passwordRules"
                         v-model="password"
                         type="password"
                         ></v-text-field>
@@ -201,6 +219,7 @@
                           label="Confirmation mot de passe*"
                           color="indigo"
                           type="password"
+                          :rules="passwordRules"
                           required
                           v-model="passwordConfirmation"
                         ></v-text-field>
@@ -219,10 +238,12 @@
                   <v-btn
                   color="indigo"
                   text
+                  :disabled="!valid"
                   @click="signin()"
                   >Inscription</v-btn>
                 </v-card-actions>
               </v-card>
+              </v-form>
               <v-snackbar
                 v-model="snackbar"
                 :multi-line="multiLine"
@@ -285,6 +306,7 @@
     },
 
     data: () => ({
+      valid: true,
       multiLine: true,
       snackbar: false,
       text: '',
@@ -292,7 +314,16 @@
       register: false,
       username: '',
       email: '',
+      emailRules: [
+        v => !!v || 'Veuillez renseigner une adresse mail svp.',
+      ],
       password: '',
+      passwordRules: [
+        v => !!v || 'Veuillez entrer un mot de passe svp.',
+      ],
+      nameRules: [
+        v => !!v || 'Veuillez entrer votre nom/prénom svp.',
+      ],
       passwordConfirmation: '',
       firstname: '',
       lastname: '',

@@ -4,25 +4,7 @@
     fluid
     tag="section"
   >
-    <v-row>
-      <v-snackbar
-      v-model="snackbar"
-      :multi-line="multiLine"
-      top="top"
-    >
-      {{ text }}
-
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          color="indigo"
-          text
-          v-bind="attrs"
-          @click="snackbar = false"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
+    <v-row v-if="admin">
     <v-card
     class="mx-auto"
     outlined
@@ -41,9 +23,16 @@
       lazy-validation
     >
       <v-text-field
-        v-model="name"
+        v-model="nameA"
         color="indigo"
-        label="Donnez un titre à votre vidéo"
+        label="Team A"
+        :rules="nameRules"
+        required
+      ></v-text-field>
+      <v-text-field
+        v-model="nameB"
+        color="indigo"
+        label="Team B"
         :rules="nameRules"
         required
       ></v-text-field>
@@ -93,13 +82,99 @@
         >Poster
         </v-btn>
     </v-card-actions>
+    <v-snackbar
+      v-model="snackbar"
+      :multi-line="multiLine"
+      top="top"
+    >
+      {{ text }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="indigo"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </v-card>
+      <v-card
+    class="mx-auto"
+    outlined
+    width="100%"
+  >
+    <v-list-item three-line>
+                <v-card-title>
+                  <span class="headline">Ajout d'un équipe</span>
+                </v-card-title>
+    </v-list-item>
+
+    <v-card-text>
+    <v-form
+      ref="form"
+      v-model="valid"
+      lazy-validation
+    >
+      <v-text-field
+        v-model="teamA"
+        color="indigo"
+        label="Team A"
+        :rules="nameRules"
+        required
+      ></v-text-field>
+      <v-text-field
+        v-model="teamB"
+        color="indigo"
+        label="Team B"
+        :rules="nameRules"
+        required
+      ></v-text-field>
+    </v-form>
+    </v-card-text>
+
+    <v-card-actions>
+        <v-btn
+        :disabled="!valid"
+        color="indigo"
+        @click="addTeam()"
+        text
+        >Ajouter
+        </v-btn>
+    </v-card-actions>
+    <v-snackbar
+      v-model="snackbar"
+      :multi-line="multiLine"
+      top="top"
+    >
+      {{ text }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="indigo"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-card>
     </v-row>
+  <v-row v-else>
+    <v-alert type="error">
+      Vous n'avez pas les droits pour accéder à cette page.
+    </v-alert>
+  </v-row>
   </v-container>
 </template>
 
 <script>
   import axios from 'axios'
+  import { mapState } from 'vuex'
 
   export default {
     name: 'DashboardDashboard',
@@ -111,9 +186,12 @@
         videoRules: [
           v => !!v || 'Veuillez choisir une video',
         ],
-        name: '',
+        nameA: '',
+        nameB: '',
+        teamA: '',
+        teamB: '',
         nameRules: [
-          v => !!v || 'Titre obligatoire',
+          v => !!v || 'Nom d\'équipe obligatoire',
         ],
         select: null,
         form: {},
@@ -121,6 +199,10 @@
         snackbar: false,
         text: 'La video à bien été postée !',
       }
+    },
+
+    computed: {
+      ...mapState(['connected', 'admin']),
     },
 
     created () {
@@ -131,16 +213,31 @@
         if (this.files) {
           const formData = new FormData()
           for (const file of this.files) {
-            formData.append('source', file, file.name)
+            formData.append('video', file, file.name)
           }
-          formData.append('name', this.name)
-          formData.append('user_id', this.user[1].id)
+          formData.append('teamA', this.nameA)
+          formData.append('teamB', this.nameB)
           this.form = formData
         }
         console.log(this.files[0])
-        return axios.post('http://localhost:5000/video', this.form)
+        return axios.post('https://api.statfive.fr/video', this.form)
           .then((res) => {
             console.log(res)
+            this.$router.push({ name: 'Dashboard', query: { redirect: '/' } })
+          })
+          .catch((e) => {
+            console.log(e)
+          })
+      },
+      addTeam () {
+        return axios.post('https://api.statfive.fr/team', {
+          red: this.teamA,
+          blue: this.teamB,
+        },
+        )
+          .then((res) => {
+            console.log(res)
+            this.$router.push({ name: 'Dashboard', query: { redirect: '/' } })
           })
           .catch((e) => {
             console.log(e)

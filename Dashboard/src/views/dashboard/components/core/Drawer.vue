@@ -5,7 +5,7 @@
     :dark="barColor !== 'rgba(228, 226, 226, 1), rgba(255, 255, 255, 0.7)'"
     :expand-on-hover="expandOnHover"
     :right="$vuetify.rtl"
-    :src="require('/home/av/Bureau/statFive/src/assets/soccer.jpg')"
+    :src="require('@/assets/soccer.jpg')"
     mobile-break-point="960"
     app
     width="260"
@@ -137,6 +137,23 @@
           title: this.$t('avatar'),
         }
       },
+    },
+
+    created () {
+      if (this.connected) {
+        this.items.push({
+          icon: 'mdi-account',
+          title: 'user',
+          to: '/pages/user',
+        })
+      }
+      if (this.admin) {
+        this.items.push({
+          title: 'admin',
+          icon: 'mdi-clipboard-outline',
+          to: '/pages/admin',
+        })
+      }
     },
 
     watch: {
