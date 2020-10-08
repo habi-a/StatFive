@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import styles from './style'
 import annexe from '../../annexe'
 
-import {Keyboard, 
-    Text, 
-    View, 
-    TouchableWithoutFeedback, 
+import {Keyboard,
+    Text,
+    View,
+    TouchableWithoutFeedback,
     KeyboardAvoidingView,
     RefreshControl,
     ScrollView,
@@ -16,7 +16,7 @@ export default class StatGameScreen extends Component {
     static navigationOptions = {
         header:null,
       };
-  
+
       constructor(props){
             super(props)
             this.state={
@@ -68,7 +68,7 @@ export default class StatGameScreen extends Component {
                             </View>
                             <Text style={styles.titre}> Tirs cadrés </Text>
                             <View style={{flexDirection: 'row', justifyContent:'space-around', height: 50}}>
-                                <Text style={styles.EquipeLeft}>2</Text>
+                                <Text style={styles.EquipeLeft}>4</Text>
                                 <Text style={styles.EquipeRight}>7</Text>
                             </View>
                             <Text style={styles.titre}> Passes </Text>

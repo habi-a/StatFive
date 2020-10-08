@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import styles from "./style";
-import {Keyboard, 
+import {Keyboard,
         Text,
-        Alert, 
-        View, 
-        TextInput, 
-        TouchableWithoutFeedback, 
+        Alert,
+        View,
+        TextInput,
+        TouchableWithoutFeedback,
         KeyboardAvoidingView,
         ImageBackground} from 'react-native';
 import { Button } from 'react-native-elements';
@@ -30,24 +30,23 @@ export default class RegisterScreen extends Component {
         }
     }
 
-    onRegister() {
-        let body = new FormData();
-        body.append("email", this.state.email)
-        body.append("firstname", this.state.firstname)
-        body.append("lastname", this.state.lastname)
-        body.append("password", this.state.password)
-        body.append("c_password", this.state.c_password)
+    onRegisterPress = async () => {
+        let body_register = new FormData();
+        body_register.append("email", this.state.email)
+        body_register.append("firstname", this.state.firstname)
+        body_register.append("lastname", this.state.lastname)
+        body_register.append("password", this.state.password)
+        body_register.append("c_password", this.state.c_password)
         const register = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-            body: body,
+            method: "POST",
+            'Accept': 'application/json',
+            'Content-Type': 'multipart/form-data',
+            body:body_register,
         };
         if (annexe.checkInput1(this.state) == false) {
             Alert.alert(
-                'Erreur',
-                'Remplir tout les champs',
+              'Champs manquants',
+              'Veuillez remplir tout les champs',
             );
         }
         else {
@@ -63,48 +62,48 @@ export default class RegisterScreen extends Component {
                     if (res.error) {
                         Alert.alert(
                             'Erreur!',
-                            'ERREUR',
+                            'Une erreur est survenue',
                         );
                         console.log(res)
                     } else {
                         Alert.alert(
-                            'Félicitation!',
+                            'Félicitation !',
                             'Vous avez créer un compte.',
                         );
-                        console.log(res.Firstame)
                         this.props.navigation.navigate('Accueil')
                     }
                 }
             }).catch((error) => console.error("Erreur Register: " ,error));
-        }
-    }
+        };
+    };
 
   render() {
     return (
-    <ImageBackground source={require('../../assets/background-home.png')} style={{width: '100%', height: '100%'}}>
-        <KeyboardAvoidingView style={styles.containerView} behavior="padding">
+    <ImageBackground source={require('../../assets/home.png')} style={{width: '100%', height: '100%'}}>
+        <TouchableWithoutFeedback style={styles.containerView} onPress={Keyboard.dismiss}>
             <ScrollView>
-                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <View style={styles.registerScreenContainer}>
-                        <View style={styles.registerFormView}>
-                            <Text style={styles.logoText}>StatFive</Text>
-                            <TextInput placeholder="Prénom" placeholderTextColor="#3897f1" style={styles.registerFormTextInput} onChange={(e) => this.setState({firstname: e.nativeEvent.text})} />
-                            <TextInput placeholder="Nom" placeholderTextColor="#3897f1" style={styles.registerFormTextInput} onChange={(e) => this.setState({lastname: e.nativeEvent.text})} />
-                            <TextInput placeholder="E-mail" placeholderTextColor="#3897f1" style={styles.registerFormTextInput} onChange={(e) => this.setState({email: e.nativeEvent.text})} />
-                            <TextInput placeholder="Mot de Passe" placeholderTextColor="#3897f1" style={styles.registerFormTextInput} secureTextEntry={true} onChange={(e) => this.setState({password: e.nativeEvent.text})} />
-                            <TextInput placeholder="Confirmation Mmot de Passe" placeholderTextColor="#3897f1" style={styles.registerFormTextInput} secureTextEntry={true} onChange={(e) => this.setState({c_password: e.nativeEvent.text})} />
-                            <Button
-                            buttonStyle={styles.RegisterButton}
-                            onPress={() => this.onRegister()} title="Créer votre compte"
-                            />
-                            <View style={styles.MainContainer}>
-                                <Text style={styles.TextStyle} onPress={ ()=> this.props.navigation.goBack() }>J'ai un compte</Text>
-                            </View>
+            <KeyboardAvoidingView behavior="padding">
+                <View style={styles.registerScreenContainer}>
+                    <View style={styles.registerFormView}>
+                        <Text style={styles.logoText}>StatFive</Text>
+                        <TextInput placeholder="Prénom" placeholderTextColor="#196F3D" style={styles.registerFormTextInput} onChange={(e) => this.setState({firstname: e.nativeEvent.text})} />
+                        <TextInput placeholder="Nom" placeholderTextColor="#196F3D" style={styles.registerFormTextInput} onChange={(e) => this.setState({lastname: e.nativeEvent.text})} />
+                        <TextInput placeholder="E-mail" placeholderTextColor="#196F3D" style={styles.registerFormTextInput} onChange={(e) => this.setState({email: e.nativeEvent.text})} />
+                        <TextInput placeholder="Mot de Passe" placeholderTextColor="#196F3D" style={styles.registerFormTextInput} secureTextEntry={true} onChange={(e) => this.setState({password: e.nativeEvent.text})} />
+                        <TextInput placeholder="Confirmation Mot de Passe" placeholderTextColor="#196F3D" style={styles.registerFormTextInput} secureTextEntry={true} onChange={(e) => this.setState({c_password: e.nativeEvent.text})} />
+                        <Button
+                        buttonStyle={styles.registerButton}
+                        onPress={() => this.onRegisterPress()}
+                        title="Créer votre compte"
+                        />
+                        <View style={styles.MainContainer}>
+                            <Text style={styles.TextStyle} onPress={ ()=> this.props.navigation.goBack() }>J'ai un compte</Text>
                         </View>
                     </View>
-                </TouchableWithoutFeedback>
+                </View>
+            </KeyboardAvoidingView>
             </ScrollView>
-        </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
     </ImageBackground>
     )
   }

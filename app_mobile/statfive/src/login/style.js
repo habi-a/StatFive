@@ -6,17 +6,23 @@ export default {
 
     containerView: {
         flex: 1,
+        height: '100%',
+        justifyContent: 'space-around',
+        left: 0,
+        position: 'absolute',
+        top: 0,
+        width: '100%'
     },
     loginScreenContainer: {
         flex: 1,
     },
     logoText: {
         fontSize: 50,
-        fontWeight: "800",
+        fontWeight: 'bold',
         marginTop: 50,
         marginBottom: 160,
         textAlign: 'center',
-        color: '#3897f1',  
+        color: '#196F3D',
     },
     loginFormView: {
         flex: 1
@@ -38,7 +44,7 @@ export default {
     },
     loginButton: {
         borderColor: '#000000',
-        backgroundColor: '#3897f1',
+        backgroundColor: '#196F3D',
         borderRadius: 15,
         borderWidth: 1.2,
         height: 45,

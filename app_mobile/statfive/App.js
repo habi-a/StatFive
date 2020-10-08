@@ -21,7 +21,7 @@ const RootStack = createStackNavigator({
   Register: { screen: RegisterScreen},
   Accueil : { screen: AccueilScreen},
   StatGame : { screen: StatGameScreen},
-  
+
 },{
   initialRouteName: 'Login',
   headerMode: 'none',

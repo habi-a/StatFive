@@ -4,10 +4,10 @@ import annexe from '../../annexe'
 import {List,
         ListItem} from 'native-base';
 
-import {Keyboard, 
-        Text, 
-        View, 
-        TouchableWithoutFeedback, 
+import {Keyboard,
+        Text,
+        View,
+        TouchableWithoutFeedback,
         KeyboardAvoidingView,
         RefreshControl,
         TouchableOpacity,
@@ -93,7 +93,7 @@ export default class AccueilScreen extends Component {
             {cancelable: false},
           );
     }
-    
+
     clearAsyncStorage = async() => {
         AsyncStorage.clear();
         this.props.navigation.navigate("Login");
@@ -105,7 +105,7 @@ export default class AccueilScreen extends Component {
 
   render() {
     return (
-    <ImageBackground source={require('../../assets/gazon.jpg')} style={{width: '100%', height: '100%', opacity: 0.95}}>
+    <ImageBackground source={require('../../assets/home.png')} style={{width: '100%', height: '100%', opacity: 0.95}}>
         <KeyboardAvoidingView style={styles.containerView} behavior="padding">
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={styles.HeaderGenerique}>

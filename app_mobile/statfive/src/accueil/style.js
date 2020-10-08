@@ -28,7 +28,7 @@ export default {
     body:{
         marginTop:40,
     },
-    bodyContent: { 
+    bodyContent: {
         flex: 1,
         alignItems: 'center',
         padding:30,
@@ -45,12 +45,13 @@ export default {
     },
     FirstLetter: {
         fontSize: 25,
-        color: '#3897f1',
+        color: '#196F3D',
         fontWeight: 'bold',
         alignItems: 'center'
     },
     listItems: {
         fontSize: 18,
+        color:'white',
         fontWeight: 'bold',
     },
 }

@@ -26,6 +26,6 @@ export default {
             return false
     },
 
-    ip: 'http://163.5.245.188:5000/',
+    ip: 'https://api.statfive.fr/',
 
 }
