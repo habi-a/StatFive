@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mariadb-volume
+  namespace: statfive
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  azureFile:
+    secretName: azure-secret
+    secretNamespace: statfive
+    shareName: statfive-mariadb-share
+    readOnly: false
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=999
+    - gid=999
+    - mfsymlinks
+    - nobrl

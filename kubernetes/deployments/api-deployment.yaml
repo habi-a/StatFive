@@ -20,11 +20,11 @@ spec:
         tier: backend
     spec:
       containers:
-        - image: api
+        - image: "acalhabi/statfive-api"
           name: api
           env:
             - name: PYTHONBUFFERED
-              value: 0
+              value: "0"
           ports:
             - containerPort: 5000
           volumeMounts:

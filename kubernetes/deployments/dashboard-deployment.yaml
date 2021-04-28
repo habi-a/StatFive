@@ -20,7 +20,7 @@ spec:
         tier: dashboard
     spec:
       containers:
-        - image: wordpress:5.7-apache
+        - image: acalhabi/statfive-web
           name: dashboard
           ports:
             - containerPort: 8080

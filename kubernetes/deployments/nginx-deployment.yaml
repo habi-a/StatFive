@@ -23,11 +23,17 @@ spec:
         - image: nginx
           name: nginx
           ports:
+            - containerPort: 80
             - containerPort: 443
           volumeMounts:
-            - mountPath: "/etc/letsencrypt"
+            - mountPath: "/etc/nginx/conf.d"
               name: nginx-storage
+            - mountPath: "/etc/letsencrypt"
+              name: letsencrypt-storage
       volumes:
         - name: nginx-storage
           persistentVolumeClaim:
             claimName: nginx-claim
+        - name: letsencrypt-storage
+          persistentVolumeClaim:
+            claimName: letsencrypt-claim

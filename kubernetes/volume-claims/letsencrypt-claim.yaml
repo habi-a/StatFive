@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: api-claim
+  name: letsencrypt-claim
   namespace: statfive
 spec:
-  storageClassName: manual
+  storageClassName: ""
   accessModes:
     - ReadWriteMany
   resources:
     requests:
-      storage: 10Gi
+      storage: 1Mi
