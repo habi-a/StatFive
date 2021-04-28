@@ -147,7 +147,7 @@ data:
     `mail` varchar(255) DEFAULT NULL,
     `name` varchar(45) DEFAULT NULL,
     `firstname` varchar(45) DEFAULT NULL,
-    `password` varchar(45) DEFAULT NULL,
+    `password` varchar(200) DEFAULT NULL,
     `image` varchar(45) DEFAULT NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
