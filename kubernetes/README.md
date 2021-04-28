@@ -1,6 +1,6 @@
 # Deploy to k8s with cloud providers
-## Cloud volumes (see https://docs.microsoft.com/fr-fr/azure/aks/azure-files-volume for Azure)
-### Create 4 file share
+## Cloud volumes (see https://docs.microsoft.com/fr-fr/azure/aks/azure-files-volume for AKS)
+### Create 4 files share (azurfiles in Azure)
 * statfive-nginx-share (conf.d files)
 * statfive-letsencrypt-share (certs files)
 * statfive-mariadb-share (db data)
