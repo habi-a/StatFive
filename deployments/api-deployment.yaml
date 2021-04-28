@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: statfive
+  name: api
+  namespace: statfive
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: statfive
+      tier: backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: statfive
+        tier: backend
+    spec:
+      containers:
+        - image: api
+          name: api
+          env:
+            - name: PYTHONBUFFERED
+              value: 0
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+            - mountPath: "/app/video"
+              name: api-storage
+      volumes:
+        - name: api-storage
+          persistentVolumeClaim:
+            claimName: api-claim

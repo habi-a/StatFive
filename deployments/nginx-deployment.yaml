@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: statfive
+  name: nginx
+  namespace: statfive
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: statfive
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: statfive
+        tier: frontend
+    spec:
+      containers:
+        - image: nginx
+          name: nginx
+          ports:
+            - containerPort: 443
+          volumeMounts:
+            - mountPath: "/etc/letsencrypt"
+              name: nginx-storage
+      volumes:
+        - name: nginx-storage
+          persistentVolumeClaim:
+            claimName: nginx-claim

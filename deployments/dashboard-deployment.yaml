@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: statfive
+  name: dashboard
+  namespace: statfive
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: statfive
+      tier: dashboard
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: statfive
+        tier: dashboard
+    spec:
+      containers:
+        - image: wordpress:5.7-apache
+          name: dashboard
+          ports:
+            - containerPort: 8080
+          args:
+            - npm
+            - run
+            - dev
+
