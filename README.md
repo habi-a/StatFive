@@ -14,5 +14,8 @@ see https://docs.microsoft.com/fr-fr/azure/aks/azure-files-volume for AKS
 ### Create Azure storage account secret
 $> kubectl create secret generic azure-secret --from-literal=azurestorageaccountname=$AKS_PERS_STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY
 
-### Kubernetes resources
+### Create Kubernetes resources
 $> kubectl apply -f <every .yaml files in kubernetes directories>
+
+### Expose to internet
+Get external ip of loadbalancer provided by your Cloud Provider and add entries to your domain DNS
