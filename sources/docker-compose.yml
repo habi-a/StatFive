@@ -71,7 +71,6 @@ services:
     image: nginx
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/ssl_statfive.conf:/etc/nginx/ssl_statfive.conf
       - /etc/letsencrypt:/etc/letsencrypt
     ports:
       - 80:80
