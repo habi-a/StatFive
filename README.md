@@ -12,7 +12,7 @@ see https://docs.microsoft.com/fr-fr/azure/aks/azure-files-volume for AKS
 * statfive-api-share (match videos)
 
 ### Create Azure storage account secret
-$> kubectl create secret generic azure-secret --from-literal=azurestorageaccountname=$AKS_PERS_STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY
+$> kubectl create secret generic azure-secret --namespace statfive --from-literal=azurestorageaccountname=$AKS_PERS_STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY
 
 ## Create Kubernetes resources
 $> kubectl apply -f <every .yaml files in kubernetes directories>
