@@ -1,3 +1,5 @@
-from flask import Flask
+from src.launcher import create_app
 
-app = Flask(__name__)
+if __name__ == '__main__':
+    app = create_app('docker')
+    app.run(host='0.0.0.0')

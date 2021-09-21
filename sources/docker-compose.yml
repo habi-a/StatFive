@@ -51,6 +51,11 @@ services:
       - statfive-network
     environment:
       - PYTHONUNBUFFERED=0
+      - MYSQL_DATABASE=statfive
+      - MYSQL_USER=statfive
+      - MYSQL_PASSWORD=statfive
+      - MYSQL_HOST=db
+      - PROD=docker
     restart: always
 
   web:

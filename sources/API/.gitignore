@@ -1,3 +1,5 @@
-venv/
+**/venv
+**/.idea
+**/log
 __pycache__/
-routes/__pycache__/
+migrations

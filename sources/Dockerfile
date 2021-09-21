@@ -9,19 +9,13 @@ RUN mkdir -p /tmp/cocoapi
 
 # Python
 RUN apt-get install -y python python3
-RUN apt-get install -y git python-pip python-dev python3-pip python3-dev
+RUN apt-get install -y build-essential libssl-dev libffi-dev default-libmysqlclient-dev zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libreadline-dev curl libbz2-dev
+RUN apt-get install -y git python-pip python-dev python3-pip python3-venv python3-dev
 RUN pip install --upgrade pip
 RUN pip3 install --upgrade pip
 
 # OpenCV
 RUN apt-get install -y python-opencv
-
-# Flask
-RUN pip3 install flask flask-restful flask-cors
-
-# Dependencies API
-RUN pip3 install pymysql
-RUN pip3 install flask-mysql
 
 # Tensorflow
 RUN python -m pip install tensorflow
@@ -56,6 +50,11 @@ WORKDIR /tensorflow/models/research/object_detection/tracker
 # Run API
 WORKDIR /app
 RUN mkdir video
-COPY ./API /app
-ENTRYPOINT [ "python3" ]
-CMD [ "api.py" ]
+COPY ./API ./
+
+RUN python3.7 -m venv venv
+RUN venv/bin/pip3 install wheel
+RUN venv/bin/pip3 install -r requirements.txt
+RUN chmod +x boot.sh
+
+CMD ["bash", "./boot.sh"]
