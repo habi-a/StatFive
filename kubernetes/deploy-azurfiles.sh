@@ -1,3 +1,5 @@
+#!/bin/bash
+
 AKS_PERS_STORAGE_ACCOUNT_NAME=mystorageaccount99991112
 AKS_PERS_RESOURCE_GROUP=statfive
 AKS_PERS_LOCATION=francecentral
