@@ -25,6 +25,20 @@ spec:
           env:
             - name: PYTHONBUFFERED
               value: "0"
+            - name: MYSQL_HOST
+              value: "mariadb"
+            - name: MYSQL_DATABASE
+              value: statfive
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: username
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: password
           ports:
             - containerPort: 5000
           volumeMounts:
