@@ -28,7 +28,7 @@ spec:
           volumeMounts:
             - mountPath: "/etc/nginx/conf.d"
               name: nginx-storage
-            - mountPath: "/etc/letsencrypt"
+            - mountPath: "/etc/letsencrypt/live/statfive.fr"
               name: letsencrypt-storage
       volumes:
         - name: nginx-storage
