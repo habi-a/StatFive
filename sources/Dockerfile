@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM debian:10
 
 RUN apt-get update -y | apt-get upgrade -y
 
@@ -52,7 +52,7 @@ WORKDIR /app
 RUN mkdir video
 COPY ./API ./
 
-RUN python3.7 -m venv venv
+RUN python3 -m venv venv
 RUN venv/bin/pip3 install wheel
 RUN venv/bin/pip3 install -r requirements.txt
 RUN chmod +x boot.sh
