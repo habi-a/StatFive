@@ -23,7 +23,7 @@ spec:
         - image: acalhabi/statfive-web
           name: dashboard
           ports:
-            - containerPort: 8080
+            - containerPort: 3000
           args:
             - npm
             - run

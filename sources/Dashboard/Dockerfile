@@ -6,5 +6,3 @@ RUN apt install -y nodejs
 COPY ./ /app
 WORKDIR /app
 RUN npm install
-RUN npm install -g @vue/cli
-RUN npm install --save vuex-persistedstate
