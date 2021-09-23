@@ -10,14 +10,14 @@ from ..helper import custom_response
 match_api = Blueprint('match', __name__)
 
 
-# @match_api.route('/all_match_by_date', methods=['GET'])
-# @swag_from(specs_match.all_match_by_date)
-# def all_match_by_date():
-#     team_in_db = TeamHasMatchPlayed.query.all()
-#     teams = []
-#     for team in team_in_db:
-#         teams.append(team.to_json())
-#     return custom_response({'error': False, 'message': 'Liste de team.', 'data': teams}, 200)
+@match_api.route('/all_match', methods=['GET'])
+@swag_from(specs_match.all_match)
+def all_match():
+    matchs_in_db = Match.query.all()
+    matchs = []
+    for match in matchs_in_db:
+        matchs.append(match.to_json())
+    return custom_response({'error': False, 'message': 'Listes des matchs.', 'data': matchs}, 200)
 
 
 @match_api.route('/stat_match_by_id/<int:id>', methods=['GET'])
