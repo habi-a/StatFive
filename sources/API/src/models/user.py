@@ -16,6 +16,8 @@ class User(db.Model):
     firstname = db.Column(db.String, nullable=False)
     mail = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
+    description = db.Column(db.String)
+    post = db.Column(db.String)
     image = db.Column(db.String)
     role = db.Column(db.String)
     code = db.Column(db.String)
@@ -38,7 +40,9 @@ class User(db.Model):
             'lastname': self.name,
             'firstname': self.firstname,
             'email': self.mail,
-            'verification': self.verification
+            'verification': self.verification,
+            'post': self.post,
+            'description': self.description
         }
 
     @staticmethod

@@ -86,6 +86,26 @@ def get_user_by_id(id):
     return custom_response({'error': False, 'message': 'Utilisateur by id.', 'data': user}, 200)
 
 
+@user_api.route('/<int:id>', methods=['PUT'])
+@swag_from(specs_users.update_user_by_id)
+def update_user(id):
+    req_data = request.get_json()
+
+    user_in_db = User.query.filter_by(id=id).first()
+    if not user_in_db:
+        message = {'error': True, 'message': 'L\' utilisateur existe pas.', 'data': None}
+        return custom_response(message, 404)
+
+    user_in_db.description = req_data['description']
+    user_in_db.post = req_data['post']
+
+    db.session.commit()
+
+    user = user_in_db.to_json()
+
+    return custom_response({'error': False, 'message': 'Update Utilisateur by id.', 'data': user}, 200)
+
+
 @user_api.route('/<string:name>', methods=['GET'])
 @swag_from(specs_users.user_by_name)
 def get_user_by_name(name):
