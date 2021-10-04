@@ -211,6 +211,10 @@ ALTER TABLE `users`
 ADD COLUMN `code` VARCHAR(45) NULL AFTER `image`,
 ADD COLUMN `verification` TINYINT(1) NULL AFTER `code`;
 
+ALTER TABLE `users` 
+ADD COLUMN post VARCHAR(45) NULL AFTER verification,
+ADD COLUMN description VARCHAR(200) NULL AFTER post;
+
 --
 -- Dumping data for table `users`
 --
@@ -298,7 +302,8 @@ UNLOCK TABLES;
 # --
 # -- Index pour la table `match_played`
 # --
-# ALTER TABLE `match_played`
+# 
+TABLE `match_played`
 #   ADD PRIMARY KEY (`id`);
 #
 # --
