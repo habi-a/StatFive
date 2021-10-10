@@ -58,14 +58,14 @@ services:
       - PROD=docker
     restart: always
 
-  web:
+  dashboard:
     build: ./Dashboard
     command: npm run dev
     volumes:
       - ./Dashboard:/app
       - /app/node_modules
     ports:
-      - 8080
+      - 3000:3000
     networks:
       - statfive-network
     depends_on:
