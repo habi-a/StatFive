@@ -38,6 +38,10 @@ class TeamHasMatchPlayed(db.Model):
     team: Team = db.relationship(Team, backref='team_match_played')
     match = db.relationship(Match, backref='team_match_played')
 
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
     def to_json(self):
         return {
             'match_id': self.match_id,

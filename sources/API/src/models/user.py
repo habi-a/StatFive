@@ -72,3 +72,7 @@ class UserHasTeam(db.Model):
 
     team = db.relationship('Team')
     user = db.relationship('User')
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()

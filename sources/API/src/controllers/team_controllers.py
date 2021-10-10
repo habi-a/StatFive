@@ -1,6 +1,7 @@
 from flask import request, json, Response, Blueprint
 from flasgger import swag_from
 
+from ..models.user import UserHasTeam
 from ..specs import specs_team
 from ..models.team import Team, TeamHasMatchPlayed
 from ..auth.authentication import Auth
@@ -45,9 +46,12 @@ def get_team_by_id(id):
         message = {'error': True, 'message': 'La team existe pas.', 'data': None}
         return custom_response(message, 404)
 
-    team = team_in_db.to_json()
+    li_m_user_has_match = UserHasTeam.query.filter_by(team_id=team_in_db.id).all()
+    data = {'team': team_in_db.to_json(), 'user': []}
+    for m_user_has_match in li_m_user_has_match:
+        data['user'].append(m_user_has_match.user.to_json())
 
-    return custom_response({'error': False, 'message': 'Team by id.', 'data': team}, 200)
+    return custom_response({'error': False, 'message': 'Team by id.', 'data': data}, 200)
 
 
 @team_api.route('/stat_team_by_id/<int:id>', methods=['GET'])
@@ -82,9 +86,11 @@ def get_team_by_name(name):
 def create_team():
     req_data = request.get_json()
 
-    team_red = Team(name=req_data['red'])
-    team_blue = Team(name=req_data['blue'])
+    for team in req_data:
+        m_team = Team(name=team['name'])
+        m_team.save()
+        for p in team['player']:
+            m_user_has_match = UserHasTeam(team_id=m_team.id, user_id=p)
+            m_user_has_match.save()
 
-    team_red.save()
-    team_blue.save()
     return custom_response({'error': False, 'message': 'Team bien enregistré.', 'data': None}, 201)
