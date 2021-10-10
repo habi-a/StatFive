@@ -2,6 +2,8 @@ import os
 import random
 import string
 import subprocess
+import time
+import threading
 
 from flask import request, json, Response, Blueprint
 from flasgger import swag_from
@@ -16,16 +18,15 @@ from subprocess import check_output, CalledProcessError, STDOUT
 match_api = Blueprint('match', __name__)
 
 
-def generate_random_number(number_of_digits: int) -> str:
-    return ''.join([random.choice(string.digits) for _ in range(number_of_digits)])
-
-
 def lunch(match_id, filepath, id_blue, id_red):
     result = subprocess.run(
         ["python", "/tensorflow/models/research/object_detection/tracker/tracker.py", str(match_id), str(id_red),
          str(id_blue), filepath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    print(result)
     return result
+
+
+def generate_random_number(number_of_digits: int) -> str:
+    return ''.join([random.choice(string.digits) for _ in range(number_of_digits)])
 
 
 @match_api.route('', methods=['POST'])
@@ -59,7 +60,8 @@ def post_match():
                                                  ended=1)
     m_team_has_match_played.save()
 
-    lunch(m_match.id, path_file + name_file, req_data['team_one'], req_data['team_two'])
+    t = threading.Thread(target=lunch, args=(m_match.id, path_file + name_file, req_data['team_one'], req_data['team_two'],))
+    t.start()
 
     return custom_response({'error': False, 'message': 'Sauvegarde du match.', 'data': None}, 200)
 
