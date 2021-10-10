@@ -36,8 +36,8 @@ send_data = sys.argv[5]
 print "[TRACKER] Starting tracker..."
 
 # HTTP Request info (To submit chronos)
-SERVER_URL = 'https://api.statfive.fr/'
-API_ENDPOINT = 'video/stat'
+SERVER_URL = 'https://api.statfive.fr/api/'
+API_ENDPOINT = 'match/result'
 data = {
   "result": {
     "id": int(match_id),
