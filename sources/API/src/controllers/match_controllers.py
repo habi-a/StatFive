@@ -13,6 +13,8 @@ from ..models.match import Match
 from ..models.team import TeamHasMatchPlayed
 from ..auth.authentication import Auth
 from ..helper import custom_response
+from ..models import db
+
 from subprocess import check_output, CalledProcessError, STDOUT
 
 match_api = Blueprint('match', __name__)
@@ -60,10 +62,29 @@ def post_match():
                                                  ended=1)
     m_team_has_match_played.save()
 
-    t = threading.Thread(target=lunch, args=(m_match.id, path_file + name_file, req_data['team_one'], req_data['team_two'],))
+    t = threading.Thread(target=lunch,
+                         args=(m_match.id, path_file + name_file, req_data['team_one'], req_data['team_two'],))
     t.start()
 
     return custom_response({'error': False, 'message': 'Sauvegarde du match.', 'data': None}, 200)
+
+
+@match_api.route('/result', methods=['POST'])
+# @swag_from(specs_match.all_match)
+def result():
+    req_data = request.get_json()
+    match_id = req_data['result']['id']
+    m_match = Match.query.filter_by(id=match_id).first()
+    m_li_team_has_match_played = TeamHasMatchPlayed.query.filter_by(match_id=match_id).all()
+
+    result_team = req_data['result']['red']
+    for m_team_has_match_played in m_li_team_has_match_played:
+        m_team_has_match_played.goals = result_team['score']
+        m_team_has_match_played.possesion = result_team['possession']
+        db.session.commit()
+        result_team = req_data['result']['blue']
+
+    return custom_response({'error': False, 'message': 'Update match result.', 'data': None}, 200)
 
 
 @match_api.route('/all_match', methods=['GET'])
