@@ -1,9 +1,11 @@
+import mimetypes
 import os
 
-from flask import Flask, jsonify, redirect, url_for
+from flask import Flask, jsonify, redirect, url_for, Response, send_file
 from flasgger import Swagger, swag_from
 from flask_cors import CORS
 from flask_mail import Mail
+from pathlib import Path
 
 from .models import db, mail
 from . import config
@@ -31,5 +33,24 @@ def create_app(config_key='development'):
     @app.route('/')
     def index():
         return redirect(url_for('flasgger.apidocs'))
+
+    @app.route('/get-video/<path>', methods=['GET'])
+    def video(path: str):
+        response = Response()
+
+        str_file_path = './src/files'
+        file_folder = os.path.abspath(str_file_path)
+        file_path = Path(file_folder)
+
+        if not file_path.exists():
+            response.status_code = 400
+            return response
+
+        final_filepath = file_path / path
+        if not final_filepath.exists():
+            response.status_code = 404
+            return response
+
+        return send_file(final_filepath, mimetype=str(mimetypes.guess_type(final_filepath, strict=True)))
 
     return app

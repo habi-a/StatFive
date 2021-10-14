@@ -12,7 +12,7 @@ from ..specs import specs_match
 from ..models.match import Match
 from ..models.team import TeamHasMatchPlayed
 from ..auth.authentication import Auth
-from ..helper import custom_response
+from ..helper import custom_response, video_url_for
 from ..models import db
 
 from subprocess import check_output, CalledProcessError, STDOUT
@@ -99,7 +99,7 @@ def all_match():
 
 @match_api.route('/stat_match_by_id/<int:id>', methods=['GET'])
 @swag_from(specs_match.stat_match_by_id)
-def stat_team_by_id(id):
+def stat_match_by_id(id):
     match_in_db = Match.query.filter_by(id=id).first()
     if not match_in_db:
         message = {'error': True, 'message': 'Le match existe pas.', 'data': None}
@@ -107,5 +107,8 @@ def stat_team_by_id(id):
     stats = []
     for stat in match_in_db.team_match_played:
         stats.append(stat.to_json())
-    data = {**match_in_db.to_json(), **{'stats': stats}}
+
+    match_data = match_in_db.to_json()
+    match_data['path'] = video_url_for('video', path=match_in_db.name)
+    data = {**match_data, **{'stats': stats}}
     return custom_response({'error': False, 'message': 'Match stats by id.', 'data': data}, 200)
