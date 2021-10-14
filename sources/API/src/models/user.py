@@ -42,7 +42,8 @@ class User(db.Model):
             'email': self.mail,
             'verification': self.verification,
             'post': self.post,
-            'description': self.description
+            'description': self.description,
+            'role': self.role
         }
 
     @staticmethod
