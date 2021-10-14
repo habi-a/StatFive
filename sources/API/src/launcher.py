@@ -51,6 +51,6 @@ def create_app(config_key='development'):
             response.status_code = 404
             return response
 
-        return send_file(final_filepath, mimetype=str(mimetypes.guess_type(final_filepath, strict=True)))
+        return send_file(final_filepath)
 
     return app
