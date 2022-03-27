@@ -67,8 +67,6 @@ services:
 
   tracker:
      build: ./tracker
-     links:
-       - api
      ports:
        - 8000
      networks:
@@ -102,8 +100,8 @@ services:
     networks:
       - statfive-network
     links:
-      - web
+      - dashboard
       - api
     depends_on:
-      - web
+      - dashboard
       - api
