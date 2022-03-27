@@ -1,10 +1,14 @@
 version: '3'
 
+
 networks:
   statfive-network:
 
+
 volumes:
   mariadb_data:
+  video:
+
 
 services:
   mariadb:
@@ -12,7 +16,7 @@ services:
     tty: true
     restart: always
     ports:
-      - 3306:3306
+      - 3306
     environment:
       MYSQL_DATABASE: statfive
       MYSQL_ROOT_PASSWORD: root
@@ -40,9 +44,10 @@ services:
     restart: always
 
   api:
-    build: .
+    build: ./API
     links:
       - mariadb
+      - tracker
     depends_on:
       - mariadb
     ports:
@@ -52,11 +57,25 @@ services:
     environment:
       - PYTHONUNBUFFERED=0
       - MYSQL_DATABASE=statfive
-      - MYSQL_USER=statfive
-      - MYSQL_PASSWORD=statfive
+      - MYSQL_USER=statfive_user
+      - MYSQL_PASSWORD=statfive_password
       - MYSQL_HOST=db
       - PROD=docker
+    volumes:
+      - video:/app/video
     restart: always
+
+  tracker:
+     build: ./tracker
+     links:
+       - api
+     ports:
+       - 8000
+     networks:
+       - statfive-network
+     volumes:
+       - video:/app/video
+     restart: always
 
   dashboard:
     build: ./Dashboard
@@ -65,7 +84,7 @@ services:
       - ./Dashboard:/app
       - /app/node_modules
     ports:
-      - 3000:3000
+      - 3000
     networks:
       - statfive-network
     depends_on:
