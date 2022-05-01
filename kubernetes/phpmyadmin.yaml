@@ -32,3 +32,21 @@ spec:
                   key: root_password
           ports:
             - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: statfive
+  name: phpmyadmin
+  namespace: statfive
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 80
+  selector:
+    app: statfive
+    tier: phpmyadmin

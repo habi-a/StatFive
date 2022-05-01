@@ -6,8 +6,7 @@ import sys
 import tensorflow as tf
 
 # Import protos
-OBJECT_DETECTION_PATH = '/tensorflow/models/research/object_detection/'
-sys.path.append(OBJECT_DETECTION_PATH)
+sys.path.append("/app")
 from protos import string_int_label_map_pb2
 
 

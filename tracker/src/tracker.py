@@ -8,7 +8,6 @@ import sys
 import tensorflow as tf
 
 # Import local functions
-sys.path.append("src")
 from ball import *
 from draw import *
 from goals import *
@@ -19,18 +18,12 @@ from stats import *
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
-if __name__ == '__main__':
+def tracker(match_id, id_red, id_blue, video_match, show):
 
     # Args variables
     if len(sys.argv) != 6:
-        print("Usage: tracker.py <match_id> <red_id> <blue_id> <path_video> <send_data>")
+        print("Usage: tracker.py <match_id> <red_id> <blue_id> <path_video> <show>")
         sys.exit(0)
-
-    match_id = sys.argv[1]
-    id_red = sys.argv[2]
-    id_blue = sys.argv[3]
-    video_match = str(sys.argv[4])
-    send_data = sys.argv[5]
 
     # HTTP Request info (To submit results)
     SERVER_URL = 'https://api.statfive.fr/api/'
@@ -42,7 +35,7 @@ if __name__ == '__main__':
     width = int(cap.get(3))
     height = int(cap.get(4))
     fourcc = cv2.VideoWriter_fourcc('X', 'V', 'I', 'D')
-    out = cv2.VideoWriter(OBJECT_DETECTION_PATH + 'tracker/video/match' + match_id + '.avi', fourcc, 10, (width, height))
+    out = cv2.VideoWriter('/app/video/match' + match_id + '.avi', fourcc, 10, (width, height))
     goal_t1, goal_t2 = define_goals(width, height)
     data = init_data(match_id, id_red, id_blue)
     team_owner_of_ball = []
@@ -73,15 +66,16 @@ if __name__ == '__main__':
         if not ret:
             break
         detections = detect_objects_on_image(image_np, model)
-        image_with_detections = draw_detections_on_image(image_np, detections, labels, goal_t1, goal_t2, loc, loc_foot, loc_ball, ball_visible)
+        image_with_detections = draw_detections_on_image(image_np, detections, labels, goal_t1, goal_t2, loc, loc_foot, loc_ball, ball_visible, show)
         already_scored = compute_goals(data, already_scored, loc_ball, goal_t1, goal_t2, ball_visible)
         team_owner_of_ball = find_possession_ball(team_owner_of_ball, loc_ball["ref"], loc_foot, ball_visible)
 
-        cv2.imshow('image', image_with_detections)
-        out.write(image_with_detections)
+        if show:
+            cv2.imshow('image', image_with_detections)
+            out.write(image_with_detections)
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
 
     cap.release()
     out.release()
@@ -91,6 +85,5 @@ if __name__ == '__main__':
     print(data)
 
     # Send stats
-    if send_data == 1:
-        print("[HTTP] Sending data...")
-        resp = requests.post(SERVER_URL + API_ENDPOINT, data = data)
+    print("[HTTP] Sending data...")
+    return requests.post(SERVER_URL + API_ENDPOINT, data = data)

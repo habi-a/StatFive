@@ -1,4 +1,17 @@
 apiVersion: v1
+kind: Secret
+metadata:
+  name: mariadb-secret
+  namespace: statfive
+type: Opaque
+data:
+  username: c3RhdGZpdmVfdXNlcg==
+  password: c3RhdGZpdmVfcGFzc3dvcmQ=
+  root_password: cm9vdA==
+
+---
+
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mariadb-initdb
@@ -417,3 +430,120 @@ data:
     #   ADD CONSTRAINT `team` FOREIGN KEY (`team_id`) REFERENCES `team` (`id`),
     #   ADD CONSTRAINT `user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
     # COMMIT;
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mariadb-volume
+  namespace: statfive
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  azureFile:
+    secretName: azure-secret
+    secretNamespace: statfive
+    shareName: statfive-mariadb-share
+    readOnly: false
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=999
+    - gid=999
+    - mfsymlinks
+    - nobrl
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mariadb-claim
+  namespace: statfive
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: statfive
+  name: mariadb
+  namespace: statfive
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: statfive
+      tier: mariadb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: statfive
+        tier: mariadb
+    spec:
+      containers:
+        - image: mariadb:10.5.9
+          name: mariadb
+          env:
+            - name: MYSQL_DATABASE
+              value: statfive
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: username
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: root_password
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: password
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: "/var/lib/mysql"
+              name: mariadb-storage
+            - name: mariadb-initdb
+              mountPath: "/docker-entrypoint-initdb.d"
+      volumes:
+        - name: mariadb-storage
+          persistentVolumeClaim:
+            claimName: mariadb-claim
+        - name: mariadb-initdb
+          configMap:
+            name: mariadb-initdb
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: statfive
+  name: mariadb
+  namespace: statfive
+spec:
+  ports:
+    - name: "3306"
+      port: 3306
+      targetPort: 3306
+  selector:
+    app: statfive
+    tier: mariadb

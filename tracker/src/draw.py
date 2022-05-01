@@ -7,7 +7,7 @@ from ball import *
 from teams import *
 
 
-def draw_detections_on_image(image, detections, labels, goal_t1, goal_t2, loc, loc_foot, loc_ball, ball_visible):
+def draw_detections_on_image(image, detections, labels, goal_t1, goal_t2, loc, loc_foot, loc_ball, ball_visible, show):
     image_with_detections = image
     height, width, channels = image_with_detections.shape
 
@@ -36,7 +36,7 @@ def draw_detections_on_image(image, detections, labels, goal_t1, goal_t2, loc, l
             detect_team_on_image(image_with_detections, detection_label, x1, x2, y1, y2, loc, loc_foot, xaverage)
             detect_ball_on_image(detection_label, loc_ball, ball_visible, xaverage, yaverage)
 
-            if loc[coords] != "not_sure":
+            if loc[coords] != "not_sure" and show:
                 image_with_detections = cv2.rectangle(
                     image_with_detections,
                     (x1, y1),
@@ -77,22 +77,23 @@ def draw_detections_on_image(image, detections, labels, goal_t1, goal_t2, loc, l
                     2
                 )
 
-    # Draw goal 1
-    image_with_detections = cv2.rectangle(
-        image_with_detections,
-        (goal_t1["x1"], goal_t1["y1"]),
-        (goal_t1["x2"], goal_t1["y2"]),
-        (238, 120, 42),
-        2
-    )
+    if show:
+        # Draw goal 1
+        image_with_detections = cv2.rectangle(
+            image_with_detections,
+            (goal_t1["x1"], goal_t1["y1"]),
+            (goal_t1["x2"], goal_t1["y2"]),
+            (238, 120, 42),
+            2
+        )
 
-    # Draw goal 2
-    image_with_detections = cv2.rectangle(
-        image_with_detections,
-        (goal_t2["x1"], goal_t2["y1"]),
-        (goal_t2["x2"], goal_t2["y2"]),
-        (238, 120, 42),
-        2
-    )
+        # Draw goal 2
+        image_with_detections = cv2.rectangle(
+            image_with_detections,
+            (goal_t2["x1"], goal_t2["y1"]),
+            (goal_t2["x2"], goal_t2["y2"]),
+            (238, 120, 42),
+            2
+        )
 
     return image_with_detections

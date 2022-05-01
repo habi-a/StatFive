@@ -1,3 +1,36 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: api-volume
+  namespace: statfive
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  azureFile:
+    secretName: azure-secret
+    secretNamespace: statfive
+    shareName: statfive-api-share
+    readOnly: false
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: api-claim
+  namespace: statfive
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,7 +53,7 @@ spec:
         tier: backend
     spec:
       containers:
-        - image: "acalhabi/statfive-api"
+        - image: "acalhabi/statfive_api"
           name: api
           env:
             - name: PYTHONBUFFERED
@@ -48,3 +81,21 @@ spec:
         - name: api-storage
           persistentVolumeClaim:
             claimName: api-claim
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: statfive
+  name: api
+  namespace: statfive
+spec:
+  ports:
+    - name: "5000"
+      port: 5000
+      targetPort: 5000
+  selector:
+    app: statfive
+    tier: backend

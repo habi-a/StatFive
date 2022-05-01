@@ -3,25 +3,25 @@ kind: Deployment
 metadata:
   labels:
     app: statfive
-  name: dashboard
+  name: web
   namespace: statfive
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: statfive
-      tier: dashboard
+      tier: web
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
         app: statfive
-        tier: dashboard
+        tier: web
     spec:
       containers:
-        - image: acalhabi/statfive-web
-          name: dashboard
+        - image: acalhabi/statfive_web
+          name: web
           ports:
             - containerPort: 3000
           args:
@@ -29,3 +29,20 @@ spec:
             - run
             - dev
 
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: statfive
+  name: web
+  namespace: statfive
+spec:
+  ports:
+    - name: "3000"
+      port: 3000
+      targetPort: 3000
+  selector:
+    app: statfive
+    tier: web
