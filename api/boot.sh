@@ -1,3 +1,5 @@
+#!/bin/bash
+
 source venv/bin/activate
 sleep 1
 rm -rf migrations

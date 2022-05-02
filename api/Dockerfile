@@ -1,4 +1,4 @@
-FROM  debian:11
+FROM --platform=linux/amd64 debian:11
 
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get -y install python3 python3-pip python3-venv python3-dev
