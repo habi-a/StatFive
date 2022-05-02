@@ -1,0 +1,96 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: reverse
+  namespace: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`traefik.statfive.fr`)
+      kind: Rule
+      services:
+        - name: api@internal
+          kind: TraefikService
+  tls:
+    certResolver: letsencrypt
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: web
+  namespace: traefik
+spec:
+  entryPoints: 
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`dashboard.statfive.fr`)
+      services:
+        - name: web
+          namespace: statfive
+          port: 3000
+  tls:
+    certResolver: letsencrypt
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: api
+  namespace: traefik
+spec:
+  entryPoints: 
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`api.statfive.fr`)
+      services:
+        - name: api
+          namespace: statfive
+          port: 5000
+  tls:
+    certResolver: letsencrypt
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: tracker
+  namespace: traefik
+spec:
+  entryPoints: 
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`tracker.statfive.fr`)
+      services:
+        - name: tracker
+          namespace: statfive
+          port: 5000
+  tls:
+    certResolver: letsencrypt
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: phpmyadmin
+  namespace: traefik
+spec:
+  entryPoints: 
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`phpmyadmin.statfive.fr`)
+      services:
+        - name: phpmyadmin
+          namespace: statfive
+          port: 80
+  tls:
+    certResolver: letsencrypt

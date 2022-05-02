@@ -1,0 +1,68 @@
+additionalArguments:
+  - "--api.insecure=true"
+  - "--accesslog=true"
+  - "--log.level=DEBUG"
+  - "--providers.kubernetescrd=true"
+  - "--providers.kubernetescrd.allowCrossNamespace=true"
+  - "--entrypoints.web.address=:8000"
+  - "--entrypoints.websecure.address=:8443"
+  - "--entrypoints.websecure.http.tls=true"
+  - "--entrypoints.websecure.http.tls.certResolver=letsencrypt"
+  - "--entrypoints.websecure.http.tls.domains[0].main=statfive.fr"
+  - "--entrypoints.websecure.http.tls.domains[0].sans=*.statfive.fr"
+  - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
+  - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=ovh"
+  - "--certificatesresolvers.letsencrypt.acme.dnschallenge.delaybeforecheck=15"
+  - "--certificatesresolvers.letsencrypt.acme.email=acalhabi@gmail.com"
+  - "--certificatesresolvers.letsencrypt.acme.storage=/certs/letsencrypt.json"
+  - "--metrics.prometheus.addentrypointslabels=true"
+  - "--metrics.prometheus.addserviceslabels=true"
+  - "--metrics.prometheus.entrypoint=traefik"
+
+ports:
+  web:
+    redirectTo: websecure
+
+env:
+  - name: TZ
+    value: "Europe/Paris"
+  - name: OVH_ENDPOINT
+    value: "ovh-eu"
+  - name: OVH_APPLICATION_KEY
+    valueFrom:
+      secretKeyRef:
+        key: apiKey
+        name: ovh-api-credentials
+  - name: OVH_APPLICATION_SECRET
+    valueFrom:
+      secretKeyRef:
+        key: appSecret
+        name: ovh-api-credentials
+  - name: OVH_CONSUMER_KEY
+    valueFrom:
+      secretKeyRef:
+        key: consumerKey
+        name: ovh-api-credentials
+
+replicas: 1
+serviceType: LoadBalancer
+
+service:
+  enabled: true
+  type: LoadBalancer
+
+traefik:
+  web:
+    port: 8000
+    expose: true
+    exposedPort: 80
+  websecure:
+    port: 8443
+    expose: true
+    exposedPort: 443
+
+persistence:
+  enabled: true
+  path: /certs
+  size: 128Mi
+

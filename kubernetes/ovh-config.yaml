@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ovh-api-credentials
+  namespace: traefik
+
+type: Opaque
+stringData:
+  apiKey: xxxxxxxxxxxxxx
+  appSecret: xxxxxxxxxxxxxxxxxxxxxxxxxxx
+  consumerKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
