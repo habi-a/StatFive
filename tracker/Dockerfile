@@ -11,7 +11,7 @@ RUN git clone https://github.com/tensorflow/models /tensorflow/models
 COPY . /app
 RUN mkdir /app/.tmp
 WORKDIR /app
-RUN mv /tensorflow/models/research/object_detection ./
+RUN mv /tensorflow/models/research/object_detection /app
 
 # Protbuf compilation
 RUN curl -OL https://github.com/protocolbuffers/protobuf/releases/download/v3.19.4/protoc-3.19.4-linux-x86_64.zip 
