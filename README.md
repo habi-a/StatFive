@@ -11,7 +11,6 @@
 - HELM CLI
 
 #### Deploy
-Azure CLI Kubectl HELM and Create a cluster AKS from GUI
 - `$> az login`
 - `$> az account set --subscription xxxxxxxxxxxxxxxxxxxxxxxx`
 - `$> az aks get-credentials --resource-group xxxxxxxx --name xxxxxxxx`
