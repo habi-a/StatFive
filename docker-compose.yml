@@ -43,7 +43,7 @@ services:
         restart: always
 
     api:
-        build: ./API
+        build: ./api
         image: acalhabi/statfive_api
         links:
             - mariadb
