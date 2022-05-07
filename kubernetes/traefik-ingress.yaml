@@ -94,3 +94,60 @@ spec:
           port: 80
   tls:
     certResolver: letsencrypt
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: prometheus
+  namespace: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`prometheus.statfive.fr`)
+      kind: Rule
+      services:
+        - name: prometheus-k8s
+          namespace: monitoring
+          port: 9090
+  tls:
+    certResolver: letsencrypt
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: grafana
+  namespace: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`grafana.statfive.fr`)
+      kind: Rule
+      services:
+        - name: grafana
+          namespace: monitoring
+          port: 3000
+  tls:
+    certResolver: letsencrypt
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: metrics
+  namespace: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: PathPrefix(`/metrics`)
+      kind: Rule
+      services:
+        - name: prometheus@internal
+          kind: TraefikService

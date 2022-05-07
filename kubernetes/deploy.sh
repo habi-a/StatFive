@@ -2,6 +2,7 @@
 
 set -e
 
+
 # Deploy storage
 AKS_PERS_STORAGE_ACCOUNT_NAME=mystorageaccount99991112
 AKS_PERS_RESOURCE_GROUP=statfive
@@ -15,8 +16,8 @@ echo Storage account name: $AKS_PERS_STORAGE_ACCOUNT_NAME
 echo Storage account key: $STORAGE_KEY
 
 
-
 # Create K8S resources
+kubectl create namespace monitoring
 kubectl create namespace statfive
 kubectl create namespace traefik
 kubectl create secret generic azure-secret --namespace statfive --from-literal=azurestorageaccountname=$AKS_PERS_STORAGE_ACCOUNT_NAME --from-literal=azurestorageaccountkey=$STORAGE_KEY
@@ -27,9 +28,19 @@ kubectl apply -f phpmyadmin.yaml
 kubectl apply -f api.yaml
 kubectl apply -f tracker.yaml
 kubectl apply -f web.yaml
-kubectl apply -f traefik.yaml
+kubectl apply -f traefik-ingress.yaml
 
 # Install traefik
 helm repo add traefik https://helm.traefik.io/traefik
 helm repo update
 helm install traefik traefik/traefik --namespace=traefik --values=traefik-values.yml
+
+# Install Monitoring
+git clone https://github.com/coreos/kube-prometheus.git
+cd kube-prometheus
+kubectl create -f manifests/setup 
+kubectl create -f manifests/
+cd ../
+kubectl apply -f prometheus-monitor.yaml
+
+
