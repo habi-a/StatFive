@@ -59,7 +59,7 @@ services:
             - MYSQL_DATABASE=statfive
             - MYSQL_USER=statfive_user
             - MYSQL_PASSWORD=statfive_password
-            - MYSQL_HOST=db
+            - MYSQL_HOST=mariadb
             - PROD=docker
         volumes:
             - video:/app/video
