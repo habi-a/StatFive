@@ -8,7 +8,7 @@
 - 1 Azure AKS Cluster
 - Azure CLI
 - Kubectl
-- HELM CLI
+- Helm CLI
 
 #### Deploy
 - `$> az login`
