@@ -36,11 +36,11 @@ helm repo update
 helm install traefik traefik/traefik --namespace=traefik --values=traefik-values.yml
 
 # Install Monitoring
-git clone https://github.com/coreos/kube-prometheus.git
+git clone https://github.com/prometheus-operator/kube-prometheus.git
 cd kube-prometheus
-kubectl create -f manifests/setup 
+kubectl create -f manifests/setup
+until kubectl get servicemonitors --all-namespaces ; do date; sleep 1; echo ""; done
 kubectl create -f manifests/
 cd ../
+rm -rf kube-prometheus
 kubectl apply -f prometheus-monitor.yaml
-
-

@@ -4,6 +4,7 @@ additionalArguments:
   - "--log.level=DEBUG"
   - "--providers.kubernetescrd=true"
   - "--providers.kubernetescrd.allowCrossNamespace=true"
+  - "--providers.kubernetescrd.allowExternalNameServices=true"
   - "--entrypoints.web.address=:8000"
   - "--entrypoints.websecure.address=:8443"
   - "--entrypoints.websecure.http.tls=true"

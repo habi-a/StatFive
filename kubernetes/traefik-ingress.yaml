@@ -27,7 +27,7 @@ spec:
     - websecure
   routes:
     - kind: Rule
-      match: Host(`dashboard.statfive.fr`)
+      match: Host(`statfive.fr`) || Host(`www.statfive.fr`) || Host(`dashboard.statfive.fr`)
       services:
         - name: web
           namespace: statfive
@@ -134,20 +134,3 @@ spec:
           port: 3000
   tls:
     certResolver: letsencrypt
-
----
-
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: metrics
-  namespace: traefik
-spec:
-  entryPoints:
-    - websecure
-  routes:
-    - match: PathPrefix(`/metrics`)
-      kind: Rule
-      services:
-        - name: prometheus@internal
-          kind: TraefikService
