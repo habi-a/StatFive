@@ -9,6 +9,8 @@
 - Azure CLI
 - Kubectl
 - Helm CLI
+- OVH Account with a Domain Name
+- Generate API OVH Credentials
 
 #### Deploy
 - `$> az login`
