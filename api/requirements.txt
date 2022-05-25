@@ -21,7 +21,7 @@ jsonschema==3.2.0
 marshmallow==3.13.0
 mistune==0.8.4
 mysqlclient==2.0.3
-PyJWT==2.1.0
+PyJWT==2.4.0
 pyrsistent==0.18.0
 pytz==2021.1
 PyYAML==5.4.1
