@@ -39,10 +39,11 @@ export default function Home() {
   const setCheck = useStore(state => state.setCheck)
 
   const login = async () => {
+    console.log(API_URL);
     if(!isEmail(email) )
       await axios.post(
-          [API_URL] + "/users/login",
-          {
+          API_URL + "/users/login",
+            {
               email,
               password: pass
             }
@@ -62,7 +63,7 @@ export default function Home() {
         .catch(err => {
           setError(err && err.response && err.response.data.message)
         });
-}
+  }
 
   const isEmail = (val) => {
     let regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
