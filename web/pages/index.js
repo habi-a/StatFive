@@ -39,7 +39,6 @@ export default function Home() {
   const setCheck = useStore(state => state.setCheck)
 
   const login = async () => {
-    console.log(API_URL);
     if(!isEmail(email) )
       await axios.post(
           API_URL + "/users/login",
