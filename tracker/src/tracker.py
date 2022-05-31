@@ -26,7 +26,7 @@ def tracker(match_id, id_red, id_blue, video_match, show):
         sys.exit(0)
 
     # HTTP Request info (To submit results)
-    SERVER_URL = 'https://api.statfive.fr/api/'
+    SERVER_URL = 'http://api:5000/api/'
     API_ENDPOINT = 'match/result'
 
     # Video Recorder

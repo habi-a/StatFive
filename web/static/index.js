@@ -1,1 +1,1 @@
-export const API_URL = "https://api.statfive.fr/api"
+export const API_URL = process.env.API_URL

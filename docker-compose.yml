@@ -90,6 +90,8 @@ services:
         depends_on:
             - mariadb
             - api
+        environment:
+            - API_URL=https://api.preprod.statfive.fr/api
 
     nginx:
         image: nginx

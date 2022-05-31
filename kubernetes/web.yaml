@@ -24,6 +24,9 @@ spec:
           name: web
           ports:
             - containerPort: 3000
+          env:
+            - name: API_URL
+              value: "https://api.statfive.fr/api"
           args:
             - npm
             - run

@@ -61,7 +61,9 @@ spec:
             - name: MYSQL_HOST
               value: "mariadb"
             - name: MYSQL_DATABASE
-              value: statfive
+              value: "statfive"
+            - name: PROD
+              value: "kubernetes"
             - name: MYSQL_USER
               valueFrom:
                 secretKeyRef:

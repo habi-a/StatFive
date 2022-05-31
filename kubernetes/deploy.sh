@@ -30,10 +30,12 @@ kubectl apply -f tracker.yaml
 kubectl apply -f web.yaml
 kubectl apply -f traefik-ingress.yaml
 
+
 # Install traefik
 helm repo add traefik https://helm.traefik.io/traefik
 helm repo update
 helm install traefik traefik/traefik --namespace=traefik --values=traefik-values.yml
+
 
 # Install Monitoring
 git clone https://github.com/prometheus-operator/kube-prometheus.git
