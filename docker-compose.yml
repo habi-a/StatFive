@@ -15,9 +15,10 @@ services:
         image: acalhabi/statfive_api
         links:
             - mariadb
-            - tracker
+            - tracker-app
         depends_on:
             - mariadb
+            - tracker-app
         ports:
             - 5000
         networks:
@@ -117,6 +118,7 @@ services:
             - redis
         depends_on:
             - redis
+            - tracker-app
         restart: always
 
     web:
