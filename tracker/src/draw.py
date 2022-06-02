@@ -2,9 +2,8 @@
  
 import math
 
-from ball import detect_ball_on_image
-from ball import *
-from teams import *
+from src.ball import *
+from src.teams import *
 
 
 def draw_detections_on_image(image, detections, labels, goal_t1, goal_t2, loc, loc_foot, loc_ball, ball_visible, show):

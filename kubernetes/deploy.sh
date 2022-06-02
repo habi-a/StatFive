@@ -24,6 +24,7 @@ kubectl create secret generic azure-secret --namespace statfive --from-literal=a
 
 kubectl apply -f ovh-config.yaml
 kubectl apply -f mariadb.yaml
+kubectl apply -f redis.yaml
 kubectl apply -f phpmyadmin.yaml
 kubectl apply -f api.yaml
 kubectl apply -f tracker.yaml

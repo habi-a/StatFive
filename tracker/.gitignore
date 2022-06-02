@@ -1,0 +1,6 @@
+object_detection
+.tmp
+*.pyc
+__pycache__
+dump.rdb
+video

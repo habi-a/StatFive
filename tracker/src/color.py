@@ -4,10 +4,6 @@ import cv2
 import numpy as np
 
 def count_nonblack_np(img):
-    """Return the number of pixels in img that are not black.
-    img must be a Numpy array with colour values along the last axis.
-
-    """
     return img.any(axis=-1).sum()
 
 

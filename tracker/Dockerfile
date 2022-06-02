@@ -1,10 +1,10 @@
 FROM tensorflow/tensorflow:2.7.1
 
-# Install Python & Flask
+# Install Python, Flask & Redis
 RUN apt-get update
-RUN apt-get install -y git python3-opencv unzip
+RUN apt-get install -y git python3-opencv unzip redis-server
 RUN pip3 install --upgrade pip
-RUN pip3 install flask requests
+RUN pip3 install flask requests redis rq
 
 # Tensorflow models
 RUN git clone https://github.com/tensorflow/models /tensorflow/models

@@ -10,38 +10,6 @@ volumes:
 
 
 services:
-    mariadb:
-        image: mariadb
-        tty: true
-        restart: always
-        ports:
-            - 3306
-        environment:
-            MYSQL_DATABASE: statfive
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_USER: statfive_user
-            MYSQL_PASSWORD: statfive_password
-        networks:
-            - statfive-network
-        volumes:
-            - mariadb_data:/var/lib/mysql
-            - ./database:/docker-entrypoint-initdb.d
-  
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        links:
-            - mariadb
-        depends_on:
-            - mariadb
-        ports:
-            - 80
-        environment:
-            PMA_HOST: mariadb
-            MYSQL_ROOT_PASSWORD: root 
-        networks:
-            - statfive-network
-        restart: always
-
     api:
         build: ./api
         image: acalhabi/statfive_api
@@ -65,7 +33,64 @@ services:
             - video:/app/video
         restart: always
 
-    tracker:
+    mariadb:
+        image: mariadb
+        tty: true
+        restart: always
+        ports:
+            - 3306
+        environment:
+            MYSQL_DATABASE: statfive
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_USER: statfive_user
+            MYSQL_PASSWORD: statfive_password
+        networks:
+            - statfive-network
+        volumes:
+            - mariadb_data:/var/lib/mysql
+            - ./database:/docker-entrypoint-initdb.d
+  
+    nginx:
+        image: nginx
+        volumes:
+            - ./nginx/conf.d:/etc/nginx/conf.d
+            - /etc/letsencrypt:/etc/letsencrypt
+        ports:
+            - 80:80
+            - 443:443
+        networks:
+            - statfive-network
+        links:
+            - web
+            - api
+        depends_on:
+            - web
+            - api
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        links:
+            - mariadb
+        depends_on:
+            - mariadb
+        ports:
+            - 80
+        environment:
+            PMA_HOST: mariadb
+            MYSQL_ROOT_PASSWORD: root 
+        networks:
+            - statfive-network
+        restart: always
+
+    redis:
+        image: redis:7.0.0
+        ports:
+            - 6379
+        networks:
+            - statfive-network
+        restart: always
+
+    tracker-app:
         build: ./tracker
         image: acalhabi/statfive_tracker
         ports:
@@ -74,6 +99,24 @@ services:
             - statfive-network
         volumes:
             - video:/app/video
+        links:
+            - redis
+        depends_on:
+            - redis
+        restart: always
+
+    tracker-worker:
+        build: ./tracker
+        image: acalhabi/statfive_tracker
+        command: rq worker --url redis://redis:6379
+        networks:
+            - statfive-network
+        volumes:
+            - video:/app/video
+        links:
+            - redis
+        depends_on:
+            - redis
         restart: always
 
     web:
@@ -92,20 +135,4 @@ services:
             - api
         environment:
             - API_URL=https://api.preprod.statfive.fr/api
-
-    nginx:
-        image: nginx
-        volumes:
-            - ./nginx/conf.d:/etc/nginx/conf.d
-            - /etc/letsencrypt:/etc/letsencrypt
-        ports:
-            - 80:80
-            - 443:443
-        networks:
-            - statfive-network
-        links:
-            - web
-            - api
-        depends_on:
-            - web
-            - api
+        restart: always

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from ball import *
+from src.ball import *
 
 
 def init_data(match_id, id_red, id_blue):

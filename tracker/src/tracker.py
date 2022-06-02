@@ -8,25 +8,19 @@ import sys
 import tensorflow as tf
 
 # Import local functions
-from ball import *
-from draw import *
-from goals import *
-from model import *
-from objects import *
-from stats import *
+from src.ball import *
+from src.draw import *
+from src.goals import *
+from src.model import *
+from src.objects import *
+from src.stats import *
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 
-def tracker(match_id, id_red, id_blue, video_match, show):
-
-    # Args variables
-    if len(sys.argv) != 6:
-        print("Usage: tracker.py <match_id> <red_id> <blue_id> <path_video> <show>")
-        sys.exit(0)
-
+def tracker(match_id, id_red, id_blue, video_match, show, callback):
     # HTTP Request info (To submit results)
-    SERVER_URL = 'http://api:5000/api/'
+    SERVER_URL = callback
     API_ENDPOINT = 'match/result'
 
     # Video Recorder
@@ -35,7 +29,7 @@ def tracker(match_id, id_red, id_blue, video_match, show):
     width = int(cap.get(3))
     height = int(cap.get(4))
     fourcc = cv2.VideoWriter_fourcc('X', 'V', 'I', 'D')
-    out = cv2.VideoWriter('/app/video/match' + match_id + '.avi', fourcc, 10, (width, height))
+    out = cv2.VideoWriter('./video/match' + str(match_id) + '.avi', fourcc, 10, (width, height))
     goal_t1, goal_t2 = define_goals(width, height)
     data = init_data(match_id, id_red, id_blue)
     team_owner_of_ball = []
@@ -84,6 +78,8 @@ def tracker(match_id, id_red, id_blue, video_match, show):
     compute_possession(data, team_owner_of_ball)
     print(data)
 
-    # Send stats
     print("[HTTP] Sending data...")
-    return requests.post(SERVER_URL + API_ENDPOINT, data = data)
+    result = requests.post(SERVER_URL + API_ENDPOINT, json = data)
+    print(result.text)
+    return data["result"]["id"]
+    

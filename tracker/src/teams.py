@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from color import *
+from src.color import *
 
 
 def detect_team_on_image(image, detection_label, x1, x2, y1, y2, loc, loc_foot, xaverage):

@@ -1,2 +1,5 @@
-__pycache__
-venv
+**/venv
+**/.idea
+**/log
+__pycache__/
+migrations

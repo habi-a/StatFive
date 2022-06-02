@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 def define_goals(width, height):
     goal_t1 = {
         "x1": int(width * 0.01),

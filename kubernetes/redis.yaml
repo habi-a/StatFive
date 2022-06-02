@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: statfive
+  name: redis
+  namespace: statfive
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: statfive
+      tier: redis
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: statfive
+        tier: redis
+    spec:
+      containers:
+        - image: redis:7.0.0
+          name: redis
+          ports:
+            - containerPort: 6379
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: statfive
+  name: redis
+  namespace: statfive
+spec:
+  ports:
+    - name: "6379"
+      port: 6379
+      targetPort: 6379
+  selector:
+    app: statfive
+    tier: redis

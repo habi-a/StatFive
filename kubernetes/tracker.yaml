@@ -3,27 +3,61 @@ kind: Deployment
 metadata:
   labels:
     app: statfive
-  name: tracker
+  name: tracker-app
   namespace: statfive
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: statfive
-      tier: tracker
+      tier: tracker-app
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
         app: statfive
-        tier: tracker
+        tier: tracker-app
     spec:
       containers:
         - image: "acalhabi/statfive_tracker"
-          name: tracker
+          name: tracker-app
           ports:
             - containerPort: 5000
+          volumeMounts:
+            - mountPath: "/app/video"
+              name: api-storage
+      volumes:
+        - name: api-storage
+          persistentVolumeClaim:
+            claimName: api-claim
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: statfive
+  name: tracker-worker
+  namespace: statfive
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: statfive
+      tier: tracker-worker
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: statfive
+        tier: tracker-worker
+    spec:
+      containers:
+        - image: "acalhabi/statfive_tracker"
+          name: tracker-worker
           volumeMounts:
             - mountPath: "/app/video"
               name: api-storage
@@ -48,4 +82,4 @@ spec:
       targetPort: 5000
   selector:
     app: statfive
-    tier: tracker
+    tier: tracker-app
