@@ -61,7 +61,7 @@ def post_match():
                                                  ended=1)
     m_team_has_match_played.save()
 
-    x = requests.post('http://tracker:5000/analyse', json={
+    x = requests.post('http://tracker-app:5000/analyse', json={
         "match_id": m_match.id,
         "id_red": req_data['team_one'],
         "id_blue": req_data['team_two'],
