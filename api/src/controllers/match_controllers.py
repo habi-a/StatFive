@@ -2,8 +2,7 @@ import os
 import random
 import string
 import subprocess
-import time
-import threading
+import requests
 
 from flask import request, json, Response, Blueprint
 from flasgger import swag_from
@@ -39,7 +38,7 @@ def post_match():
         return custom_response({'error': 'Is not a mp4 file.'}, 400)
     req_data = request.form.to_dict()
 
-    path_file = './src/files/'
+    path_file = '/app/video/'
     name_file = generate_random_number(6) + '_' + video_storage.name + '.mp4'
 
     video_storage.save(path_file + name_file)
@@ -62,9 +61,14 @@ def post_match():
                                                  ended=1)
     m_team_has_match_played.save()
 
-    t = threading.Thread(target=lunch,
-                         args=(m_match.id, path_file + name_file, req_data['team_one'], req_data['team_two'],))
-    t.start()
+    x = requests.post('http://tracker:5000/analyse', json={
+        "match_id": m_match.id,
+        "id_red": req_data['team_one'],
+        "id_blue": req_data['team_two'],
+        "video_match": f"/app/video/{name_file}",
+        "show": False,
+        "callback": "http://api:5000/"
+    })
 
     return custom_response({'error': False, 'message': 'Sauvegarde du match.', 'data': None}, 200)
 
@@ -89,6 +93,7 @@ def result():
 
 @match_api.route('/all_match', methods=['GET'])
 @swag_from(specs_match.all_match)
+@Auth.auth_required
 def all_match():
     matchs_in_db = Match.query.all()
     matchs = []
@@ -99,6 +104,7 @@ def all_match():
 
 @match_api.route('/stat_match_by_id/<int:id>', methods=['GET'])
 @swag_from(specs_match.stat_match_by_id)
+@Auth.auth_required
 def stat_match_by_id(id):
     match_in_db = Match.query.filter_by(id=id).first()
     if not match_in_db:

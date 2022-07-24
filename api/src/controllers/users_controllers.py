@@ -75,6 +75,7 @@ def login():
 
 @user_api.route('/<int:id>', methods=['GET'])
 @swag_from(specs_users.user_by_id)
+@Auth.auth_required
 def get_user_by_id(id):
     user_in_db = User.query.filter_by(id=id).first()
     if not user_in_db:
@@ -88,6 +89,7 @@ def get_user_by_id(id):
 
 @user_api.route('/<int:id>', methods=['PUT'])
 @swag_from(specs_users.update_user_by_id)
+@Auth.auth_required
 def update_user(id):
     req_data = request.get_json()
 
@@ -121,6 +123,7 @@ def get_user_by_name(name):
 
 @user_api.route('/all_user', methods=['GET'])
 @swag_from(specs_users.all_user)
+@Auth.auth_required
 def all_team():
     users_in_db = User.query.all()
     users = []
@@ -131,6 +134,7 @@ def all_team():
 
 @user_api.route('/stat_user_by_id/<int:id>', methods=['GET'])
 @swag_from(specs_users.stat_user_by_id)
+@Auth.auth_required
 def stat_user_by_id(id):
     user_in_db = User.query.filter_by(id=id).first()
     if not user_in_db:

@@ -14,6 +14,7 @@ team_api = Blueprint('team', __name__)
 
 @team_api.route('/all_team', methods=['GET'])
 @swag_from(specs_team.all_team)
+@Auth.auth_required
 def all_team():
     team_in_db = Team.query.all()
     teams = []
@@ -24,6 +25,7 @@ def all_team():
 
 @team_api.route('/average_team', methods=['GET'])
 @swag_from(specs_team.average_team)
+@Auth.auth_required
 def average_team():
     team_in_db = Team.query.all()
     teams = []
@@ -40,6 +42,7 @@ def average_team():
 
 @team_api.route('/<int:id>', methods=['GET'])
 @swag_from(specs_team.team_by_id)
+@Auth.auth_required
 def get_team_by_id(id):
     team_in_db = Team.query.filter_by(id=id).first()
     if not team_in_db:
@@ -56,6 +59,7 @@ def get_team_by_id(id):
 
 @team_api.route('/stat_team_by_id/<int:id>', methods=['GET'])
 @swag_from(specs_team.stat_team_by_id)
+@Auth.auth_required
 def stat_team_by_id(id):
     team_in_db = Team.query.filter_by(id=id).first()
     if not team_in_db:
@@ -70,6 +74,7 @@ def stat_team_by_id(id):
 
 @team_api.route('/<string:name>', methods=['GET'])
 @swag_from(specs_team.team_by_name)
+@Auth.auth_required
 def get_team_by_name(name):
     team_in_db = Team.query.filter_by(name=name).first()
     if not team_in_db:
@@ -83,6 +88,7 @@ def get_team_by_name(name):
 
 @team_api.route('/create_team', methods=['POST'])
 @swag_from(specs_team.create)
+@Auth.auth_required
 def create_team():
     req_data = request.get_json()
 
