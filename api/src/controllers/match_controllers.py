@@ -67,7 +67,7 @@ def post_match():
         "id_blue": req_data['team_two'],
         "video_match": f"/app/video/{name_file}",
         "show": False,
-        "callback": "http://api:5000/"
+        "callback": "http://api:5000/match/result"
     })
 
     return custom_response({'error': False, 'message': 'Sauvegarde du match.', 'data': None}, 200)
@@ -77,6 +77,7 @@ def post_match():
 # @swag_from(specs_match.all_match)
 def result():
     req_data = request.get_json()
+    print(req_data)
     match_id = req_data['result']['id']
     m_match = Match.query.filter_by(id=match_id).first()
     m_li_team_has_match_played = TeamHasMatchPlayed.query.filter_by(match_id=match_id).all()
