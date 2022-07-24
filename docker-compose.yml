@@ -114,6 +114,8 @@ services:
             - statfive-network
         volumes:
             - video:/app/video
+        environment:
+            OBJC_DISABLE_INITIALIZE_FORK_SAFETY: "YES"
         links:
             - redis
         depends_on:

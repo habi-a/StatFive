@@ -4,7 +4,7 @@ set -e
 
 
 # Deploy storage
-AKS_PERS_STORAGE_ACCOUNT_NAME=mystorageaccount99991112
+AKS_PERS_STORAGE_ACCOUNT_NAME=mystorageaccount$(( $RANDOM % 99999999 + 00000001 ))
 AKS_PERS_RESOURCE_GROUP=statfive
 AKS_PERS_LOCATION=francecentral
 az storage account create -n $AKS_PERS_STORAGE_ACCOUNT_NAME -g $AKS_PERS_RESOURCE_GROUP -l $AKS_PERS_LOCATION --sku Standard_LRS
@@ -29,16 +29,15 @@ kubectl apply -f phpmyadmin.yaml
 kubectl apply -f api.yaml
 kubectl apply -f tracker.yaml
 kubectl apply -f web.yaml
-kubectl apply -f traefik-ingress.yaml
-
 
 # Install traefik
 helm repo add traefik https://helm.traefik.io/traefik
 helm repo update
 helm install traefik traefik/traefik --namespace=traefik --values=traefik-values.yml
-
+kubectl apply -f traefik-ingress.yaml
 
 # Install Monitoring
+rm -rf kube-prometheus
 git clone https://github.com/prometheus-operator/kube-prometheus.git
 cd kube-prometheus
 kubectl create -f manifests/setup

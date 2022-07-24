@@ -58,6 +58,9 @@ spec:
       containers:
         - image: "acalhabi/statfive_tracker"
           name: tracker-worker
+          env:
+            - name: OBJC_DISABLE_INITIALIZE_FORK_SAFETY
+              value: "YES"
           volumeMounts:
             - mountPath: "/app/video"
               name: api-storage
