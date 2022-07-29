@@ -10,6 +10,7 @@ import Select from 'react-select'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import withAuth from '../components/withAuth';
+import { getAllTeam } from "@mokhta_s/react-statfive-api"
 
 const Admin = () => {
     const dataUser = useStore(state => state.data)
@@ -20,29 +21,17 @@ const Admin = () => {
 
     const token = useStore(state => state.token)
 
+    const getTeam = () => {
+      let result = getAllTeam(API_URL)
+      if(!result.error)
+        setAllTeam(result)
+    }
 
-    const getAllTeam = async () => {
-        await axios.get(
-            API_URL + `/team/all_team`).then(res => {
-                let arrayObj = res.data.data
-                setAllTeam(res.data.data);
-                arrayObj = arrayObj.map(item => {
-                    return {
-                      value: item.id,
-                      label: item.name
-                    };
-                  });
-                setAllTeam(arrayObj)
-            })
-          .catch(err => {
-            console.log(err)
-          });
-      }
 
       useEffect(() => {
-        if(data && dataUser.role !== 1)
+        if(false) // data && dataUser.role !== 1
           return router.replace('/accueil')
-        getAllTeam()
+        getTeam()
       }, [data])
     
       const addVideo = async () => {

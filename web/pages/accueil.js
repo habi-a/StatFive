@@ -4,26 +4,23 @@ import { Line, Doughnut } from 'react-chartjs-2';
 import { data, options, dataPass, dataVictory } from '../static/data';
 import { GiTrophyCup, GiMedal } from "react-icons/gi"
 import { useEffect, useState } from 'react';
-import axios from "axios"
 import { API_URL } from "../static";
 import withAuth from '../components/withAuth';
+import { getAverageGoal } from '@mokhta_s/react-statfive-api'
 
 const Accueil = () => {
     const [teamRank, setTeamRank] = useState(null);
 
-    const getAverageGoal = async () => {
-        await axios.get(
-            API_URL + `/team/average_team`).then(res => {
-                res.data.data.sort((a, b) => b.moyenne_goal - a.moyenne_goal);
-                setTeamRank(res.data.data)
-            })
-          .catch(err => {
-            console.log(err)
-          });
+    const getGoalRank = async () => {
+        let result = await getAverageGoal(API_URL)
+        if(result.length > 0)
+            setTeamRank(result)
+        else
+            setTeamRank([])
     }
 
     useEffect(() => {
-        getAverageGoal()
+        getGoalRank()
     }, [])
 
   return (
@@ -42,8 +39,8 @@ const Accueil = () => {
                         <List spacing={3} textAlign="center" w="100%">
                             {teamRank && teamRank.map((el, i) => 
                                 i <= 4 ? i <= 2
-                                ? <ListItem bgColor="#84C9D5" cursor="pointer"> <ListIcon as={i == 0 ? GiTrophyCup : GiMedal} color={i == 0 ? "gold" : i == 1 ? "silver" : "bronze"} />{el.name}</ListItem> 
-                                : <ListItem bgColor="#F3FAFB" cursor="pointer" mb="10px">{el.name}</ListItem> 
+                                ? <ListItem key={i} bgColor="#84C9D5" cursor="pointer"> <ListIcon as={i == 0 ? GiTrophyCup : GiMedal} color={i == 0 ? "gold" : i == 1 ? "silver" : "bronze"} />{el.name}</ListItem> 
+                                : <ListItem key={i} bgColor="#F3FAFB" cursor="pointer" mb="10px">{el.name}</ListItem> 
                                 : null
                             )}
                             <Link href="/classement" color="blueteal.500">

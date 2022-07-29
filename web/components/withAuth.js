@@ -9,7 +9,8 @@ const withAuth = (WrappedComponent) => {
     const Router = useRouter();
     const [verified, setVerified] = useState("0");
     const token = useStore((state) => state.token)
-    const verif = useStore((state) => state.verification)
+    //const verif = useStore((state) => state.verification)
+    const verif = true
 
     useEffect(async () => {
       const accessToken = token

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router'
 import axios from "axios"
 import { API_URL } from "../static";
+import { register } from "@mokhta_s/react-statfive-api"
 
 import PasswordStrengthBar from 'react-password-strength-bar';
 
@@ -19,24 +20,21 @@ export default function Inscription() {
   const bg = useColorModeValue("blueteal.500", "blueteal.500")
   const router = useRouter()
 
-  const register = async () => {
+  const reg = async () => {
     if(pass !== pass2)
       return setError("Les mots de passe ne correspondent pas")
     if(lastname.length < 2 || firstname < 2) 
       return setError("Le prénom ou le nom est trop court")
-    if(!isEmail(email))
-      await axios.post(
-          [API_URL] + "/users/create",
-          {
-              email,
-              firstname,
-              lastname,
-              password: pass
-            }
-        ).then(res => router.push("/"))
-        .catch(err => {
-          setError(err && err.response && err.response.data.message)
-        });
+    if(!isEmail(email)) {
+      let result = await register(API_URL, email, firstname, lastname, pass, pass2)
+      console.log(result)
+      if(!(result?.data?.error))
+        router.push('/')
+      else
+      setError(result.data.message)
+    } else {
+      return setError("L'email n'est pas conforme.")
+    }
 }
 
   const isEmail = (val) => {
@@ -67,7 +65,7 @@ export default function Inscription() {
           <Input placeholder="Confirmer le mot de passe" type="password" mb="30px" value={pass2} onChange={(e) => setPass2(e.target.value)} />
         </Flex>
         <Stack direction="row" spacing={4}>
-            <Button colorScheme="blue" href="/accueil" onClick={register}>Valider</Button>
+            <Button colorScheme="blue" href="/accueil" onClick={reg}>Valider</Button>
             <Link href="/">
                 <Button colorScheme="blue" variant="outline">Déjà inscrit ?</Button>
             </Link>

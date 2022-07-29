@@ -6,6 +6,7 @@ import withAuth from '../components/withAuth'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { API_URL } from "../static";
+import { getAllTeam, getMyTeam } from '@mokhta_s/react-statfive-api'
 
 const Profil = () => {
   const [teamID, setTeamID] = useState(null)
@@ -14,30 +15,30 @@ const Profil = () => {
   const userID = useStore((state) => state.data.id)
 
   const allTeam = async () => {
-    await axios.get(
-    API_URL + `/team/all_team`).then(res => {
-        setTeamID(res.data.data);
-    })  
-  .catch(err => {
-    console.log(err)
-  });
-}
+    let result = await getAllTeam(API_URL)
+    if(result?.length > 0) {
+      setTeamID(result)
+    }
+  }
 
-  const getMyTeam = () => {
-    teamID && teamID.map(async (elm) => {
-      await axios.get(
-        API_URL + `/team/${elm.id}`).then(res => {
-          const arrayTeam = res.data.data.user
-          if(arrayTeam.length === 5) {
-            if(arrayTeam.find(o => o.id === userID)) {
-              setTeam((array) => [...array, arrayTeam])
-            }
-          }
-        })  
-      .catch(err => {
-        console.log(err)
-      });
-    })
+  const getTeam = async () => {
+    console.log(teamID, userID)
+    let result = await getMyTeam(API_URL, teamID, userID)
+    console.log(result)
+    result && result.map(async (elm) => {
+          await axios.get(elm).then(res => {
+              const arrayTeam = res.data.data.user
+              console.log(arrayTeam)
+              if(arrayTeam.length === 5) {
+                if(arrayTeam.find(o => o.id === userID)) {
+                  setTeam([arrayTeam])
+                }
+              }
+            })  
+          .catch(err => {
+            return err.response
+          })
+        })
   }
 
   useEffect(() => {
@@ -45,7 +46,8 @@ const Profil = () => {
   }, [])
 
   useEffect(() => {
-    getMyTeam()
+    if(teamID?.length > 0)
+      getTeam()
   }, [teamID])
 
   return (
@@ -60,7 +62,7 @@ const Profil = () => {
                         <h2>
                             <AccordionButton _expanded={{ bg: "black", color: "white" }}>
                               <Box flex="1" textAlign="left">
-                                {`Equipe ${i}`}
+                                {`Equipe ${++i}`}
                               </Box>
                             <AccordionIcon />
                           </AccordionButton>

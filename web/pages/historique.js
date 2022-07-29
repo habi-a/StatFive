@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import axios from "axios"
 import { API_URL } from "../static";
 import withAuth from '../components/withAuth';
+import { matchListHistoric } from "@mokhta_s/react-statfive-api"
 
 
 const customStyles = {
@@ -27,15 +28,12 @@ const Historique = () => {
   const [teamTwo, setTeamTwo] = useState(null)
 
   useEffect(() => {
-    matchListHistoric()
+    matchHistoric()
   }, [])
 
-  const matchListHistoric = async () => {
-    await axios.get(
-        API_URL + `/match/all_match`).then(res => setMatchList(res.data.data))
-      .catch(err => {
-        console.log(err)
-      });
+  const matchHistoric = async () => {
+    let result = await matchListHistoric(API_URL)
+    setMatchList(result)
   }
 
   const openModal = async (id) => {

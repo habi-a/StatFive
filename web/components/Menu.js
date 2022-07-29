@@ -77,8 +77,8 @@ import {useStore} from "../pages/index"
       { name: 'Paramètre', href: "/parametre", icon: FiSettings },
     ];
     
-    data && data.role === 1 && LinkItems.push({ name: "Création d'équipe", href: "/equipe", icon: RiFootballFill })
-    data && data.role === 1 && LinkItems.push({ name: 'Admin', href: "/admin", icon: RiAdminLine })
+    LinkItems.push({ name: "Création d'équipe", href: "/equipe", icon: RiFootballFill }) // data && data.role === 1 && 
+    LinkItems.push({ name: 'Admin', href: "/admin", icon: RiAdminLine }) // data && data.role === 1 && 
 
     return (
       <Box

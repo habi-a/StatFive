@@ -17,7 +17,7 @@ const Equipe = () => {
     const dataUser = useStore((state) => state.data)
 
     useEffect(() => {
-      if(dataUser && dataUser.role !== 1)
+      if(false) // dataUser && dataUser.role !== 1
         return router.replace('/accueil')
       resetTeam()
     }, [dataUser])
@@ -27,7 +27,7 @@ const Equipe = () => {
             [API_URL] + `/team/create_team`,
             [{name: teamName, player: arrayTeam }])
           .then(res => {
-              toast.success("L'équipe a été créée avec succès", {
+              toast.success("La création de l'équipe a été effectué", {
                   position: "bottom-right",
                   autoClose: 5000,
                   hideProgressBar: false,
