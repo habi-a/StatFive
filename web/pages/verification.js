@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import OtpInput from 'react-otp-input';
 import {useStore} from "./index"
 import Router from 'next/router'
+import { verification } from '@mokhta_s/react-statfive-api'
 
 
 const Verification = () => {
@@ -21,23 +22,22 @@ const Verification = () => {
     const addVerif = useStore(state => state.addVerif)
     const router = useRouter()
 
-    const verification = async () => {
-        await axios.get(
-            API_URL + `/users/verification_code/${otp.toUpperCase()}`,
-            {
-                headers: {
-                "api-token": token
-                }
-            }).then(async (res) => {
-                const newData = await axios.get(API_URL + `/users/${data.id}`)
-                setData(newData.data.data)
-                addVerif(true)
-                router.push("/accueil"); 
-                setCheck()
-            })
-        .catch(err => {
-            setError(err && err.response && err.response.data.message)
-        });
+    const verif = async () => {
+        if(otp.length < 1) {
+            setError("Aucun champ n'a été rempli")
+            return;
+        }
+        // let result = await verification(API_URL, otp, token, data.id);
+        // console.log(result)
+        // if(result && !(result?.data?.error)) {
+        //     setData(result.data)
+        //     addVerif(true)
+        //     router.push('accueil')
+        //     setCheck()
+        // } else {
+        //     console.log(result)
+        //     setError(result.data.message)
+        // }
     }
 
     useEffect(() => {
@@ -70,7 +70,7 @@ const Verification = () => {
                     textTransform: "uppercase"
                 }}
             />
-            <Button colorScheme="teal" variant="outline" onClick={verification} mt="20px">Valider</Button>
+            <Button colorScheme="teal" variant="outline" onClick={verif} mt="20px">Valider</Button>
         </Box>
     )
 }

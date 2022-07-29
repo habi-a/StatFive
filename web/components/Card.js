@@ -18,6 +18,8 @@ import {useStore} from "../pages/index"
     const removeSpecificID = useStore(state => state.resetID)
     const test = useStore(state => state.teamUser)
 
+    console.log(info)
+
     const userDelete = () => {
       delUser(false);
       removeSpecificID(info.id)

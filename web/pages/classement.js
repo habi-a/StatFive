@@ -2,26 +2,21 @@ import { Flex, Box, Heading, List, ListItem, ListIcon } from '@chakra-ui/react'
 import SimpleSidebar from "../components/Menu"
 import { GiTrophyCup, GiMedal } from "react-icons/gi"
 import { useEffect, useState } from 'react';
-import axios from "axios"
 import { API_URL } from "../static";
 import withAuth from '../components/withAuth';
+import { getAverageGoal } from "@mokhta_s/react-statfive-api"
 
 const Classement = () => {
     const [teamRank, setTeamRank] = useState(null);
 
-    const getAverageGoal = async () => {
-        await axios.get(
-            API_URL + `/team/average_team`).then(res => {
-                res.data.data.sort((a, b) => b.moyenne_goal - a.moyenne_goal);
-                setTeamRank(res.data.data)
-            })
-          .catch(err => {
-            console.log(err)
-          });
+    const getGoal = async () => {
+        let result = await getAverageGoal(API_URL)
+        if(!result.error)
+            setTeamRank(result)
     }
 
     useEffect(() => {
-        getAverageGoal()
+        getGoal()
     }, [])
 
   return (

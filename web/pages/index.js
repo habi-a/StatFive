@@ -1,11 +1,11 @@
 import { Flex, useColorModeValue, Box, Input, Heading, Button, Stack, Link, Image, Alert, AlertDescription, CloseButton, AlertIcon } from '@chakra-ui/react'
 import { useState } from 'react';
 import styles from '../styles/Home.module.css'
-import axios from "axios"
 import { API_URL } from "../static";
 import { useRouter } from 'next/router'
 import create from 'zustand'
 import { persist } from "zustand/middleware"
+import { login } from "@mokhta_s/react-statfive-api"
 
 export const useStore = create(persist((set) => ({
   token: null,
@@ -38,31 +38,29 @@ export default function Home() {
   const addData = useStore(state => state.addData)
   const setCheck = useStore(state => state.setCheck)
 
-  const login = async () => {
-    if(!isEmail(email) )
-      await axios.post(
-          API_URL + "/users/login",
-            {
-              email,
-              password: pass
-            }
-        ).then(res => {
-          addToken(res.data.data.token);
-          addVerif(res.data.data.verification);
-          addValue(res.data.data.id)
-          addData(res.data.data)
-          if(res.data.data.verification) {
-            router.push("/accueil"); 
-            setCheck()
-          }
-          else {
+   const log = async () => {
+      const res = await login(API_URL, email, pass)
+      if(res === "L'email n'est pas conforme.") {
+        setError(res)
+        return;
+      }
+
+      if (!(res?.data?.error)) {
+        addToken(res.data.data.token);
+        addVerif(res.data.data.verification);
+        addValue(res.data.data.id)
+        addData(res.data.data)
+        if(true) {
+          router.push("/accueil"); 
+          setCheck()
+        } else {
             router.push("/verification")
-          }
-        })
-        .catch(err => {
-          setError(err && err.response && err.response.data.message)
-        });
-  }
+        }
+       }
+       else {
+        setError(res.data.message)
+       }
+ }
 
   const isEmail = (val) => {
     let regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -88,7 +86,7 @@ export default function Home() {
           <Input placeholder="Mot de passe" type="password" mb="30px" value={pass} onChange={(e) => setPass(e.target.value)}/>
         </Flex>
         <Stack direction="row" spacing={4}>
-            <Button colorScheme="blue" href="/accueil" onClick={() => login()}>Se connecter</Button>
+            <Button colorScheme="blue" href="/accueil" onClick={() => log()}>Se connecter</Button>
           <Link href="/inscription">
             <Button colorScheme="blue" variant="outline">S'inscrire</Button>
           </Link>

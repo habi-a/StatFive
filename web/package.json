@@ -1,6 +1,6 @@
 {
   "name": "statfive",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -15,10 +15,12 @@
     "@chakra-ui/react": "^1.6.5",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
+    "@mokhta_s/react-statfive-api": "3.1.13",
     "axios": "^0.23.0",
     "chart.js": "^3.4.1",
     "framer-motion": "^4.1.17",
     "next": "11.0.1",
+    "postcss": "^8.4.12",
     "react": "17.0.2",
     "react-chartjs-2": "^3.0.4",
     "react-dom": "17.0.2",
@@ -35,9 +37,5 @@
     "react-toastify": "^8.0.3",
     "react-upload-file": "^2.0.0-beta.6",
     "zustand": "^3.5.10"
-  },
-  "devDependencies": {
-    "eslint": "7.31.0",
-    "eslint-config-next": "11.0.1"
   }
 }

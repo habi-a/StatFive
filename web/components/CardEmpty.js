@@ -69,7 +69,6 @@ const customStyles = {
           boxShadow={'2xl'}
           rounded={'md'}
           overflow={'hidden'}
-            w='270px'
             h="360px">
               <Button
               onClick={openModal}
