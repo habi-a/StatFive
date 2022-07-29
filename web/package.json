@@ -19,7 +19,7 @@
     "axios": "^0.23.0",
     "chart.js": "^3.4.1",
     "framer-motion": "^4.1.17",
-    "next": "11.0.1",
+    "next": "12.1.0",
     "postcss": "^8.4.12",
     "react": "17.0.2",
     "react-chartjs-2": "^3.0.4",
