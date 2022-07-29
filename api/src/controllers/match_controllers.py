@@ -80,6 +80,8 @@ def result():
     print(req_data)
     match_id = req_data['result']['id']
     m_match = Match.query.filter_by(id=match_id).first()
+    m_match.finish = True
+    db.session.commit()
     m_li_team_has_match_played = TeamHasMatchPlayed.query.filter_by(match_id=match_id).all()
 
     result_team = req_data['result']['red']
@@ -108,8 +110,8 @@ def all_match():
 @Auth.auth_required
 def stat_match_by_id(id):
     match_in_db = Match.query.filter_by(id=id).first()
-    if not match_in_db:
-        message = {'error': True, 'message': 'Le match existe pas.', 'data': None}
+    if not match_in_db or not match_in_db.finish:
+        message = {'error': True, 'message': 'Le match est en cours d\'analyse.', 'data': None}
         return custom_response(message, 404)
     stats = []
     for stat in match_in_db.team_match_played:

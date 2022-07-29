@@ -73,6 +73,19 @@ def login():
     return custom_response({'error': False, 'message': 'Utilisateur bien login.', 'data': user}, 201)
 
 
+@user_api.route('/me', methods=['GET'])
+@Auth.auth_required
+def get_me():
+    user_in_db = User.query.filter_by(id=g.user['id']).first()
+    if not user_in_db:
+        message = {'error': True, 'message': 'L\' utilisateur existe pas.', 'data': None}
+        return custom_response(message, 404)
+
+    user = user_in_db.to_json()
+
+    return custom_response({'error': False, 'message': 'get me', 'data': user}, 200)
+
+
 @user_api.route('/<int:id>', methods=['GET'])
 @swag_from(specs_users.user_by_id)
 @Auth.auth_required
