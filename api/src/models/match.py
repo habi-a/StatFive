@@ -25,5 +25,5 @@ class Match(db.Model):
             'duration': self.duration,
             'ground': self.ground,
             'path': self.path,
-            'finish': self.path
+            'finish': self.finish
         }

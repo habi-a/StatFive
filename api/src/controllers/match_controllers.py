@@ -7,6 +7,7 @@ import requests
 from flask import request, json, Response, Blueprint
 from flasgger import swag_from
 
+from ..models.user import UserHasTeam
 from ..specs import specs_match
 from ..models.match import Match
 from ..models.team import TeamHasMatchPlayed
@@ -110,14 +111,37 @@ def all_match():
 @Auth.auth_required
 def stat_match_by_id(id):
     match_in_db = Match.query.filter_by(id=id).first()
-    if not match_in_db or not match_in_db.finish:
+    if not match_in_db:
+        message = {'error': True, 'message': 'Le match existe pas.', 'data': None}
+        return custom_response(message, 404)
+    if not match_in_db.finish:
         message = {'error': True, 'message': 'Le match est en cours d\'analyse.', 'data': None}
         return custom_response(message, 404)
-    stats = []
-    for stat in match_in_db.team_match_played:
-        stats.append(stat.to_json())
+
+    # stats = []
+    # for stat in match_in_db.team_match_played:
+    #     stats.append(stat.to_json())
 
     match_data = match_in_db.to_json()
+    print(match_data)
     match_data['path'] = video_url_for('video', path=match_in_db.name)
-    data = {**match_data, **{'stats': stats}}
-    return custom_response({'error': False, 'message': 'Match stats by id.', 'data': data}, 200)
+
+    team_has_match_played = TeamHasMatchPlayed.query.filter_by(match_id=match_in_db.id).all()
+
+    data = {
+        **match_data,
+        **{'players': None},
+    }
+
+    for stat in team_has_match_played:
+        user_has_teams = UserHasTeam.query.filter_by(team_id=stat.team_id).all()
+        li_user = []
+        for user_has_team in user_has_teams:
+            li_user.append(user_has_team.user.to_json())
+        if int(stat.color) == 0:
+            data['team_red'] = {**stat.to_json(), 'players': li_user}
+        else:
+            data['team_blue'] = {**stat.to_json(), 'players': li_user}
+
+
+    return custom_response({'error': False, 'message': 'Match stats by id match.', 'data': data}, 200)

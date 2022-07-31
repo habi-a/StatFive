@@ -137,7 +137,7 @@ def get_user_by_name(name):
 @user_api.route('/all_user', methods=['GET'])
 @swag_from(specs_users.all_user)
 @Auth.auth_required
-def all_team():
+def all_user():
     users_in_db = User.query.all()
     users = []
     for user in users_in_db:
