@@ -95,7 +95,7 @@ def all_match():
     matchs = []
     for match in matchs_in_db:
         match_data = match.to_json()
-        match_data['path'] = video_url_for('video', path=match_data.name)
+        match_data['path'] = video_url_for('video', path=match_data['name'])
         matchs.append(match_data)
     return custom_response({'error': False, 'message': 'Listes des matchs.', 'data': matchs}, 200)
 
