@@ -20,13 +20,6 @@ from subprocess import check_output, CalledProcessError, STDOUT
 match_api = Blueprint('match', __name__)
 
 
-def lunch(match_id, filepath, id_blue, id_red):
-    result = subprocess.run(
-        ["python", "/tensorflow/models/research/object_detection/tracker/tracker.py", str(match_id), str(id_red),
-         str(id_blue), filepath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    return result
-
-
 def generate_random_number(number_of_digits: int) -> str:
     return ''.join([random.choice(string.digits) for _ in range(number_of_digits)])
 
@@ -118,12 +111,7 @@ def stat_match_by_id(id):
         message = {'error': True, 'message': 'Le match est en cours d\'analyse.', 'data': None}
         return custom_response(message, 404)
 
-    # stats = []
-    # for stat in match_in_db.team_match_played:
-    #     stats.append(stat.to_json())
-
     match_data = match_in_db.to_json()
-    print(match_data)
     match_data['path'] = video_url_for('video', path=match_in_db.name)
 
     team_has_match_played = TeamHasMatchPlayed.query.filter_by(match_id=match_in_db.id).all()
@@ -142,6 +130,5 @@ def stat_match_by_id(id):
             data['team_red'] = {**stat.to_json(), 'players': li_user}
         else:
             data['team_blue'] = {**stat.to_json(), 'players': li_user}
-
 
     return custom_response({'error': False, 'message': 'Match stats by id match.', 'data': data}, 200)

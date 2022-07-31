@@ -12,7 +12,7 @@ class Match(db.Model):
     duration = db.Column(db.String, nullable=False)
     ground = db.Column(db.Integer, nullable=False)
     path = db.Column(db.String, nullable=False)
-    finish = db.Column(db.Boolean, nullable=False)
+    finish = db.Column(db.Boolean, nullable=False, default=False)
 
     def save(self):
         db.session.add(self)
