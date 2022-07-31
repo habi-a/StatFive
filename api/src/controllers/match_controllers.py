@@ -71,7 +71,6 @@ def post_match():
 # @swag_from(specs_match.all_match)
 def result():
     req_data = request.get_json()
-    print(req_data)
     match_id = req_data['result']['id']
     m_match = Match.query.filter_by(id=match_id).first()
     m_match.finish = True
@@ -95,7 +94,9 @@ def all_match():
     matchs_in_db = Match.query.all()
     matchs = []
     for match in matchs_in_db:
-        matchs.append(match.to_json())
+        match_data = match.to_json()
+        match_data['path'] = video_url_for('video', path=match_data.name)
+        matchs.append(match_data)
     return custom_response({'error': False, 'message': 'Listes des matchs.', 'data': matchs}, 200)
 
 
