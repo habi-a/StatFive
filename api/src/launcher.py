@@ -38,7 +38,7 @@ def create_app(config_key='development'):
     def video(path: str):
         response = Response()
 
-        str_file_path = './src/files'
+        str_file_path = '/app/video'
         file_folder = os.path.abspath(str_file_path)
         file_path = Path(file_folder)
 
