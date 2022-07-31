@@ -128,8 +128,8 @@ def stat_match_by_id(id):
         for user_has_team in user_has_teams:
             li_user.append(user_has_team.user.to_json())
         if int(stat.color) == 0:
-            data['team_red'] = {**stat.to_json(), 'players': li_user}
+            data['team_red'] = {**stat.to_json(), **user_has_team.team.to_json(), 'players': li_user}
         else:
-            data['team_blue'] = {**stat.to_json(), 'players': li_user}
+            data['team_blue'] = {**stat.to_json(), **user_has_team.team.to_json(), 'players': li_user}
 
     return custom_response({'error': False, 'message': 'Match stats by id match.', 'data': data}, 200)
