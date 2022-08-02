@@ -29,3 +29,18 @@ def send_verification_code_mail(message: str, email: str, code: str) -> str:
         pass
 
     return code
+
+
+def send_reset_password_mail(message: str, email: str, code: str) -> str:
+    msg = Message_mail('Votre lien pour réinitialiser votre mot de passe', sender='elhorm_j@etna-alternance.net', recipients=[email])
+    msg.html = render_template("reset_password.html",
+                               code=code,
+                               message=message
+                               )
+    try:
+        mail.send(msg)
+    except Exception as err:
+        print(f"Exception while sending verification mail to {email} : {str(err)}")
+        pass
+
+    return code

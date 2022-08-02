@@ -15,7 +15,7 @@ class Development:
 
     MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
     MAIL_PORT = os.environ.get('MAIL_PORT', 465)
-    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', True)
+    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', False)
     MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL', True)
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'Villepinte93420')
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME', 'elhorm_j@etna-alternance.net')

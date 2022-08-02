@@ -77,3 +77,26 @@ class UserHasTeam(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
+
+
+class UserPending(db.Model):
+    """
+    UserPending Model
+    """
+    __tablename__ = 'pending'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    type = db.Column(db.String)
+    code = db.Column(db.String)
+    expired = db.Column(db.Boolean)
+    created_at = db.Column(db.DateTime)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    user = db.relationship('User')
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
