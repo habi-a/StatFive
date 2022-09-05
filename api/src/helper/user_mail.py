@@ -18,7 +18,10 @@ def send_verification_code_mail(message: str, email: str, code: str) -> str:
     :param email mail address where to send the mail
     :return the randomly generated code
     """
-    msg = Message_mail('Votre code de vérification', sender='elhorm_j@etna-alternance.net', recipients=[email])
+
+    sender = os.environ.get('MAIL_SENDER', 'elhorm_j@etna-alternance.net')
+
+    msg = Message_mail('Votre code de vérification', sender=sender, recipients=[email])
     msg.html = render_template("send_code.html",
                                code=code,
                                message=message
@@ -33,9 +36,11 @@ def send_verification_code_mail(message: str, email: str, code: str) -> str:
 
 
 def send_reset_password_mail(message: str, email: str, code: str) -> str:
-    msg = Message_mail('Votre lien pour réinitialiser votre mot de passe', sender='elhorm_j@etna-alternance.net', recipients=[email])
-
+    sender = os.environ.get('MAIL_SENDER', 'elhorm_j@etna-alternance.net')
     url = os.environ.get('URL_WEB', 'http://127.0.0.1:3000/')
+
+    msg = Message_mail('Votre lien pour réinitialiser votre mot de passe', sender=sender, recipients=[email])
+
     msg.html = render_template("reset_password.html",
                                code=code,
                                url=url,
