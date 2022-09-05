@@ -1,3 +1,4 @@
+import os
 import random
 import string
 
@@ -33,8 +34,11 @@ def send_verification_code_mail(message: str, email: str, code: str) -> str:
 
 def send_reset_password_mail(message: str, email: str, code: str) -> str:
     msg = Message_mail('Votre lien pour réinitialiser votre mot de passe', sender='elhorm_j@etna-alternance.net', recipients=[email])
+
+    url = os.environ.get('URL_WEB', 'http://127.0.0.1:3000/')
     msg.html = render_template("reset_password.html",
                                code=code,
+                               url=url,
                                message=message
                                )
     try:

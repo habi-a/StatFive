@@ -25,7 +25,7 @@ def create():
     if user_in_db:
         message = {'error': True, 'message': 'Email déjà existant, veuillez en choisir un autre.', 'data': None}
         return custom_response(message, 400)
-    code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
+    code = ''.join(random.choices(string.digits, k=6))
     send_verification_code_mail('Votre code de validation est le', req_data['email'], code)
     password = User.hash_password(req_data['password'])
     user = User(
