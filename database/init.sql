@@ -238,6 +238,26 @@ UNLOCK TABLES;
 -- Dump completed on 2021-09-09  9:27:38
 
 
+DROP TABLE IF EXISTS `pending`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pending` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `type` VARCHAR(45) NULL DEFAULT NULL,
+  `code` VARCHAR(45) NULL DEFAULT NULL,
+  `created_at` DATETIME NULL DEFAULT NULL,
+  `expired` TINYINT(2) NULL DEFAULT NULL,
+  `user_id` INT(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `userpending_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `userpending`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
+
 # use statfive;
 #
 # CREATE TABLE `match_played` (
