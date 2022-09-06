@@ -1,12 +1,8 @@
-import { Flex, useColorModeValue, Box, Input, Heading, Button, Stack, Link, Image, Alert, AlertDescription, CloseButton, AlertIcon } from '@chakra-ui/react'
-import styles from '../styles/Home.module.css'
+import { Flex, useColorModeValue, Box, Input, Heading, Button, Stack, Link, Image, Alert, AlertDescription, CloseButton, AlertIcon, Center } from '@chakra-ui/react'
 import { useState } from 'react';
 import { useRouter } from 'next/router'
-import axios from "axios"
 import { API_URL } from "../static";
 import { register } from "@mokhta_s/react-statfive-api"
-
-import PasswordStrengthBar from 'react-password-strength-bar';
 
 export default function Inscription() {
   const [email, setEmail] = useState("");
@@ -15,7 +11,6 @@ export default function Inscription() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [error, setError] = useState(null)
-  const [strength, setStrength] = useState(null);
 
   const bg = useColorModeValue("blueteal.500", "blueteal.500")
   const router = useRouter()
@@ -27,7 +22,6 @@ export default function Inscription() {
       return setError("Le prénom ou le nom est trop court")
     if(!isEmail(email)) {
       let result = await register(API_URL, email, firstname, lastname, pass, pass2)
-      console.log(result)
       if(!(result?.data?.error))
         router.push('/')
       else
@@ -45,9 +39,10 @@ export default function Inscription() {
   }
 
   return (
-    <Box bgColor={bg} className={styles.container}>
+    <Center bgColor={bg} h="100vh">
+      <Box >
       <Flex boxShadow="2xl" w="400px" h="auto" bgColor="white" borderRadius="15px" justifyContent="center" p="20px" flexDir="column">
-        <Image src="statfive.png" w="175px" m="auto"/>
+        <Image alt="Logo de StatFive" src="statfive.png" w="175px" m="auto"/>
         {error && 
         <Alert status="error" borderRadius="10px" mb="10px">
           <AlertIcon />
@@ -61,7 +56,6 @@ export default function Inscription() {
           <Input placeholder="Prénom" mb="15px" value={firstname} onChange={(e) => setFirstname(e.target.value)} />
           <Input placeholder="E-mail" mb="15px" borderColor={isEmail(email) ? "crimson" : "green.200"} value={email} onChange={(e) => setEmail(e.target.value)}/>
           <Input placeholder="Mot de passe" type="password" mb="15px" value={pass} onChange={(e) => setPass(e.target.value)}/>
-          <PasswordStrengthBar password={pass} scoreWords={["simple", "simple", "ok", "bon", "très bon"]} shortScoreWord="trop court" onChangeScore={(val) => setStrength(val)}/>
           <Input placeholder="Confirmer le mot de passe" type="password" mb="30px" value={pass2} onChange={(e) => setPass2(e.target.value)} />
         </Flex>
         <Stack direction="row" spacing={4}>
@@ -71,6 +65,8 @@ export default function Inscription() {
             </Link>
         </Stack>
       </Flex>
-    </Box>
+    </Box>  
+    </Center>
+    
   )
 }

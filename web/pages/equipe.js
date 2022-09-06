@@ -1,20 +1,20 @@
-import { Flex, Box, Heading, Button, Input } from '@chakra-ui/react'
+import { Flex, Box, Heading, Button, Input, useToast } from '@chakra-ui/react'
 import SimpleSidebar from "../components/Menu"
 import CardEmpty from '../components/CardEmpty'
 import axios from "axios"
 import { useEffect, useState } from 'react';
 import {useStore} from "./index"
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { API_URL } from "../static";
 import withAuth from '../components/withAuth'
 import router from 'next/router'
+import { createTeam } from '@mokhta_s/react-statfive-api';
 
 const Equipe = () => {
+    const toast = useToast()
     const [teamName, setTeamName] = useState('')
     const resetTeam = useStore(state => state.resetTeam)
     const arrayTeam = useStore(state => state.teamUser)
     const dataUser = useStore((state) => state.data)
+
 
     useEffect(() => {
       if(false) // dataUser && dataUser.role !== 1
@@ -22,40 +22,34 @@ const Equipe = () => {
       resetTeam()
     }, [dataUser])
 
-    const createTeam = async () => {
-        await axios.post(
-            [API_URL] + `/team/create_team`,
-            [{name: teamName, player: arrayTeam }])
-          .then(res => {
-              toast.success("La création de l'équipe a été effectué", {
-                  position: "bottom-right",
-                  autoClose: 5000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  });
-          })
-          .catch(err => console.log('Erreur', err)
-          );
+    const createNewTeam = async () => {
+        const result = await createTeam(teamName, arrayTeam)
+        if(!result?.data.error) {
+            toast({
+                title: "La création de l'équipe a été effectué",
+                description: "Votre équipe est disponible",
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+              })
+        }
     }
 
   return (
     <Box>
         <SimpleSidebar />
-        <Box pos="relative" left="240px" w="calc(100% -  240px)">
+        <Box pos="relative" left={{sm: "100px", md: "240px"}} w={{ md:"calc(100% -  240px)"}}>
             <Heading textAlign="center">Création d'équipe</Heading>
             <Input type="text" value={teamName} placeholder="Nom de l'équipe" mt="25px" w="50%" errorBorderColor="red.300" isInvalid={teamName.length < 1} ml="40px" onChange={(e) => setTeamName(e.target.value)}/>
-            <Flex flexDir="row" justifyContent="space-between" padding="40px">
+            <Flex flexDir={{base: "column", md: "row"}} justifyContent="space-between" padding="40px">
                 <CardEmpty />
                 <CardEmpty />
                 <CardEmpty />
                 <CardEmpty />
                 <CardEmpty />
             </Flex>
-            {arrayTeam.length === 5 && teamName.length > 0 && <Button ml="40px" onClick={() => createTeam()} colorScheme="blue">Valider l'équipe</Button>}
-            <ToastContainer
+            {arrayTeam.length === 5 && teamName.length > 0 && <Button ml="40px" onClick={() => createNewTeam()} colorScheme="blue">Valider l'équipe</Button>}
+            {/* <ToastContainer
                             position="bottom-right"
                             autoClose={5000}
                             hideProgressBar={false}
@@ -65,7 +59,7 @@ const Equipe = () => {
                             pauseOnFocusLoss
                             draggable
                             pauseOnHover
-                        />
+                        /> */}
         </Box>
     </Box>
   )

@@ -1,13 +1,12 @@
-import { Flex, Text, Box, Heading, Textarea, IconButton, useColorMode, Button, Select, Link, Image } from '@chakra-ui/react'
+import { Flex, Text, Box, Heading, Textarea, IconButton, useColorMode, Button, Select, Link, Image, useToast  } from '@chakra-ui/react'
 import SimpleSidebar from "../components/Menu"
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import {useStore} from "./index"
 import { useState } from 'react';
-import axios from "axios"
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { API_URL } from "../static";
 import withAuth from '../components/withAuth';
+import { updateProfil } from '@mokhta_s/react-statfive-api';
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useRouter } from 'next/router'
 
 const Parametre = () => {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -17,30 +16,39 @@ const Parametre = () => {
     const [description, setDescription] = useState(dataUser ? dataUser.description : '');
     const [poste, setPoste] = useState(dataUser ? dataUser.post : '' )
 
-    const updateProfil = async () => {
-          await axios.put(
-              [API_URL] + `/users/${idUser}`,
-              { description, post: poste})
-            .then(res => {
-                toast.success('Le profil a bien été modifié', {
-                    position: "bottom-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    });
-                console.log('Profil bien modifié')
-            })
-            .catch(err => console.log('Erreur', err)
-            );
+    const toast = useToast()
+    const router = useRouter()
+
+    const updateProfilUser = async () => {
+        const result = await updateProfil(idUser, description, poste)
+        if(result?.data.error === false ) {
+            toast({
+                title: "Profil",
+                description: "Votre profil a bien été modifié",
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+              })
+        } else {
+            toast({
+            title: "Profil",
+            description: "Il y a eu un problème lors de la modification",
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+            });
+        }
+    }
+
+    const logout = async () => {
+        await AsyncStorage.clear()
+        router.push("/verification")
     }
 
   return (
     <Box>
         <SimpleSidebar />
-        <Box pos="relative" left="240px" w="calc(100% -  240px)">
+        <Box pos="relative" left={{sm: "100px", md: "240px"}} w={{ md:"calc(100% -  240px)"}}>
             <Heading textAlign="center" mb="50px">Mes paramètres</Heading>
             <Flex flexDir="column" >
                 <Flex mb="25px" justifyContent="center">
@@ -65,8 +73,8 @@ const Parametre = () => {
                             <option value="Défenseur">Défenseur</option>
                             <option value="Gardien">Gardien</option>
                         </Select>
-                        <Button onClick={() => updateProfil()} mt="25px">Enregistrer mes modifications</Button>
-                        <ToastContainer
+                        <Button onClick={() => updateProfilUser()} mt="25px">Enregistrer mes modifications</Button>
+                        {/* <ToastContainer
                             position="bottom-right"
                             autoClose={5000}
                             hideProgressBar={false}
@@ -76,7 +84,7 @@ const Parametre = () => {
                             pauseOnFocusLoss
                             draggable
                             pauseOnHover
-                        />
+                        /> */}
                     </Flex>
                 </Flex>
                 <Flex flexDirection="column" ml="40px" alignItems="center">
@@ -88,7 +96,7 @@ const Parametre = () => {
                     
                 </Flex>
                 <Flex mt="50px">
-                    <Link m="auto" href="/"><Button onClick={() => logOut()} color="white" background="black">Se déconnecter</Button></Link>
+                    <Link m="auto" href="/"><Button onClick={() => logout()} color="white" background="black">Se déconnecter</Button></Link>
                     <Button m="auto" w="25%" colorScheme="red" isDisabled>Supprimer mon compte</Button>
                 </Flex>
             </Flex>

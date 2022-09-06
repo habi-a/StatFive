@@ -1,4 +1,3 @@
-// HOC/withAuth.jsx
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useStore } from "../pages";
@@ -9,20 +8,18 @@ const withAuth = (WrappedComponent) => {
     const Router = useRouter();
     const [verified, setVerified] = useState("0");
     const token = useStore((state) => state.token)
-    //const verif = useStore((state) => state.verification)
-    const verif = true
+    const verif = useStore((state) => state.verification)
 
-    useEffect(async () => {
-      const accessToken = token
-      if (!accessToken) {
+    useEffect(() => {
+      if (!token) {
         Router.replace("/");
         setVerified("0")
-      } else if(verif === false && accessToken) {
+      } else if(verif === false && token) {
         setVerified("1")
       } else {
         setVerified("2")
       }
-    }, []);
+    }, [Router, token, verif]);
 
     if (verified === "2") {
       return <WrappedComponent {...props} />;

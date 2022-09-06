@@ -1,16 +1,13 @@
-import { Flex, Text, Box, Heading, Button, AspectRatio } from '@chakra-ui/react'
+import { Flex, Text, Box, Heading, Button, AspectRatio, useToast } from '@chakra-ui/react'
 import SimpleSidebar from "../components/Menu"
-import { data } from '../static/data';
 import { useEffect, useState } from 'react';
 import router from 'next/router'
 import {useStore} from "./index"
 import axios from "axios"
 import { API_URL } from "../static";
 import Select from 'react-select'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import withAuth from '../components/withAuth';
-import { getAllTeam } from "@mokhta_s/react-statfive-api"
+import { getAllTeam, addVideo } from "@mokhta_s/react-statfive-api"
 
 const Admin = () => {
     const dataUser = useStore(state => state.data)
@@ -20,9 +17,10 @@ const Admin = () => {
     const [teamTwo, setTeamTwo] = useState(null);
 
     const token = useStore(state => state.token)
+    const toast = useToast()
 
-    const getTeam = () => {
-      let result = getAllTeam(API_URL)
+    const getTeam = async () => {
+      let result = await getAllTeam(API_URL)
       if(!result.error)
         setAllTeam(result)
     }
@@ -32,44 +30,26 @@ const Admin = () => {
         if(false) // data && dataUser.role !== 1
           return router.replace('/accueil')
         getTeam()
-      }, [data])
+      }, [dataUser])
     
-      const addVideo = async () => {
-        var bodyFormData = new FormData();
-        bodyFormData.append('video', mp4);
-        bodyFormData.append('team_one', teamOne);
-        bodyFormData.append('team_two', teamTwo);
-    
-    
-        var headers = {
-          'Content-Type': 'multipart/form-data',
-          "Access-Control-Allow-Origin": "*",
-          'api-token': token
+      const addNewVideo = async () => {
+        const result = await addVideo(mp4, teamOne, teamTwo)
+        if(!result?.data?.error) {
+            toast({
+                title: "L'analyse vidéo a bien été lancé",
+                description: "Elle sera bientôt disponible..",
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+              })
         }
-        await axios.post(
-            [API_URL] + `/match`,
-            bodyFormData, { headers: headers })
-          .then(res => {
-              toast.success("L'analyse vidéo a bien été lancé", {
-                  position: "bottom-right",
-                  autoClose: 5000,
-                  hideProgressBar: false,
-                  closeOnClick: true,
-                  pauseOnHover: true,
-                  draggable: true,
-                  progress: undefined,
-                  });
-              console.log('Analyse vidéo en cours')
-          })
-          .catch(err => console.log('Erreur', err)
-          );
       }
     
 
   return (
     <Box>
         <SimpleSidebar />
-        <Box pos="relative" left="240px" w="calc(100% -  240px)">
+        <Box pos="relative" left={{sm: "100px", md: "240px"}} w={{ md:"calc(100% -  240px)"}}>
                     <Heading textAlign="center" mb="25px">Création du match</Heading>
                     <Flex w="100%" justifyContent="center" flexDir="column">
                         <Text as="h1" fontSize="30px" textAlign="center">Equipe 1</Text>
@@ -91,19 +71,8 @@ const Admin = () => {
                           allowFullScreen
                         />
                       </AspectRatio>
-                    {mp4 && teamOne && teamTwo && <Button mt="25px" onClick={() => addVideo()}>Valider la création</Button>}
+                    {mp4 && teamOne && teamTwo && <Button mt="25px" onClick={() => addNewVideo()}>Valider la création</Button>}
                     </Flex>
-                    <ToastContainer
-                            position="bottom-right"
-                            autoClose={5000}
-                            hideProgressBar={false}
-                            newestOnTop={false}
-                            closeOnClick
-                            rtl={false}
-                            pauseOnFocusLoss
-                            draggable
-                            pauseOnHover
-                        />
         </Box>
     </Box>
   )

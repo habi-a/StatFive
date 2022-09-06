@@ -2,7 +2,6 @@ import { Flex, Box, Heading, List, ListItem, ListIcon } from '@chakra-ui/react'
 import SimpleSidebar from "../components/Menu"
 import { GiTrophyCup, GiMedal } from "react-icons/gi"
 import { useEffect, useState } from 'react';
-import { API_URL } from "../static";
 import withAuth from '../components/withAuth';
 import { getAverageGoal } from "@mokhta_s/react-statfive-api"
 
@@ -10,7 +9,7 @@ const Classement = () => {
     const [teamRank, setTeamRank] = useState(null);
 
     const getGoal = async () => {
-        let result = await getAverageGoal(API_URL)
+        let result = await getAverageGoal()
         if(!result.error)
             setTeamRank(result)
     }
@@ -22,7 +21,7 @@ const Classement = () => {
   return (
     <Box>
         <SimpleSidebar />
-        <Box pos="relative" left="240px" w="calc(100% -  240px)">
+        <Box pos="relative" left={{sm: "100px", md: "240px"}} w={{ md:"calc(100% -  240px)"}}>
             <Heading textAlign="center" mb="50px">Classement moyenne de but</Heading>
             <Flex flexDir="row" justifyContent="space-around">
                     <Flex justifyContent="center" w="100%">

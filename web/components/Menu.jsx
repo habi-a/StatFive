@@ -10,18 +10,13 @@ import {
     DrawerContent,
     Text,
     useDisclosure,
-    BoxProps,
-    FlexProps,
     Image
   } from '@chakra-ui/react';
   import {
     FiHome,
-    FiTrendingUp,
     FiCompass,
-    FiStar,
     FiSettings,
     FiMenu,
-    FiPower
   } from 'react-icons/fi';
   import {
     RiProfileLine,
@@ -29,13 +24,8 @@ import {
     RiFootballFill,
     RiAdminLine
   } from 'react-icons/ri'
-  import { IconType } from 'react-icons';
-  import { ReactText, useEffect, useState } from 'react';
-  import { useRouter } from 'next/router'
 import {useStore} from "../pages/index"
 
- 
-  
   export default function SimpleSidebar({ children }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -155,7 +145,7 @@ import {useStore} from "../pages/index"
         />
   
         <Text fontSize="2xl" ml="8" fontFamily="monospace" fontWeight="bold">
-          Logo
+          Statfive
         </Text>
       </Flex>
     );
