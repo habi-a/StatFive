@@ -1,24 +1,17 @@
 import {
     Heading,
-    Avatar,
     Box,
     Center,
-    Image,
-    Flex,
     Text,
     Stack,
     Button,
     useColorModeValue,
-    Link
   } from '@chakra-ui/react';
 
 import {useStore} from "../pages/index"
   
   export default function Card({info, delUser, cantDelete}) {
     const removeSpecificID = useStore(state => state.resetID)
-    const test = useStore(state => state.teamUser)
-
-    console.log(info)
 
     const userDelete = () => {
       delUser(false);

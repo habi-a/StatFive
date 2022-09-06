@@ -1,4 +1,4 @@
-import { Flex, useColorModeValue, Box, Input, Heading, Button, Stack, Link, Image, Alert, AlertDescription, CloseButton, AlertIcon } from '@chakra-ui/react'
+import { Flex, useColorModeValue, Box, Input, Heading, Button, Stack, Link, Image, Alert, AlertDescription, CloseButton, AlertIcon, Center, Divider } from '@chakra-ui/react'
 import { useState } from 'react';
 import styles from '../styles/Home.module.css'
 import { API_URL } from "../static";
@@ -46,11 +46,11 @@ export default function Home() {
       }
 
       if (!(res?.data?.error)) {
-        addToken(res.data.data.token);
-        addVerif(res.data.data.verification);
-        addValue(res.data.data.id)
-        addData(res.data.data)
-        if(true) {
+        addToken(res.data.token);
+        addVerif(res.data.verification);
+        addValue(res.data.id)
+        addData(res.data)
+        if(res.data.verification) {
           router.push("/accueil"); 
           setCheck()
         } else {
@@ -70,28 +70,31 @@ export default function Home() {
   }
 
   return (
-    <Box bgColor={bg} className={styles.container}>
-      <Flex boxShadow="2xl" w="400px" h="auto" bgColor="white" borderRadius="15px" justifyContent="center" p="20px" flexDir="column">
-        <Image src="statfive.png" w="175px" m="auto"/>
-        {error && 
-        <Alert status="error" borderRadius="10px" mb="10px">
-          <AlertIcon />
-          <AlertDescription mr={2}>{error}</AlertDescription>
-          <CloseButton position="absolute" right="8px" top="8px" />
-        </Alert>
-        }
-        <Heading textAlign="center" mb="30px">Connexion</Heading>
-        <Flex flexDir="column" w="100%">
-          <Input placeholder="E-mail" mb="15px" borderColor={isEmail(email) ? "crimson" : "green.200"} value={email} onChange={(e) => setEmail(e.target.value)}/>
-          <Input placeholder="Mot de passe" type="password" mb="30px" value={pass} onChange={(e) => setPass(e.target.value)}/>
+    <Center bgColor={bg} h="100vh">
+      <Box>
+        <Flex boxShadow="2xl" w="400px" h="auto" bgColor="white" borderRadius="15px" justifyContent="center" p="20px" flexDir="column">
+          <Image alt="Logo de StatFive" src="statfive.png" w="175px" m="auto"/>
+          {error && 
+          <Alert status="error" borderRadius="10px" mb="10px">
+            <AlertIcon />
+            <AlertDescription mr={2}>{error}</AlertDescription>
+            <CloseButton position="absolute" right="8px" top="8px" />
+          </Alert>
+          }
+          <Heading textAlign="center" mb="30px">Connexion</Heading>
+          <Flex flexDir="column" w="100%">
+            <Input placeholder="E-mail" mb="15px" borderColor={isEmail(email) ? "crimson" : "green.200"} value={email} onChange={(e) => setEmail(e.target.value)}/>
+            <Input placeholder="Mot de passe" type="password" mb="30px" value={pass} onChange={(e) => setPass(e.target.value)}/>
+          </Flex>
+          <Stack direction="row" spacing={4}>
+              <Button colorScheme="blue" href="/accueil" onClick={() => log()}>Se connecter</Button>
+            <Link href="/inscription">
+              <Button colorScheme="blue" variant="outline">Inscription</Button>
+            </Link>
+          </Stack>
+              <Link mt="15px" colorScheme="white" color="black" href="/reset-password">Mot de passe oublié ?</Link>
         </Flex>
-        <Stack direction="row" spacing={4}>
-            <Button colorScheme="blue" href="/accueil" onClick={() => log()}>Se connecter</Button>
-          <Link href="/inscription">
-            <Button colorScheme="blue" variant="outline">S'inscrire</Button>
-          </Link>
-        </Stack>
-      </Flex>
-    </Box>
+      </Box>
+    </Center>
   )
 }

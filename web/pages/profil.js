@@ -4,29 +4,29 @@ import Card from "../components/Card"
 import {useStore} from "./index"
 import withAuth from '../components/withAuth'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
-import { API_URL } from "../static";
 import { getAllTeam, getMyTeam } from '@mokhta_s/react-statfive-api'
+import axios from "axios"
 
 const Profil = () => {
   const [teamID, setTeamID] = useState(null)
   const [team, setTeam] = useState([])
 
   const userID = useStore((state) => state.data.id)
+  const token = useStore(state => state.token)
 
   const allTeam = async () => {
-    let result = await getAllTeam(API_URL)
+    let result = await getAllTeam()
+    console.log('ici', result)
     if(result?.length > 0) {
       setTeamID(result)
     }
   }
 
   const getTeam = async () => {
-    console.log(teamID, userID)
-    let result = await getMyTeam(API_URL, teamID, userID)
+    let result = await getMyTeam(teamID)
     console.log(result)
     result && result.map(async (elm) => {
-          await axios.get(elm).then(res => {
+          await axios.get(elm, { headers:{"api-token": token} }).then(res => {
               const arrayTeam = res.data.data.user
               console.log(arrayTeam)
               if(arrayTeam.length === 5) {
@@ -53,7 +53,7 @@ const Profil = () => {
   return (
     <Box>
         <SimpleSidebar />
-        <Box pos="relative" left="240px" w="calc(100% -  240px)">
+        <Box pos="relative" left={{sm: "100px", md: "240px"}} w={{ md:"calc(100% -  240px)"}}>
             <Heading textAlign="center">Mon profil</Heading>
             <Flex flexDir="row" padding="40px" ml="40px">
               {team && team.map((elm, i) => 

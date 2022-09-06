@@ -1,52 +1,36 @@
-import { Flex, Box, Heading, List, ListItem, ListIcon, Button, Text, AspectRatio } from '@chakra-ui/react'
+import { Flex, Box, Heading, List, ListItem, ListIcon, Button, Text, AspectRatio, Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton, } from '@chakra-ui/react'
 import SimpleSidebar from "../components/Menu"
 import { GiSoccerField } from "react-icons/gi"
-import Modal from 'react-modal';
 import { useEffect, useState } from 'react';
 import axios from "axios"
 import { API_URL } from "../static";
 import withAuth from '../components/withAuth';
-import { matchListHistoric } from "@mokhta_s/react-statfive-api"
-
-
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
+import { matchListHistoric, statMatchById } from "@mokhta_s/react-statfive-api"
 
 const Historique = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [matchList, setMatchList] = useState([]);
   const [matchData, setMatchData] = useState(null)
-  const [teamOne, setTeamOne] = useState(null)
-  const [teamTwo, setTeamTwo] = useState(null)
 
   useEffect(() => {
     matchHistoric()
   }, [])
 
   const matchHistoric = async () => {
-    let result = await matchListHistoric(API_URL)
+    let result = await matchListHistoric()
     setMatchList(result)
   }
 
   const openModal = async (id) => {
-    const dataMatch = await axios.get(API_URL + `/match/stat_match_by_id/${id}`)
-    setMatchData(dataMatch.data.data)
-    const getInfoTeamOne = axios.get(API_URL + `/team/${dataMatch.data.data.stats[0].team_id}`)
-    const getInfoTeamTwo = axios.get(API_URL + `/team/${dataMatch.data.data.stats[1].team_id}`)
-    axios.all([getInfoTeamOne, getInfoTeamTwo]).then(axios.spread((...responses) => {
-      setTeamOne(responses[0].data.data)
-      setTeamTwo(responses[1].data.data)
-    })).catch(errors => {
-      console.log(errors)
-    })
+    const result = await statMatchById(id)
+    console.log(result)
+    setMatchData(result.data.data)
     setIsOpen(true);
   }
 
@@ -57,37 +41,37 @@ const Historique = () => {
   return (
     <Box>
         <SimpleSidebar />
-        <Box pos="relative" left="240px" w="calc(100% -  240px)">
+        <Box pos="relative" left={{sm: "100px", md: "240px"}} w={{ md:"calc(100% -  240px)"}}>
             <Heading textAlign="center" mb="50px">Historique des matchs</Heading>
             <Flex justifyContent="center" w="100%">
               <List spacing={3} textAlign="center" w="100%">
-                {matchList.map((elm) => {
-                  return <ListItem bgColor="#84C9D5" cursor="pointer" p="10px" w="100%" onClick={() => openModal(elm.id)}> <ListIcon as={GiSoccerField} color="green" />ID DU MATCH : {elm.id} | Match {elm.name}</ListItem>
+                {matchList.map((elm, i) => {
+                  return <ListItem key={i} bgColor="#84C9D5" cursor={elm.finish ? "pointer" : "not-allowed"} p="10px" w="100%" onClick={() => {elm.finish && openModal(elm.id)}}> <ListIcon as={GiSoccerField} color="green" />{!elm.finish && "ANALYSE EN COURS"} - ID DU MATCH : {elm.id} | Match {elm.name}</ListItem>
                 })}
               </List>
             </Flex>
         </Box>
-        <Modal
-              isOpen={modalIsOpen}
-              onRequestClose={closeModal}
-              style={customStyles}
-              contentLabel="Example Modal"
-            >
-              <Heading textAlign="center" mb="25px">Match</Heading>
+        <Modal isOpen={modalIsOpen} onClose={closeModal}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Statistique du match</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+          <Heading textAlign="center" mb="25px">Match</Heading>
               <Flex w="300px" h="auto" justifyContent="space-around">
                 <Box>
-                  <Text>Equipe {teamOne && teamOne.team.name}<br/><br/></Text>
+                  <Text>Equipe {matchData && matchData.team_blue.name}<br/><br/></Text>
                   <hr/>
-                  <Text>But : {matchData && matchData.stats[0].goals}<br/><br/></Text>
+                  <Text>But : {matchData && matchData.team_blue.goals}<br/><br/></Text>
                   <hr/>
-                  <Text>Possession : {matchData && matchData.stats[0].possesion}<br/><br/></Text>
+                  <Text>Possession : {matchData && matchData.team_blue.possesion}<br/><br/></Text>
                 </Box>
                 <Box>
-                  <Text>Equipe {teamTwo && teamTwo.team.name}<br/><br/></Text>
+                  <Text>Equipe {matchData && matchData.team_red.name}<br/><br/></Text>
                   <hr/>
-                  <Text>But : {matchData && matchData.stats[1].goals}<br/><br/></Text>
+                  <Text>But : {matchData && matchData.team_red.goals}<br/><br/></Text>
                   <hr/>
-                  <Text>Possession : {matchData && matchData.stats[1].possesion}<br/><br/></Text>
+                  <Text>Possession : {matchData && matchData.team_red.possesion}<br/><br/></Text>
                 </Box>
                 
                 
@@ -100,8 +84,15 @@ const Historique = () => {
                     allowFullScreen
                   />
                 </AspectRatio>
-              <Button onClick={closeModal} mt="25px">Fermer</Button>
-            </Modal>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme='blue' mr={3} onClick={closeModal}>
+              Fermer
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   )
 }
