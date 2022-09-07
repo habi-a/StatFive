@@ -15,6 +15,7 @@
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@mokhta_s/react-statfive-api": "^3.2.1",
+    "@react-native-async-storage/async-storage": "^1.17.10",
     "framer-motion": "^6.5.1",
     "next": "12.2.3",
     "react": "18.2.0",
