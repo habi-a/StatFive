@@ -59,6 +59,11 @@ spec:
         - image: "acalhabi/statfive_tracker"
           name: tracker-worker
           command: ["rq", "worker", "--url", "redis://redis:6379"]
+          resources:
+            limits:
+              memory: "2Gi"
+            requests:
+              memory: "1Gi"
           env:
             - name: OBJC_DISABLE_INITIALIZE_FORK_SAFETY
               value: "YES"

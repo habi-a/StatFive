@@ -61,7 +61,7 @@ def post_match():
         "id_blue": req_data['team_two'],
         "video_match": f"/app/video/{name_file}",
         "show": False,
-        "callback": "http://api:5000/"
+        "callback": "http://api:5000/api/"
     })
 
     return custom_response({'error': False, 'message': 'Sauvegarde du match.', 'data': None}, 200)
