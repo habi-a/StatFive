@@ -274,7 +274,7 @@ metadata:
   namespace: statfive
 spec:
   capacity:
-    storage: 5Ti
+    storage: 1Gi
   accessModes:
     - ReadWriteMany
   azureFile:
@@ -303,7 +303,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 5Ti
+      storage: 1Gi
 
 ---
 
