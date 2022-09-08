@@ -40,10 +40,12 @@ export default function Home() {
 
    const log = async () => {
       const res = await login(API_URL, email, pass)
+      console.log("resultat", res)
       if(res === "L'email n'est pas conforme.") {
         setError(res)
         return;
       }
+      console.log(res.error)
       if(res.error) {
         setError(res.message)
       } else {
@@ -51,6 +53,7 @@ export default function Home() {
         addVerif(res.data.verification);
         addValue(res.data.id)
         addData(res.data)
+        console.log(res.data.verification)
         if(res.data.verification) {
           router.push("/accueil"); 
           setCheck()
