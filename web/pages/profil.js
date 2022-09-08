@@ -28,7 +28,6 @@ const Profil = () => {
     result && result.map(async (elm) => {
           await axios.get(elm, { headers:{"api-token": token} }).then(res => {
               const arrayTeam = res.data.data.user
-              console.log(arrayTeam)
               if(arrayTeam.length === 5) {
                 if(arrayTeam.find(o => o.id === userID)) {
                   setTeam([arrayTeam])
