@@ -44,7 +44,9 @@ export default function Home() {
         setError(res)
         return;
       }
-      if (!(res?.error)) {
+      if(res.error) {
+        setError(res.message)
+      } else {
         addToken(res.data.token);
         addVerif(res.data.verification);
         addValue(res.data.id)
@@ -53,12 +55,9 @@ export default function Home() {
           router.push("/accueil"); 
           setCheck()
         } else {
-            router.push("/verification")
+          router.push("/verification")
         }
-       }
-       else {
-        setError(res.data.message)
-       }
+      }
  }
 
   const isEmail = (val) => {
