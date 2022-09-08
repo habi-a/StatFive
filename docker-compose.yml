@@ -131,7 +131,6 @@ services:
         command: npm run dev
         volumes:
             - ./web:/app
-            - /app/node_modules
         ports:
             - 3000
         networks:
