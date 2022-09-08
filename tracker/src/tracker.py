@@ -82,4 +82,3 @@ def tracker(match_id, id_red, id_blue, video_match, show, callback):
     result = requests.post(SERVER_URL + API_ENDPOINT, json = data)
     print(result.text)
     return data["result"]["id"]
-    
