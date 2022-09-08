@@ -31,6 +31,7 @@ services:
             - MYSQL_HOST=mariadb
             - PROD=docker
             - URL_WEB=https://dashboard.preprod.statfive.fr/
+            - API_URL=https://api.preprod.statfive.fr  
             - MAIL_USERNAME=noreply@statfive.fr
         volumes:
             - video:/app/video
