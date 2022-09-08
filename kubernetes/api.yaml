@@ -74,6 +74,10 @@ spec:
                 secretKeyRef:
                   name: mariadb-secret
                   key: password
+            - name: URL_WEB
+              value: "https://dashboard.statfive.fr/"
+            - name: MAIL_USERNAME
+              value: "noreply@statfive.fr"
           ports:
             - containerPort: 5000
           volumeMounts:

@@ -1,8 +1,5 @@
 #!/bin/bash
 
-set -e
-
-
 # Deploy storage
 AKS_PERS_STORAGE_ACCOUNT_NAME=mystorageaccount$(( $RANDOM % 99999999 + 00000001 ))
 AKS_PERS_RESOURCE_GROUP=statfive
