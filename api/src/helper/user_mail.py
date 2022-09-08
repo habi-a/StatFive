@@ -19,7 +19,7 @@ def send_verification_code_mail(message: str, email: str, code: str) -> str:
     :return the randomly generated code
     """
 
-    sender = os.environ.get('MAIL_SENDER', 'elhorm_j@etna-alternance.net')
+    sender = os.environ.get('MAIL_USERNAME', 'noreply@statfive.fr')
 
     msg = Message_mail('Votre code de vérification', sender=sender, recipients=[email])
     msg.html = render_template("send_code.html",
@@ -36,8 +36,8 @@ def send_verification_code_mail(message: str, email: str, code: str) -> str:
 
 
 def send_reset_password_mail(message: str, email: str, code: str) -> str:
-    sender = os.environ.get('MAIL_SENDER', 'elhorm_j@etna-alternance.net')
-    url = os.environ.get('URL_WEB', 'http://127.0.0.1:3000/')
+    sender = os.environ.get('MAIL_USERNAME', 'noreply@statfive.fr')
+    url = os.environ.get('URL_WEB', 'https://dashboard.statfive.fr/')
 
     msg = Message_mail('Votre lien pour réinitialiser votre mot de passe', sender=sender, recipients=[email])
 
