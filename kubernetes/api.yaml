@@ -76,6 +76,8 @@ spec:
                   key: password
             - name: URL_WEB
               value: "https://dashboard.statfive.fr/"
+            - name: API_URL
+              value: "https://api.statfive.fr"            
             - name: MAIL_USERNAME
               value: "noreply@statfive.fr"
           ports:

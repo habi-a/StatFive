@@ -69,7 +69,7 @@ spec:
     - kind: Rule
       match: Host(`tracker.statfive.fr`)
       services:
-        - name: tracker
+        - name: tracker-app
           namespace: statfive
           port: 5000
   tls:

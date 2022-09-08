@@ -58,6 +58,7 @@ spec:
       containers:
         - image: "acalhabi/statfive_tracker"
           name: tracker-worker
+          command: ["rq", "worker", "--url", "redis://redis:6379"]
           env:
             - name: OBJC_DISABLE_INITIALIZE_FORK_SAFETY
               value: "YES"
@@ -76,7 +77,7 @@ kind: Service
 metadata:
   labels:
     app: statfive
-  name: tracker
+  name: tracker-app
   namespace: statfive
 spec:
   ports:
