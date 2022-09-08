@@ -46,15 +46,14 @@ export default function Home() {
         return;
       }
       console.log(res.error)
-      if(res.error) {
-        setError(res.message)
+      if(res.data.error) {
+        setError(res.data.message)
       } else {
-        addToken(res.data.token);
-        addVerif(res.data.verification);
-        addValue(res.data.id)
-        addData(res.data)
-        console.log(res.data.verification)
-        if(res.data.verification) {
+        addToken(res.data.data.token);
+        addVerif(res.data.data.verification);
+        addValue(res.data.data.id)
+        addData(res.data.data)
+        if(res.data.data.verification) {
           router.push("/accueil"); 
           setCheck()
         } else {
