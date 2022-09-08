@@ -49,11 +49,11 @@ export default function Home() {
       if(res.data.error) {
         setError(res.data.message)
       } else {
-        addToken(res.data.data.token);
-        addVerif(res.data.data.verification);
-        addValue(res.data.data.id)
-        addData(res.data.data)
-        if(res.data.data.verification) {
+        addToken(res.data.token);
+        addVerif(res.data.verification);
+        addValue(res.data.id)
+        addData(res.data)
+        if(res.data.verification) {
           router.push("/accueil"); 
           setCheck()
         } else {
