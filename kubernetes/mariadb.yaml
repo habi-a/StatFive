@@ -269,12 +269,12 @@ data:
 
 apiVersion: v1
 kind: PersistentVolume
-
+metadata:
   name: mariadb-volume
   namespace: statfive
 spec:
   capacity:
-    storage: 1Gi
+    storage: 5Ti
   accessModes:
     - ReadWriteMany
   azureFile:
@@ -303,7 +303,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 1Gi
+      storage: 5Ti
 
 ---
 
