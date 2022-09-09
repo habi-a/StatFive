@@ -14,7 +14,7 @@
     "@chakra-ui/toast": "^3.0.2",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
-    "@mokhta_s/react-statfive-api": "^3.2.2",
+    "@mokhta_s/react-statfive-api": "^3.2.3",
     "@react-native-async-storage/async-storage": "^1.17.10",
     "framer-motion": "^6.5.1",
     "next": "12.2.3",

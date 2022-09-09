@@ -948,10 +948,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@mokhta_s/react-statfive-api@^3.2.2":
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/@mokhta_s/react-statfive-api/-/react-statfive-api-3.2.2.tgz#5dd3e605c72e40f4ea196cd845d8bbee6b2fca98"
-  integrity sha512-3fwKQKEcw+TyBV+PN/UZDQJV0yRAHQEG4yvMVMcE6N8uQ9s1VPV7n/AGggC5ItzrNA9mxUEDeKcEF4pc9cIL8Q==
+"@mokhta_s/react-statfive-api@^3.2.3":
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/@mokhta_s/react-statfive-api/-/react-statfive-api-3.2.3.tgz#b113f81924599ad2345538e0a5511dd6141e318a"
+  integrity sha512-4SLQEzoXboAcGEuk0GuP046Fktedq3c8Gz/gSClpw0q9occiZQNO2YnzEKgbVtoxibQduA27SMf9hIp/mWjr9g==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.17.7"
     axios "^0.25.0"
