@@ -17,7 +17,7 @@ class Development:
     MAIL_PORT = os.environ.get('MAIL_PORT', 465)
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', False)
     MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL', True)
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'Villepinte93420')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'xxxxxxxxxxxx')
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME', 'elhorm_j@etna-alternance.net')
 
 
@@ -35,7 +35,7 @@ class Docker:
     MAIL_PORT = os.environ.get('MAIL_PORT', 465)
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', False)
     MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL', True)
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', '3@qm6HBL76R5ArK!')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'xxxxxxxxxxxxxxx')
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME', 'noreply@statfive.fr')
 
 
@@ -53,7 +53,7 @@ class Kubernetes:
     MAIL_PORT = os.environ.get('MAIL_PORT', 465)
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', False)
     MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL', True)
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', '3@qm6HBL76R5ArK!')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'xxxxxxxxxxxxx')
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME', 'noreply@statfive.fr')
 
 app_config = {
