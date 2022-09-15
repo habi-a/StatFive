@@ -23,6 +23,18 @@ def make_admin(id):
     return custom_response({'error': False, 'message': 'make-admin', 'data': user_in_db.to_json()}, 200)
 
 
+@admin_api.route('/list-complex', methods=['GET'])
+@Auth.super_admin_required
+def list_complex():
+    li_complex_m = Complex.query.all()
+    li_complex = []
+
+    for complex_m in li_complex_m:
+        li_complex.append(complex_m.to_json())
+    return custom_response({'error': False, 'message': 'list-complex', 'data': li_complex}, 200)
+
+
+
 # list complex
 
 # @admin_api.route('/make-admin/<int:id>', methods=['GET'])
