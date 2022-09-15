@@ -4,10 +4,10 @@ import string
 import subprocess
 import requests
 
-from flask import request, json, Response, Blueprint
+from flask import request, json, Response, Blueprint, g
 from flasgger import swag_from
 
-from ..models.user import UserHasTeam
+from ..models.user import UserHasTeam, User
 from ..specs import specs_match
 from ..models.match import Match
 from ..models.team import TeamHasMatchPlayed
@@ -25,8 +25,11 @@ def generate_random_number(number_of_digits: int) -> str:
 
 
 @match_api.route('', methods=['POST'])
+@Auth.admin_required
 # @swag_from(specs_match.all_match)
 def post_match():
+
+    #g.user['id']
     video_storage = request.files.get('video')
     if not video_storage or video_storage.content_type != 'video/mp4':
         return custom_response({'error': 'Is not a mp4 file.'}, 400)
@@ -36,7 +39,7 @@ def post_match():
     name_file = generate_random_number(6) + '_' + video_storage.name + '.mp4'
 
     video_storage.save(path_file + name_file)
-
+    # ground
     m_match = Match(name=name_file, duration="10:00", ground=1, path=path_file + name_file)
     m_match.save()
     m_team_has_match_played = TeamHasMatchPlayed(team_id=req_data['team_one'],
@@ -100,6 +103,31 @@ def all_match():
     return custom_response({'error': False, 'message': 'Listes des matchs.', 'data': matchs}, 200)
 
 
+@match_api.route('/get-my-match', methods=['GET'])
+@Auth.auth_required
+def get_my_match():
+    user_in_db = User.query.filter_by(id=g.user['id']).first()
+    if not user_in_db:
+        message = {'error': True, 'message': 'L\' utilisateur existe pas.', 'data': None}
+        return custom_response(message, 404)
+
+    li_m_user_has_team = UserHasTeam.query.filter_by(user_id=user_in_db.id).all()
+
+    data = []
+    for m_user_has_team in li_m_user_has_team:
+        team = m_user_has_team.team
+        li_team_has_match_played = TeamHasMatchPlayed.query.filter_by(team_id=team.id).all()
+        for team_has_match_played in li_team_has_match_played:
+            match = Match.query.filter_by(id=team_has_match_played.match_id).first()
+            data.append({
+                **team_has_match_played.to_json(),
+                **team.to_json(),
+                **match.to_json()
+            })
+
+    return custom_response({'error': False, 'message': 'Listes des matchs.', 'data': data}, 200)
+
+
 @match_api.route('/stat_match_by_id/<int:id>', methods=['GET'])
 @swag_from(specs_match.stat_match_by_id)
 @Auth.auth_required
@@ -126,7 +154,7 @@ def stat_match_by_id(id):
         user_has_teams = UserHasTeam.query.filter_by(team_id=stat.team_id).all()
         li_user = []
         for user_has_team in user_has_teams:
-            li_user.append(user_has_team.user.to_json())
+            li_user.append(user_has_team.user.to_json(True))
         if int(stat.color) == 0:
             data['team_red'] = {**stat.to_json(), **user_has_team.team.to_json(), 'players': li_user}
         else:

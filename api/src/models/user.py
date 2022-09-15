@@ -1,6 +1,9 @@
 from marshmallow import fields, Schema
 import datetime
+
 from . import db
+
+from .complex import Complex
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -22,6 +25,8 @@ class User(db.Model):
     role = db.Column(db.String)
     code = db.Column(db.String)
     verification = db.Column(db.Boolean)
+    complex_id = db.Column(db.Integer, db.ForeignKey('complex.id'), nullable=True)
+    complex: Complex = db.relationship(Complex)
 
     def check_password(self, password):
         """
@@ -34,8 +39,9 @@ class User(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def to_json(self):
-        return {
+    def to_json(self, get_complex=False):
+
+        data = {
             'id': self.id,
             'lastname': self.name,
             'firstname': self.firstname,
@@ -45,6 +51,9 @@ class User(db.Model):
             'description': self.description,
             'role': self.role
         }
+        if get_complex and self.complex:
+            data['complex'] = self.complex.to_json()
+        return data
 
     @staticmethod
     def hash_password(password):

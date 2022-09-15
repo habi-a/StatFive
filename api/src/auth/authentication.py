@@ -18,7 +18,6 @@ class Auth:
                                 status=400)
             else:
                 token = request.headers.get('api-token')
-                print(token)
                 data = Auth.decode_token(token)
                 if data['error']:
                     return Response(mimetype='application/json',
@@ -34,6 +33,69 @@ class Auth:
                 return func(*args, **kwargs)
 
         return decorated_auth
+
+    @staticmethod
+    def super_admin_required(func):
+        @wraps(func)
+        def decorated_auth(*args, **kwargs):
+            if 'api-token' not in request.headers:
+                return Response(mimetype='application/json',
+                                response=json.dumps(
+                                    {'error': 'Authentication token is not available, please login to get one'}),
+                                status=400)
+            else:
+                token = request.headers.get('api-token')
+                data = Auth.decode_token(token)
+                if data['error']:
+                    return Response(mimetype='application/json',
+                                    response=json.dumps(data['error']),
+                                    status=400)
+                user_id = data['data']['user_id']
+                check_user = User.get_one_user(user_id)
+                if not check_user:
+                    return Response(mimetype='application/json',
+                                    response=json.dumps({'error': 'user does not exist, invalid token'}),
+                                    status=400)
+                elif check_user.role != 2:
+                    return Response(mimetype='application/json',
+                                    response=json.dumps({'error': 'user not super admin'}),
+                                    status=400)
+                g.user = {'id': user_id}
+                return func(*args, **kwargs)
+
+        return decorated_auth
+
+    @staticmethod
+    def admin_required(func):
+        @wraps(func)
+        def decorated_auth(*args, **kwargs):
+            if 'api-token' not in request.headers:
+                return Response(mimetype='application/json',
+                                response=json.dumps(
+                                    {'error': 'Authentication token is not available, please login to get one'}),
+                                status=400)
+            else:
+                token = request.headers.get('api-token')
+                data = Auth.decode_token(token)
+                if data['error']:
+                    return Response(mimetype='application/json',
+                                    response=json.dumps(data['error']),
+                                    status=400)
+                user_id = data['data']['user_id']
+                check_user = User.get_one_user(user_id)
+                if not check_user:
+                    return Response(mimetype='application/json',
+                                    response=json.dumps({'error': 'user does not exist, invalid token'}),
+                                    status=400)
+                elif check_user.role != 2 and check_user.role != 1:
+                    return Response(mimetype='application/json',
+                                    response=json.dumps({'error': 'user not super admin or admin'}),
+                                    status=400)
+                g.user = {'id': user_id}
+                return func(*args, **kwargs)
+
+        return decorated_auth
+
 
     @staticmethod
     def generate_token(user_id):

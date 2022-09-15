@@ -68,7 +68,7 @@ def login():
         message = {'error': True, 'message': 'Mauvais mot de passe.', 'data': None}
         return custom_response(message, 401)
 
-    user = user_in_db.to_json()
+    user = user_in_db.to_json(True)
     user['token'] = Auth.generate_token(user_in_db.id)
 
     return custom_response({'error': False, 'message': 'Utilisateur bien login.', 'data': user}, 201)
@@ -124,7 +124,9 @@ def confirm_reset_password():
 @user_api.route('/me', methods=['GET'])
 @Auth.auth_required
 def get_me():
+
     user_in_db = User.query.filter_by(id=g.user['id']).first()
+
     if not user_in_db:
         message = {'error': True, 'message': 'L\' utilisateur existe pas.', 'data': None}
         return custom_response(message, 404)
@@ -189,7 +191,8 @@ def all_user():
     users_in_db = User.query.all()
     users = []
     for user in users_in_db:
-        users.append(user.to_json())
+        if user.role != 2:
+            users.append(user.to_json(True))
     return custom_response({'error': False, 'message': 'Liste de user.', 'data': users}, 200)
 
 
@@ -206,5 +209,5 @@ def stat_user_by_id(id):
     for stat in stats_in_db:
         stats.append(stat.to_json())
 
-    data = {**user_in_db.to_json(), **{'stats': stats}}
+    data = {**user_in_db.to_json(True), **{'stats': stats}}
     return custom_response({'error': False, 'message': 'Liste de stats by id.', 'data': data}, 200)
