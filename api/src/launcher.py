@@ -25,10 +25,12 @@ def create_app(config_key='development'):
     from .controllers.users_controllers import user_api as user_blueprint
     from .controllers.team_controllers import team_api as team_blueprint
     from .controllers.match_controllers import match_api as match_blueprint
+    from .controllers.admin_controllers import admin_api as admin_blueprint
 
     app.register_blueprint(user_blueprint, url_prefix='/api/users')
     app.register_blueprint(team_blueprint, url_prefix='/api/team')
     app.register_blueprint(match_blueprint, url_prefix='/api/match')
+    app.register_blueprint(admin_blueprint, url_prefix='/api/admin')
 
     @app.route('/')
     def index():
