@@ -7,6 +7,7 @@ import requests
 from flask import request, json, Response, Blueprint, g
 from flasgger import swag_from
 
+from ..models.complex import Complex
 from ..models.user import UserHasTeam, User
 from ..specs import specs_match
 from ..models.match import Match
@@ -29,7 +30,11 @@ def generate_random_number(number_of_digits: int) -> str:
 # @swag_from(specs_match.all_match)
 def post_match():
 
-    #g.user['id']
+    user_in_db = User.query.filter_by(id=g.user['id']).first()
+    if not user_in_db:
+        message = {'error': True, 'message': 'L\' utilisateur existe pas.', 'data': None}
+        return custom_response(message, 404)
+
     video_storage = request.files.get('video')
     if not video_storage or video_storage.content_type != 'video/mp4':
         return custom_response({'error': 'Is not a mp4 file.'}, 400)
@@ -40,7 +45,7 @@ def post_match():
 
     video_storage.save(path_file + name_file)
     # ground
-    m_match = Match(name=name_file, duration="10:00", ground=1, path=path_file + name_file)
+    m_match = Match(name=name_file, duration="10:00", ground=1, path=path_file + name_file, complex_id=user_in_db.id)
     m_match.save()
     m_team_has_match_played = TeamHasMatchPlayed(team_id=req_data['team_one'],
                                                  match_id=m_match.id,
@@ -126,6 +131,24 @@ def get_my_match():
             })
 
     return custom_response({'error': False, 'message': 'Listes des matchs.', 'data': data}, 200)
+
+
+@match_api.route('/get-match-by-complex/<int:id>', methods=['GET'])
+@Auth.auth_required
+def get_match_by_complex(id):
+    complex_in_db = Complex.query.filter_by(id=id).first()
+    if not complex_in_db:
+        message = {'error': True, 'message': 'Complex existe pas.', 'data': None}
+        return custom_response(message, 404)
+
+    matchs_in_db = Match.query.filter_by(complex_id=complex_in_db.id).all()
+    matchs = []
+    for match in matchs_in_db:
+        match_data = match.to_json()
+        match_data['path'] = video_url_for('video', path=match_data['name'])
+        matchs.append(match_data)
+
+    return custom_response({'error': False, 'message': 'Listes des matchs.', 'data': matchs}, 200)
 
 
 @match_api.route('/stat_match_by_id/<int:id>', methods=['GET'])

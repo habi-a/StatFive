@@ -1,4 +1,5 @@
 from . import db
+from .complex import Complex
 
 
 class Match(db.Model):
@@ -13,6 +14,8 @@ class Match(db.Model):
     ground = db.Column(db.Integer, nullable=False)
     path = db.Column(db.String, nullable=False)
     finish = db.Column(db.Boolean, nullable=False, default=False)
+    complex_id = db.Column(db.Integer, db.ForeignKey('complex.id'), nullable=True)
+    complex: Complex = db.relationship(Complex)
 
     def save(self):
         db.session.add(self)
