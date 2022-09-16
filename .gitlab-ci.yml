@@ -72,4 +72,4 @@ publish-api:
   stage: publish
   extends: .ssh-connect-preprod
   variables:
-    COMMAND: "sudo docker push api"
+    COMMAND: "sudo docker push acalhabi/statfive_api"
