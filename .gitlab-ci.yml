@@ -3,6 +3,16 @@ stages:
   - test
   - deploy
 
+.ssh-connect-preprod:
+  image: debian:11
+  before_script:
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+
+
 build-job:
   stage: build
   script:
@@ -24,15 +34,10 @@ lint-test-job:
     - echo "No lint issues found."
 
 deploy-preprod-job:
-  image: debian:11
-  before_script:
-    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
   stage: deploy
+  extends: .ssh-connect-preprod
   script:
-    - ssh -tt -oStrictHostKeyChecking=no "$PREPROD_GITUSER"@"$PREPROD_SERVER_IP"
-    - cd "$PATH_GPE_DIR"
-    - sudo docker-compose ps
+    - > 
+      ssh -tt -oStrictHostKeyChecking=no "$PREPROD_GITUSER"@"$PREPROD_SERVER_IP" &&
+      cd "$PATH_GPE_DIR" &&
+      sudo docker-compose ps
