@@ -33,6 +33,6 @@ deploy-preprod-job:
     - chmod 700 ~/.ssh
   stage: deploy
   script:
-      - ssh -tt "$PREPROD_GITUSER"@"$PREPROD_SERVER_IP"
-      - cd "$PATH_GPE_DIR"
-      - sudo docker-compose ps
+    - ssh -tt -oStrictHostKeyChecking=no "$PREPROD_GITUSER"@"$PREPROD_SERVER_IP"
+    - cd "$PATH_GPE_DIR"
+    - sudo docker-compose ps
