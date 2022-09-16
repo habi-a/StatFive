@@ -5,7 +5,7 @@ stages:
 
 .ssh-connect-preprod:
   image: debian:11
-  variable:
+  variables:
     COMMAND: "echo 'You need to implement COMMAND Variable'"
   before_script:
     - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
@@ -39,6 +39,6 @@ lint-test-job:
 
 deploy-preprod-job:
   stage: deploy
-  variable:
+  variables:
     COMMAND: "sudo docker-compose ps"
   extends: .ssh-connect-preprod
