@@ -18,7 +18,7 @@ stages:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - touch ~/.ssh/known_hosts
-    - ssh-keyscan "$PREPROD_SERVER_IP" >> ~/.ssh/known_hosts
+    - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
   script:
     - ssh "$PREPROD_GITUSER"@"$PREPROD_SERVER_IP" "cd $PATH_GPE_DIR; $COMMAND"
 
