@@ -17,9 +17,10 @@ stages:
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
   script:
-    - echo "$COMMAND"
-    - ssh -tt -oStrictHostKeyChecking=no "$PREPROD_GITUSER"@"$PREPROD_SERVER_IP" "cd $PATH_GPE_DIR; $COMMAND"
+    - ssh "$PREPROD_GITUSER"@"$PREPROD_SERVER_IP" "cd $PATH_GPE_DIR; $COMMAND"
 
 
 pull-repo-gitlab:
