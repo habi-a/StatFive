@@ -24,10 +24,15 @@ lint-test-job:
     - echo "No lint issues found."
 
 deploy-preprod-job:
+  image: debian:11
+  before_script:
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
   stage: deploy
-  image: docker/compose
-  variables:
-    DOCKER_HOST: tcp://localhost:2375/
-    DOCKER_DRIVER: overlay2
   script:
-    - docker-compose ps
+      - ssh "PREPROD_GITUSER"@"$PREPROD_SERVER_IP"
+      - cd "$PATH_GPE_DIR"
+      - sudo docker-compose ps
