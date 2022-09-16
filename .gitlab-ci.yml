@@ -14,7 +14,8 @@ stages:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
   script:
-    ssh -tt -oStrictHostKeyChecking=no "$PREPROD_GITUSER"@"$PREPROD_SERVER_IP" 'cd "$PATH_GPE_DIR"; "$COMMAND"'
+    echo "$COMMAND"
+    ssh -tt -oStrictHostKeyChecking=no "$PREPROD_GITUSER"@"$PREPROD_SERVER_IP" 'cd "$PATH_GPE_DIR"; sudo docker-compose ps'
 
 
 build-job:
