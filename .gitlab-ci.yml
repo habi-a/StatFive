@@ -36,6 +36,8 @@ unit-test-api:
     - echo "Running unit tests... This will take about 60 seconds."
     - sleep 1
     - echo "Code coverage is 90%"
+  needs:
+    pull-repo-gitlab
 
 lint-test-api:
   stage: test
@@ -43,6 +45,8 @@ lint-test-api:
     - echo "Linting code... This will take about 10 seconds."
     - sleep 1
     - echo "No lint issues found."
+  needs:
+    pull-repo-gitlab
 
 
 build-api:
