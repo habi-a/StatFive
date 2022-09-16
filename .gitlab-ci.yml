@@ -1,7 +1,11 @@
 stages:
-  - build
+  - setup
   - test
-  - deploy
+  - build
+  - deploy_preprod
+  - publish
+  - deploy_prod
+
 
 .ssh-connect-preprod:
   image: debian:11
@@ -18,28 +22,49 @@ stages:
     - ssh -tt -oStrictHostKeyChecking=no "$PREPROD_GITUSER"@"$PREPROD_SERVER_IP" "cd $PATH_GPE_DIR; $COMMAND"
 
 
-build-job:
-  stage: build
-  script:
-    - echo "Compiling the code..."
-    - echo "Compile complete."
+pull-repo-gitlab:
+  stage: setup
+  extends: .ssh-connect-preprod
+  variables:
+    COMMAND: "git pull origin master"
 
-unit-test-job:
+
+unit-test-api:
   stage: test
   script:
     - echo "Running unit tests... This will take about 60 seconds."
     - sleep 1
     - echo "Code coverage is 90%"
 
-lint-test-job:
+lint-test-api:
   stage: test
   script:
     - echo "Linting code... This will take about 10 seconds."
     - sleep 1
     - echo "No lint issues found."
 
-deploy-preprod-job:
-  stage: deploy
-  variables:
-    COMMAND: "sudo docker-compose ps"
+
+build-api:
+  stage: build
   extends: .ssh-connect-preprod
+  variables:
+    COMMAND: "sudo docker-compose build api"
+  needs:
+    - unit-test-api
+    - lint-test-api
+
+
+deploy-preprod-api:
+  stage: deploy_preprod
+  extends: .ssh-connect-preprod
+  variables:
+    COMMAND: "sudo docker-compose up -d"
+  needs:
+    - build-api
+
+
+publish-api:
+  stage: publish
+  extends: .ssh-connect-preprod
+  variables:
+    COMMAND: "sudo docker push api"
