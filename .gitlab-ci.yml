@@ -37,7 +37,7 @@ unit-test-api:
     - sleep 1
     - echo "Code coverage is 90%"
   needs:
-    pull-repo-gitlab
+    - pull-repo-gitlab
 
 lint-test-api:
   stage: test
@@ -46,7 +46,7 @@ lint-test-api:
     - sleep 1
     - echo "No lint issues found."
   needs:
-    pull-repo-gitlab
+    - pull-repo-gitlab
 
 
 build-api:
