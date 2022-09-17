@@ -1,10 +1,9 @@
 stages:
-  - setup
   - test
+  - setup
   - build
-  - deploy_preprod
   - publish
-  - deploy_prod
+  - deploy
 
 
 .ssh-connect-preprod:
@@ -26,20 +25,23 @@ stages:
 unit-test-api:
   stage: test
   script:
-    - echo "Running unit tests... This will take about 60 seconds."
-    - sleep 1
+    - echo "Running unit tests... This will take about 1 seconds."
     - echo "Code coverage is 90%"
-  only:
-    refs:
-      - staging
-
+  needs: [pull-api-git]
 
 lint-test-api:
   stage: test
   script:
-    - echo "Linting code... This will take about 10 seconds."
-    - sleep 1
+    - echo "Linting code... This will take about 1 seconds."
     - echo "No lint issues found."
+
+
+pull-api-git:
+  stage: setup
+  extends: .ssh-connect-preprod
+  variables:
+    COMMAND: "cd api/ && git pull origin master"
+  needs: [unit-test-api, lint-test-api-api]
   only:
     refs:
       - staging
@@ -50,19 +52,7 @@ build-api:
   extends: .ssh-connect-preprod
   variables:
     COMMAND: "sudo docker-compose build api"
-  needs: [unit-test-api, lint-test-api-api]
-  only:
-    refs:
-      - staging
-
-
-
-deploy-preprod-api:
-  stage: deploy_preprod
-  extends: .ssh-connect-preprod
-  variables:
-    COMMAND: "sudo docker-compose up -d"
-  needs: [build-api]
+  needs: [pull-api-git]
   only:
     refs:
       - staging
@@ -76,3 +66,24 @@ publish-api:
   only:
     refs:
       - master
+
+
+deploy-preprod-api:
+  stage: deploy
+  extends: .ssh-connect-preprod
+  variables:
+    COMMAND: "sudo docker-compose up -d"
+  needs: [build-api]
+  only:
+    refs:
+      - staging
+
+deploy-prod-api:
+  stage: deploy
+  script:
+    - echo "test"
+  needs: [publish-api]
+  only:
+    refs:
+      - master
+
