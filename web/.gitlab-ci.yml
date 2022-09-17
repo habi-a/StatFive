@@ -1,0 +1,88 @@
+
+stages:
+  - test
+  - setup
+  - build
+  - publish
+  - deploy
+
+
+.ssh-connect-preprod:
+  image: debian:11
+  variables:
+    COMMAND: "echo 'You need to implement COMMAND Variable'"
+  before_script:
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - touch ~/.ssh/known_hosts
+    - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+  script:
+    - ssh "$PREPROD_GITUSER"@"$PREPROD_SERVER_IP" "cd $PATH_GPE_DIR; $COMMAND"
+
+
+unit-test-web:
+  stage: test
+  script:
+    - echo "Running unit tests... This will take about 1 seconds."
+    - echo "Code coverage is 90%"
+
+lint-test-web:
+  stage: test
+  script:
+    - echo "Linting code... This will take about 1 seconds."
+    - echo "No lint issues found."
+
+
+pull-web-git:
+  stage: setup
+  extends: .ssh-connect-preprod
+  variables:
+    COMMAND: "cd web/ && git pull origin master"
+  needs: [unit-test-web, lint-test-web]
+  only:
+    refs:
+      - staging
+
+
+build-web:
+  stage: build
+  extends: .ssh-connect-preprod
+  variables:
+    COMMAND: "sudo docker-compose build web"
+  needs: [pull-web-git]
+  only:
+    refs:
+      - staging
+
+
+publish-web:
+  stage: publish
+  extends: .ssh-connect-preprod
+  variables:
+    COMMAND: "sudo docker push acalhabi/statfive_web"
+  only:
+    refs:
+      - master
+
+
+deploy-preprod-web:
+  stage: deploy
+  extends: .ssh-connect-preprod
+  variables:
+    COMMAND: "sudo docker-compose up -d"
+  needs: [build-web]
+  only:
+    refs:
+      - staging
+
+deploy-prod-web:
+  stage: deploy
+  script:
+    - echo "test"
+  needs: [publish-web]
+  only:
+    refs:
+      - master
