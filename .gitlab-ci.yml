@@ -10,4 +10,10 @@ statfive_api:
     - changes:
         - api/*
 
-
+statfive_web:
+  stage: triggers
+  trigger:
+    include: web/.gitlab-ci.yml
+  rules:
+    - changes:
+        - web/*
