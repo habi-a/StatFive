@@ -1,0 +1,13 @@
+stages:
+  - triggers
+
+
+statfive_api:
+  stage: triggers
+  trigger:
+    include: api/.gitlab-ci.yml
+  rules:
+    - changes:
+        - api/*
+
+
