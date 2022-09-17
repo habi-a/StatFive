@@ -27,7 +27,6 @@ unit-test-api:
   script:
     - echo "Running unit tests... This will take about 1 seconds."
     - echo "Code coverage is 90%"
-  needs: [pull-api-git]
 
 lint-test-api:
   stage: test
