@@ -134,3 +134,23 @@ spec:
           port: 3000
   tls:
     certResolver: letsencrypt
+
+---
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: alertmanager
+  namespace: traefik
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`alertmanager.statfive.fr`)
+      kind: Rule
+      services:
+        - name: alertmanager-main
+          namespace: monitoring
+          port: 9093
+  tls:
+    certResolver: letsencrypt
