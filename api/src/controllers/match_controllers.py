@@ -45,7 +45,7 @@ def post_match():
 
     video_storage.save(path_file + name_file)
     # ground
-    m_match = Match(name=name_file, duration="10:00", ground=1, path=path_file + name_file, complex_id=user_in_db.id)
+    m_match = Match(name=name_file, duration="10:00", ground=1, path=path_file + name_file, complex_id=user_in_db.complex_id)
     m_match.save()
     m_team_has_match_played = TeamHasMatchPlayed(team_id=req_data['team_one'],
                                                  match_id=m_match.id,
