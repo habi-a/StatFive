@@ -71,7 +71,7 @@ def user_to_complex(id, complex_id):
     return custom_response({'error': False, 'message': 'make-admin', 'data': None}, 200)
 
 
-@admin_api.route('/user-dissociate-complex/<int:id>', methods=['DEL'])
+@admin_api.route('/user-dissociate-complex/<int:id>', methods=['DELETE'])
 @Auth.super_admin_required
 def user_del_complex(id):
     user_in_db = User.query.filter_by(id=id).first()
