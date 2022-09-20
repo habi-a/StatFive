@@ -44,6 +44,8 @@ cd ../
 rm -rf kube-prometheus
 kubectl apply -f prometheus-monitor.yaml
 
-# Alert Manager config
+# Alert Manager config & rules
 kubectl -n monitoring delete secret alertmanager-main
 kubectl -n monitoring create secret generic alertmanager-main --from-file=alertmanager.yaml
+
+kubectl apply -f alertmanager-statfive-rules.yaml

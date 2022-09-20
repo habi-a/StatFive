@@ -1,0 +1,42 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+  name: alertmanager-statfive-rules
+  namespace: monitoring
+spec:
+  groups:
+  - name: statfive.rules
+    rules:
+      - alert: PodApiDown
+        for: 1m
+        expr: sum(kube_pod_container_status_running{namespace="statfive", container="api"}) < 1
+        annotations:
+          message: The deployment api has less than 1 pod running.
+      - alert: PodWebDown
+        for: 1m
+        expr: sum(kube_pod_container_status_running{namespace="statfive", container="web"}) < 1
+        annotations:
+          message: The deployment web has less than 1 pod running.
+      - alert: PodDBDown
+        for: 1m
+        expr: sum(kube_pod_container_status_running{namespace="statfive", container="mariadb"}) < 1
+        annotations:
+          message: The deployment db less than 1 pod running.
+      - alert: PodRedisDown
+        for: 1m
+        expr: sum(kube_pod_container_status_running{namespace="statfive", container="redis"}) < 1
+        annotations:
+          message: The deployment redis has less than 1 pod running.
+      - alert: PodTrackerDown
+        for: 1m
+        expr: sum(kube_pod_container_status_running{namespace="statfive", container="tracker-app"}) < 1
+        annotations:
+          message: The deployment tracker has less than 1 pod running.
+      - alert: PodWorkerDown
+        for: 1m
+        expr: sum(kube_pod_container_status_running{namespace="statfive", container="tracker-worker"}) < 1
+        annotations:
+          message: The deployment worker has less than 1 pod running.
