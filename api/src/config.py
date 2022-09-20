@@ -35,7 +35,7 @@ class Docker:
     MAIL_PORT = os.environ.get('MAIL_PORT', 465)
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', False)
     MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL', True)
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'xxxxxxxxxxxxxxx')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'xAx3s&4Dj4#@J7?j')
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME', 'noreply@statfive.fr')
 
 
@@ -53,7 +53,7 @@ class Kubernetes:
     MAIL_PORT = os.environ.get('MAIL_PORT', 465)
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', False)
     MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL', True)
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'xxxxxxxxxxxxx')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'xAx3s&4Dj4#@J7?j')
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME', 'noreply@statfive.fr')
 
 app_config = {
