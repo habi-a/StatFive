@@ -5,6 +5,7 @@ from flask import request, json, Response, Blueprint, g
 from flasgger import swag_from
 from datetime import datetime
 
+from ..models.complex import Complex
 from ..specs import specs_users
 from ..auth.authentication import Auth
 from ..helper import custom_response, video_url_for
@@ -123,6 +124,18 @@ def confirm_reset_password():
     return custom_response({'error': False, 'message': 'mot de passee change', 'data': m_user.to_json()}, 200)
 
 
+def get_data_complex(complex_id):
+    matchs_in_db = Match.query.filter_by(complex_id=complex_id).all()
+    nb_but = 0
+
+    for match in matchs_in_db:
+        li_team_has_match_played = TeamHasMatchPlayed.query.filter_by(match_id=match.id).all()
+        for team_has_match_played in li_team_has_match_played:
+            nb_but += team_has_match_played.goals
+
+    return {'nb_match': len(matchs_in_db), 'nb_but': nb_but}
+
+
 @user_api.route('/me', methods=['GET'])
 @Auth.auth_required
 def get_me():
@@ -136,23 +149,16 @@ def get_me():
     user = user_in_db.to_json()
 
     if user.complex_id:
-
-        matchs_in_db = Match.query.filter_by(complex_id=user_in_db.complex_id).all()
-        matchs = []
-        nb_but = 0
-
-        for match in matchs_in_db:
-            match_data = match.to_json()
-            match_data['path'] = video_url_for('video', path=match_data['name'])
-            matchs.append(match_data)
-            li_team_has_match_played = TeamHasMatchPlayed.query.filter_by(match_id=match.id).all()
-            for team_has_match_played in li_team_has_match_played:
-                nb_but += team_has_match_played.goals
-
-        user['stats'] = {'nb_match': len(matchs), 'nb_but': nb_but}
-
+        user['stats'] = get_data_complex(user.complex_id)
     elif user.role == 2:
-        pass
+        li_complex_in_db = Complex.query.all()
+        li_complex_data = []
+
+        for complex_in_db in li_complex_in_db:
+            complex_data = complex_in_db.to_json()
+            complex_data['stats'] = get_data_complex(complex_in_db.id)
+            li_complex_data.append(complex_data)
+        user['complexes'] = li_complex_data
 
     return custom_response({'error': False, 'message': 'get me', 'data': user}, 200)
 
