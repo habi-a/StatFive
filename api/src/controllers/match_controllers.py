@@ -14,6 +14,7 @@ from ..models.match import Match
 from ..models.team import TeamHasMatchPlayed
 from ..auth.authentication import Auth
 from ..helper import custom_response, video_url_for
+from ..helper.user_mail import send_match_finish
 from ..models import db
 
 from subprocess import check_output, CalledProcessError, STDOUT
@@ -45,7 +46,7 @@ def post_match():
 
     video_storage.save(path_file + name_file)
     # ground
-    m_match = Match(name=name_file, duration="10:00", ground=1, path=path_file + name_file, complex_id=user_in_db.id)
+    m_match = Match(name=name_file, duration="10:00", ground=1, path=path_file + name_file, complex_id=user_in_db.complex_id)
     m_match.save()
     m_team_has_match_played = TeamHasMatchPlayed(team_id=req_data['team_one'],
                                                  match_id=m_match.id,
@@ -85,12 +86,21 @@ def result():
     db.session.commit()
     m_li_team_has_match_played = TeamHasMatchPlayed.query.filter_by(match_id=match_id).all()
 
+    path = video_url_for('video', path=m_match.name)
+
     result_team = req_data['result']['red']
     for m_team_has_match_played in m_li_team_has_match_played:
         m_team_has_match_played.goals = result_team['score']
         m_team_has_match_played.possesion = result_team['possession']
         db.session.commit()
         result_team = req_data['result']['blue']
+
+        team_id = m_team_has_match_played.team_id
+        li_user_has_team = UserHasTeam.query.filter_by(team_id=team_id).all()
+        for user_has_team in li_user_has_team:
+            user_in_db = User.query.filter_by(id=user_has_team.user_id).first()
+            if user_in_db:
+                send_match_finish('Votre analyse du match est fini', user_in_db.mail, path)
 
     return custom_response({'error': False, 'message': 'Update match result.', 'data': None}, 200)
 

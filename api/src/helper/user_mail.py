@@ -53,3 +53,19 @@ def send_reset_password_mail(message: str, email: str, code: str) -> str:
         pass
 
     return code
+
+
+def send_match_finish(message: str, email: str, url_match: str):
+    sender = os.environ.get('MAIL_USERNAME', 'noreply@statfive.fr')
+
+    msg = Message_mail('match_finish', sender=sender, recipients=[email])
+
+    msg.html = render_template("match_finish.html",
+                               url=url_match,
+                               message=message
+                               )
+    try:
+        mail.send(msg)
+    except Exception as err:
+        print(f"Exception while sending verification mail to {email} : {str(err)}")
+        pass
