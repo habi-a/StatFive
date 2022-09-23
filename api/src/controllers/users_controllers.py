@@ -7,11 +7,13 @@ from datetime import datetime
 
 from ..specs import specs_users
 from ..auth.authentication import Auth
-from ..helper import custom_response
+from ..helper import custom_response, video_url_for
 from ..helper.user_mail import send_verification_code_mail, send_reset_password_mail
 from ..models.user import User, UserPending
 from ..models.stats import Stats
 from ..models import db
+from ..models.match import Match
+from ..models.team import TeamHasMatchPlayed
 
 user_api = Blueprint('users', __name__)
 
@@ -132,6 +134,25 @@ def get_me():
         return custom_response(message, 404)
 
     user = user_in_db.to_json()
+
+    if user.complex_id:
+
+        matchs_in_db = Match.query.filter_by(complex_id=user_in_db.complex_id).all()
+        matchs = []
+        nb_but = 0
+
+        for match in matchs_in_db:
+            match_data = match.to_json()
+            match_data['path'] = video_url_for('video', path=match_data['name'])
+            matchs.append(match_data)
+            li_team_has_match_played = TeamHasMatchPlayed.query.filter_by(match_id=match.id).all()
+            for team_has_match_played in li_team_has_match_played:
+                nb_but += team_has_match_played.goals
+
+        user['stats'] = {'nb_match': len(matchs), 'nb_but': nb_but}
+
+    elif user.role == 2:
+        pass
 
     return custom_response({'error': False, 'message': 'get me', 'data': user}, 200)
 
