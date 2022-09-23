@@ -116,21 +116,37 @@ def get_my_match():
         message = {'error': True, 'message': 'L\' utilisateur existe pas.', 'data': None}
         return custom_response(message, 404)
 
-    li_m_user_has_team = UserHasTeam.query.filter_by(user_id=user_in_db.id).all()
+    if not user_in_db.complex_id:
+        li_m_user_has_team = UserHasTeam.query.filter_by(user_id=user_in_db.id).all()
 
-    data = []
-    for m_user_has_team in li_m_user_has_team:
-        team = m_user_has_team.team
-        li_team_has_match_played = TeamHasMatchPlayed.query.filter_by(team_id=team.id).all()
-        for team_has_match_played in li_team_has_match_played:
-            match = Match.query.filter_by(id=team_has_match_played.match_id).first()
-            data.append({
-                **team_has_match_played.to_json(),
-                **team.to_json(),
-                **match.to_json()
-            })
+        data = []
+        for m_user_has_team in li_m_user_has_team:
+            team = m_user_has_team.team
+            li_team_has_match_played = TeamHasMatchPlayed.query.filter_by(team_id=team.id).all()
+            for team_has_match_played in li_team_has_match_played:
+                match = Match.query.filter_by(id=team_has_match_played.match_id).first()
+                data.append({
+                    **team_has_match_played.to_json(),
+                    **team.to_json(),
+                    **match.to_json()
+                })
 
-    return custom_response({'error': False, 'message': 'Listes des matchs.', 'data': data}, 200)
+        return custom_response({'error': False, 'message': 'Listes des matchs.', 'data': data}, 200)
+
+    else:
+        complex_in_db = Complex.query.filter_by(id=user_in_db.complex_id).first()
+        if not complex_in_db:
+            message = {'error': True, 'message': 'Complex existe pas.', 'data': None}
+            return custom_response(message, 404)
+
+        matchs_in_db = Match.query.filter_by(complex_id=complex_in_db.id).all()
+        matchs = []
+        for match in matchs_in_db:
+            match_data = match.to_json()
+            match_data['path'] = video_url_for('video', path=match_data['name'])
+            matchs.append(match_data)
+
+        return custom_response({'error': False, 'message': 'Listes des matchs.', 'data': matchs}, 200)
 
 
 @match_api.route('/get-match-by-complex/<int:id>', methods=['GET'])
