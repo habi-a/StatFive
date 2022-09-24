@@ -148,9 +148,9 @@ def get_me():
 
     user = user_in_db.to_json()
 
-    if user.complex_id:
-        user['stats'] = get_data_complex(user.complex_id)
-    elif user.role == 2:
+    if user['complex_id']:
+        user['stats'] = get_data_complex(user['complex_id'])
+    elif user['role'] == 2:
         li_complex_in_db = Complex.query.all()
         li_complex_data = []
 

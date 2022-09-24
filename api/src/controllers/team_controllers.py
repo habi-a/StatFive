@@ -16,13 +16,10 @@ team_api = Blueprint('team', __name__)
 @swag_from(specs_team.all_team)
 @Auth.auth_required
 def all_team():
-    li_user_has_team = UserHasTeam.query.filter_by(user_id=g.user['id']).all()
-
+    team_in_db = Team.query.filter_by(id=g.user['id']).all()
     teams = []
-
-    for user_has_team in li_user_has_team:
-        team_in_db = Team.query.filter_by(id=user_has_team.team.id).first()
-        teams.append(team_in_db.to_json())
+    for team in team_in_db:
+        teams.append(team.to_json())
     return custom_response({'error': False, 'message': 'Liste de team.', 'data': teams}, 200)
 
 
@@ -43,7 +40,7 @@ def average_team():
     return custom_response({'error': False, 'message': 'Liste average goal team.', 'data': teams}, 200)
 
 
-@team_api.route('/<int:id>', methods=['GET'])
+@team_api.route('', methods=['GET'])
 @swag_from(specs_team.team_by_id)
 @Auth.auth_required
 def get_team_by_id(id):
@@ -52,10 +49,13 @@ def get_team_by_id(id):
         message = {'error': True, 'message': 'La team existe pas.', 'data': None}
         return custom_response(message, 404)
 
-    li_m_user_has_match = UserHasTeam.query.filter_by(team_id=team_in_db.id).all()
-    data = {'team': team_in_db.to_json(), 'user': []}
-    for m_user_has_match in li_m_user_has_match:
-        data['user'].append(m_user_has_match.user.to_json())
+    li_m_user_has_team = UserHasTeam.query.filter_by(user_id=g.user['id']).all()
+    data = []
+    # data = {'team': team_in_db.to_json(), 'user': []}
+    for m_user_has_team in li_m_user_has_team:
+        team_in_db = Team.query.filter_by(id=m_user_has_team.team_id).first()
+        data.append(m_user_has_team.user.to_json())
+        # data['user'].append(m_user_has_match.user.to_json())
 
     return custom_response({'error': False, 'message': 'Team by id.', 'data': data}, 200)
 
