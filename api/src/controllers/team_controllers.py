@@ -44,10 +44,6 @@ def average_team():
 @swag_from(specs_team.team_by_id)
 @Auth.auth_required
 def get_team_by_id():
-    # team_in_db = Team.query.filter_by(id=id).first()
-    # if not team_in_db:
-    #     message = {'error': True, 'message': 'La team existe pas.', 'data': None}
-    #     return custom_response(message, 404)
 
     li = []
     li_m_user_has_team = UserHasTeam.query.filter_by(user_id=g.user['id']).all()

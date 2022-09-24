@@ -10,11 +10,11 @@ from ..specs import specs_users
 from ..auth.authentication import Auth
 from ..helper import custom_response, video_url_for
 from ..helper.user_mail import send_verification_code_mail, send_reset_password_mail
-from ..models.user import User, UserPending
+from ..models.user import User, UserPending, UserHasTeam
 from ..models.stats import Stats
 from ..models import db
 from ..models.match import Match
-from ..models.team import TeamHasMatchPlayed
+from ..models.team import TeamHasMatchPlayed, Team
 
 user_api = Blueprint('users', __name__)
 
@@ -159,7 +159,17 @@ def get_me():
             li_complex_data.append(complex_data)
         user['complexes'] = li_complex_data
     else:
-        pass
+        data = []
+        li_m_user_has_team = UserHasTeam.query.filter_by(user_id=g.user['id']).all()
+        for m_user_has_team in li_m_user_has_team:
+            team_in_db = Team.query.filter_by(id=m_user_has_team.team_id).first()
+            data_team = team_in_db.to_json()
+            data_team['nb_but'] = 0
+            li_team_has_match_played = TeamHasMatchPlayed.query.filter_by(team_id=team_in_db.id).all()
+            for team_has_match_played in li_team_has_match_played:
+                data_team['nb_but'] += team_has_match_played.goals
+            data.append(data_team)
+        user['teams'] = data
 
     return custom_response({'error': False, 'message': 'get me', 'data': user}, 200)
 
