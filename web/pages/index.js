@@ -40,12 +40,10 @@ export default function Home() {
 
    const log = async () => {
       const res = await login(API_URL, email, pass)
-      console.log("resultat", res)
       if(res === "L'email n'est pas conforme.") {
         setError(res)
         return;
       }
-      console.log(res.error)
       if(res.data.error) {
         setError(res.data.message)
       } else {

@@ -1,41 +1,70 @@
-import { Flex, Box, Heading, List, ListItem, ListIcon, Button, Text, AspectRatio, Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton, } from '@chakra-ui/react'
+import { Flex, Box, Heading,Text, AspectRatio,
+  Center,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionIcon,
+  AccordionPanel,
+  Select } from '@chakra-ui/react'
 import SimpleSidebar from "../components/Menu"
-import { GiSoccerField } from "react-icons/gi"
 import { useEffect, useState } from 'react';
-import axios from "axios"
-import { API_URL } from "../static";
 import withAuth from '../components/withAuth';
 import { matchListHistoric, statMatchById } from "@mokhta_s/react-statfive-api"
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { API_URL } from '../static';
 
 const Historique = () => {
-  const [modalIsOpen, setIsOpen] = useState(false);
   const [matchList, setMatchList] = useState([]);
-  const [matchData, setMatchData] = useState(null)
+  const [matchData, setMatchData] = useState(null);
+  const [allComplexe, setAllComplexe] = useState([]);
 
   useEffect(() => {
-    matchHistoric()
+    async function getM() {
+      const user = await AsyncStorage.getItem('userInfo');
+      const userInfo = JSON.parse(user);
+      if(userInfo && userInfo.role < 2) {
+        getMatch()
+      } else {
+        getAllComplexe()
+      }
+    }
+    getM()
   }, [])
 
-  const matchHistoric = async () => {
-    let result = await matchListHistoric()
-    setMatchList(result)
+  const getMatch = async (idComplex) => {
+    const token = await AsyncStorage.getItem('token');
+    const user = await AsyncStorage.getItem('userInfo');
+    const userInfo = JSON.parse(user);
+    if(userInfo && userInfo.role < 2 ) {
+      const result = await axios.get(API_URL + `/match/get-my-match`,  { headers:{"api-token": token} })
+      if(!result.data?.error) {
+        setMatchList(result.data.data)
+      }
+    } else {
+      const resultat = await axios.get(API_URL + "/match/get-match-by-complex/" + idComplex, { headers: {"api-token": token}})
+      if(!resultat.data?.error) {
+        setMatchList(resultat.data.data)
+      }
+    }
+
+  }
+
+  const getAllComplexe = async () => {
+    const token = await AsyncStorage.getItem('token');
+    const user = await AsyncStorage.getItem('userInfo');
+    const userInfo = JSON.parse(user);
+    if(userInfo && userInfo.role === 2) {
+      const result = await axios.get(API_URL + `/admin/list-complex`, { headers:{"api-token": token} })
+          if(!result?.data.error) {
+              setAllComplexe(result.data.data)
+          }
+    }
   }
 
   const openModal = async (id) => {
     const result = await statMatchById(id)
-    console.log(result)
     setMatchData(result.data.data)
-    setIsOpen(true);
-  }
-
-  function closeModal() {
-    setIsOpen(false);
   }
 
   return (
@@ -43,56 +72,53 @@ const Historique = () => {
         <SimpleSidebar />
         <Box pos="relative" left={{sm: "100px", md: "240px"}} w={{ md:"calc(100% -  240px)"}}>
             <Heading textAlign="center" mb="50px">Historique des matchs</Heading>
-            <Flex justifyContent="center" w="100%">
-              <List spacing={3} textAlign="center" w="100%">
-                {matchList.map((elm, i) => {
-                  return <ListItem key={i} bgColor="#84C9D5" cursor={elm.finish ? "pointer" : "not-allowed"} p="10px" w="100%" onClick={() => {elm.finish && openModal(elm.id)}}> <ListIcon as={GiSoccerField} color="green" />{!elm.finish && "ANALYSE EN COURS"} - ID DU MATCH : {elm.id} | Match {elm.name}</ListItem>
-                })}
-              </List>
-            </Flex>
-        </Box>
-        <Modal isOpen={modalIsOpen} onClose={closeModal}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Statistique du match</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-          <Heading textAlign="center" mb="25px">Match</Heading>
-              <Flex w="300px" h="auto" justifyContent="space-around">
-                <Box>
-                  <Text>Equipe {matchData && matchData.team_blue.name}<br/><br/></Text>
-                  <hr/>
-                  <Text>But : {matchData && matchData.team_blue.goals}<br/><br/></Text>
-                  <hr/>
-                  <Text>Possession : {matchData && matchData.team_blue.possesion}<br/><br/></Text>
+            {allComplexe?.length > 0 &&<Select w="25%" m="5px auto" placeholder="Choisir un complexe" onChange={(e) => e.target.value && getMatch(e.target.value) }>
+                                    {allComplexe && allComplexe.length > 0 &&
+                                    allComplexe.map((el, i) => 
+                                        <option key={i} value={`${el.id}`}>{el.name}</option>
+                                    )
+                                }
+              </Select>}
+              {matchList && matchList.length <  1 && <Heading mt="25px" w="100%" size="md" textAlign="center">Aucune information n'a été trouvé</Heading>}
+              <Center>
+                <Accordion w="100%" mt="25px" allowToggle>
+                  {matchList.map((elm, i) => {
+                    return <AccordionItem>
+                    <h2>
+                      <AccordionButton onClick={() => {elm.finish && openModal(elm.id)}} _expanded={{ bg: '#002B5B', color: 'white' }}>
+                        <Box flex='1' textAlign='left'>
+                        {!elm.finish && "ANALYSE EN COURS - "} Match n° {elm.id} | Match {elm.name}
+                        </Box>
+                        <AccordionIcon />
+                      </AccordionButton>
+                    </h2>
+                    <AccordionPanel padding="inherit">
+                    <Flex h="auto">
+                <Box w="50%">
+                  <Text p="5" fontSize="26px" fontWeight="700" backgroundColor="#3DB2FF" color="white" textAlign="center" borderRight="1px solid #002B5B" borderBottom="1px solid #002B5B">{matchData && matchData.team_blue.name}</Text>
+                  <Text p="3" fontSize="18px" fontWeight="500" backgroundColor="#F9F5EB" color="#3DB2FF" textAlign="center" borderRight="1px solid #002B5B" borderBottom="2px solid #002B5B">But : {matchData && matchData.team_blue.goals}</Text>
+                  <Text p="3" fontSize="18px" fontWeight="500" backgroundColor="#F9F5EB" color="#3DB2FF" textAlign="center" borderRight="1px solid #002B5B" borderBottom="2px solid #002B5B">Possession : {matchData && Math.round(matchData.team_blue.possesion)} %</Text>
                 </Box>
-                <Box>
-                  <Text>Equipe {matchData && matchData.team_red.name}<br/><br/></Text>
-                  <hr/>
-                  <Text>But : {matchData && matchData.team_red.goals}<br/><br/></Text>
-                  <hr/>
-                  <Text>Possession : {matchData && matchData.team_red.possesion}<br/><br/></Text>
+                <Box w="50%">
+                  <Text p="5" fontSize="26px" fontWeight="700" backgroundColor="#3DB2FF" color="white" textAlign="center" borderLeft="1px solid #002B5B" borderBottom="1px solid #002B5B">{matchData && matchData.team_red.name}</Text>
+                  <Text p="3" fontSize="18px" fontWeight="500" backgroundColor="#F9F5EB" color="#3DB2FF" textAlign="center" borderLeft="1px solid #002B5B" borderBottom="2px solid #002B5B">But : {matchData && matchData.team_red.goals}</Text>
+                  <Text p="3" fontSize="18px" fontWeight="500" backgroundColor="#F9F5EB" color="#3DB2FF" textAlign="center" borderLeft="1px solid #002B5B" borderBottom="2px solid #002B5B">Possession : {matchData && Math.round(matchData.team_red.possesion)} %</Text>
                 </Box>
-                
-                
               </Flex>
-              <Text>Vidéo du match : </Text>
-              <AspectRatio maxW="560px" ratio={1}>
+              <Text textAlign="center" fontWeight="700" fontSize="26px">Vidéo du match</Text>
+              <AspectRatio w="480px" h="270px" ratio={1} m="5px auto">
                   <iframe
-                    title="naruto"
+                    title="video_match"
                     src={matchData && matchData.path}
                     allowFullScreen
                   />
                 </AspectRatio>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme='blue' mr={3} onClick={closeModal}>
-              Fermer
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+                    </AccordionPanel>
+                  </AccordionItem>
+                  })}
+                </Accordion>
+              </Center>
+        </Box>
     </Box>
   )
 }

@@ -22,7 +22,6 @@ const Verification = () => {
             return;
         }
         const result = await verification(value);
-        console.log(result)
         if(result && !(result?.data?.error)) {
             setData(result.data)
             addVerif(true)
