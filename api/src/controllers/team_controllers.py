@@ -49,15 +49,18 @@ def get_team_by_id():
     #     message = {'error': True, 'message': 'La team existe pas.', 'data': None}
     #     return custom_response(message, 404)
 
+    li = []
     li_m_user_has_team = UserHasTeam.query.filter_by(user_id=g.user['id']).all()
-    data = []
-    # data = {'team': team_in_db.to_json(), 'user': []}
     for m_user_has_team in li_m_user_has_team:
         team_in_db = Team.query.filter_by(id=m_user_has_team.team_id).first()
-        data.append(m_user_has_team.user.to_json())
-        # data['user'].append(m_user_has_match.user.to_json())
+        data = {'team': team_in_db.to_json(), 'user': []}
+        two_li_m_user_has_team = UserHasTeam.query.filter_by(team_id=team_in_db.team_id).all()
+        for two_m_user_has_team in two_li_m_user_has_team:
+            data['user'].append(two_m_user_has_team.user.to_json())
 
-    return custom_response({'error': False, 'message': 'Team by id.', 'data': data}, 200)
+        li.append(data)
+
+    return custom_response({'error': False, 'message': 'Team by id.', 'data': li}, 200)
 
 
 @team_api.route('/stat_team_by_id/<int:id>', methods=['GET'])
