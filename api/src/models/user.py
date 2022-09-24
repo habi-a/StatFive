@@ -49,7 +49,8 @@ class User(db.Model):
             'verification': self.verification,
             'post': self.post,
             'description': self.description,
-            'role': self.role
+            'role': self.role,
+            'complex_id': self.complex_id
         }
         if get_complex and self.complex:
             data['complex'] = self.complex.to_json()
