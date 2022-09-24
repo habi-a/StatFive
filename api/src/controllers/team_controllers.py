@@ -1,4 +1,4 @@
-from flask import request, json, Response, Blueprint
+from flask import request, json, Response, Blueprint, g
 from flasgger import swag_from
 
 from ..models.user import UserHasTeam
@@ -16,10 +16,13 @@ team_api = Blueprint('team', __name__)
 @swag_from(specs_team.all_team)
 @Auth.auth_required
 def all_team():
-    team_in_db = Team.query.all()
+    li_user_has_team = UserHasTeam.query.filter_by(user_id=g.user['id']).all()
+
     teams = []
-    for team in team_in_db:
-        teams.append(team.to_json())
+
+    for user_has_team in li_user_has_team:
+        team_in_db = Team.query.filter_by(id=user_has_team.team.id).first()
+        teams.append(team_in_db.to_json())
     return custom_response({'error': False, 'message': 'Liste de team.', 'data': teams}, 200)
 
 
