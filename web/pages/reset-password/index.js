@@ -11,7 +11,6 @@ export default function Home() {
 
    const sendMailPassword = async () => {
       const res = await getNewPassword(email)
-      console.log("result", res)
       if(!(res?.data?.error)) {
         setValidation(true)
       } else {

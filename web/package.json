@@ -14,16 +14,17 @@
     "@chakra-ui/toast": "^3.0.2",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
-    "@mokhta_s/react-statfive-api": "^3.2.3",
+    "@mokhta_s/react-statfive-api": "^3.2.6",
     "@react-native-async-storage/async-storage": "^1.17.10",
+    "axios": "0.27.2",
     "framer-motion": "^6.5.1",
     "next": "12.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-dropzone": "^14.2.2",
     "react-icons": "^4.4.0",
     "react-select": "^5.4.0",
-    "zustand": "^4.0.0",
-    "axios": "0.27.2"
+    "zustand": "^4.0.0"
   },
   "devDependencies": {
     "eslint": "8.20.0",
