@@ -146,7 +146,7 @@ def get_me():
         message = {'error': True, 'message': 'L\' utilisateur existe pas.', 'data': None}
         return custom_response(message, 404)
 
-    user = user_in_db.to_json()
+    user = user_in_db.to_json(True)
 
     if user['complex_id']:
         user['stats'] = get_data_complex(user['complex_id'])
