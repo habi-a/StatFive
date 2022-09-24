@@ -16,7 +16,7 @@ team_api = Blueprint('team', __name__)
 @swag_from(specs_team.all_team)
 @Auth.auth_required
 def all_team():
-    team_in_db = Team.query.filter_by(id=g.user['id']).all()
+    team_in_db = Team.query.all()
     teams = []
     for team in team_in_db:
         teams.append(team.to_json())

@@ -153,12 +153,13 @@ def get_me():
     elif user['role'] == 2:
         li_complex_in_db = Complex.query.all()
         li_complex_data = []
-
         for complex_in_db in li_complex_in_db:
             complex_data = complex_in_db.to_json()
             complex_data['stats'] = get_data_complex(complex_in_db.id)
             li_complex_data.append(complex_data)
         user['complexes'] = li_complex_data
+    else:
+        pass
 
     return custom_response({'error': False, 'message': 'get me', 'data': user}, 200)
 
