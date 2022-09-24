@@ -54,7 +54,7 @@ def get_team_by_id():
     for m_user_has_team in li_m_user_has_team:
         team_in_db = Team.query.filter_by(id=m_user_has_team.team_id).first()
         data = {'team': team_in_db.to_json(), 'user': []}
-        two_li_m_user_has_team = UserHasTeam.query.filter_by(team_id=team_in_db.team_id).all()
+        two_li_m_user_has_team = UserHasTeam.query.filter_by(team_id=team_in_db.id).all()
         for two_m_user_has_team in two_li_m_user_has_team:
             data['user'].append(two_m_user_has_team.user.to_json())
 
