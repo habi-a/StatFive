@@ -4,49 +4,35 @@ import Card from "../components/Card"
 import {useStore} from "./index"
 import withAuth from '../components/withAuth'
 import { useEffect, useState } from 'react'
-import { getAllTeam, getMyTeam } from '@mokhta_s/react-statfive-api'
-import axios from "axios"
+import { getMyTeam, getMe } from '@mokhta_s/react-statfive-api'
+import Profile from '../components/Profile'
 
 const Profil = () => {
   const [teamID, setTeamID] = useState(null)
   const [team, setTeam] = useState([])
+  const [user, setUser] = useState(null)
 
-  const userID = useStore((state) => state.data.id)
-  const token = useStore(state => state.token)
-
-  const allTeam = async () => {
-    let result = await getAllTeam()
-    console.log('ici', result)
-    if(result?.length > 0) {
-      setTeamID(result)
+  const getUser = async () => {
+    const result = await getMe()
+    console.log("ici getMe", result)
+    if(!result?.data.error) {
+      setUser(result.data.data)
     }
   }
 
   const getTeam = async () => {
     let result = await getMyTeam(teamID)
-    console.log(result)
-    result && result.map(async (elm) => {
-          await axios.get(elm, { headers:{"api-token": token} }).then(res => {
-              const arrayTeam = res.data.data.user
-              if(arrayTeam.length === 5) {
-                if(arrayTeam.find(o => o.id === userID)) {
-                  setTeam([arrayTeam])
-                }
-              }
-            })  
-          .catch(err => {
-            return err.response
-          })
-        })
+    if(result.length > 0) {
+      setTeam(result)
+    }
   }
 
   useEffect(() => {
-    allTeam()
+    getUser()
   }, [])
 
   useEffect(() => {
-    if(teamID?.length > 0)
-      getTeam()
+    getTeam()
   }, [teamID])
 
   return (
@@ -54,20 +40,21 @@ const Profil = () => {
         <SimpleSidebar />
         <Box pos="relative" left={{sm: "100px", md: "240px"}} w={{ md:"calc(100% -  240px)"}}>
             <Heading textAlign="center">Mon profil</Heading>
+              <Profile data={user}/>
             <Flex flexDir="row" padding="40px" ml="40px">
-              {team && team.map((elm, i) => 
+              {team && team.map((elm, i) =>
                 <Accordion allowToggle mr="20px">
                   <AccordionItem>
                         <h2>
                             <AccordionButton _expanded={{ bg: "black", color: "white" }}>
                               <Box flex="1" textAlign="left">
-                                {`Equipe ${++i}`}
+                                {`Equipe ${elm.team.name}`}
                               </Box>
                             <AccordionIcon />
                           </AccordionButton>
                         </h2>
-                      <AccordionPanel> 
-                        {elm.map((el) => 
+                      <AccordionPanel>
+                        {elm.user.map((el) =>
                         <Card info={el} cantDelete={true} />
                         )}
                       </AccordionPanel>

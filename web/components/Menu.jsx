@@ -24,6 +24,9 @@ import {
     RiFootballFill,
     RiAdminLine
   } from 'react-icons/ri'
+  import {
+    MdAdminPanelSettings
+  } from 'react-icons/md'
 import {useStore} from "../pages/index"
 
   export default function SimpleSidebar({ children }) {
@@ -63,12 +66,17 @@ import {useStore} from "../pages/index"
       { name: 'Accueil', href: "/accueil", icon: FiHome },
       { name: 'Mon profil', href: "/profil", icon: RiProfileLine },
       { name: 'Classement', href: "/classement", icon: FiCompass },
-      { name: 'Historique', href: "/historique", icon: RiFolderHistoryLine },
-      { name: 'Paramètre', href: "/parametre", icon: FiSettings },
+      { name: 'Historique de match', href: "/historique", icon: RiFolderHistoryLine },
+      { name: 'Paramètres', href: "/parametre", icon: FiSettings },
     ];
     
-    data && data.role === 1 && LinkItems.push({ name: "Création d'équipe", href: "/equipe", icon: RiFootballFill }) 
-    data && data.role === 1 && LinkItems.push({ name: 'Admin', href: "/admin", icon: RiAdminLine })
+    if(data && data.role >= 1 ) {
+      LinkItems.push({ name: "Création d'équipe", href: "/equipe", icon: RiFootballFill }) 
+      LinkItems.push({ name: 'Création de match', href: "/creation-match", icon: RiAdminLine })
+    }
+    if(data && data.role === 2) {
+      LinkItems.push({ name: 'Admin', href: "/admin", icon: MdAdminPanelSettings })
+    }
 
     return (
       <Box
