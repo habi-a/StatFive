@@ -92,15 +92,14 @@ def result():
     for m_team_has_match_played in m_li_team_has_match_played:
         m_team_has_match_played.goals = result_team['score']
         m_team_has_match_played.possesion = result_team['possession']
-        db.session.commit()
         result_team = req_data['result']['blue']
 
-        team_id = m_team_has_match_played.team_id
-        li_user_has_team = UserHasTeam.query.filter_by(team_id=team_id).all()
+        li_user_has_team = UserHasTeam.query.filter_by(team_id=m_team_has_match_played.team_id).all()
         for user_has_team in li_user_has_team:
             user_in_db = User.query.filter_by(id=user_has_team.user_id).first()
             if user_in_db:
                 send_match_finish('Votre analyse du match est fini', user_in_db.mail, path)
+        db.session.commit()
 
     return custom_response({'error': False, 'message': 'Update match result.', 'data': None}, 200)
 
