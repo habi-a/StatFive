@@ -1,5 +1,4 @@
 
-
 stages:
   - test
   - setup
@@ -81,9 +80,11 @@ deploy-preprod-web:
 
 deploy-prod-web:
   stage: deploy
-  script:
-    - echo "test"
+  extends: .ssh-connect-preprod
+  variables:
+    COMMAND: "kubectl rollout restart deployment web -n statfive"
   needs: [publish-web]
   only:
     refs:
       - master
+
