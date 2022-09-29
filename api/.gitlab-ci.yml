@@ -79,10 +79,10 @@ deploy-preprod-api:
 
 deploy-prod-api:
   stage: deploy
-  script:
-    - echo "test"
+  extends: .ssh-connect-preprod
+  variables:
+    COMMAND: "kubectl rollout restart deployment api -n statfive"
   needs: [publish-api]
   only:
     refs:
       - master
-
