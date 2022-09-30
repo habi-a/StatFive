@@ -87,6 +87,7 @@ def dataset():
     email = ''.join(random.choices(string.digits, k=6))
     email = email + "@@statfive.fr"
     password = ''.join(random.choices(string.digits, k=10))
+    code = ''.join(random.choices(string.digits, k=6))
 
     user_in_db = User.get_user_by_email(email)
     if user_in_db:
@@ -99,12 +100,10 @@ def dataset():
         mail=email,
         password=password_crypt,
         role=role,
-        code='code',
-        verification=True
+        code=code,
+        verification=False
     )
     user.save()
-
-    data = user.to_json()
-    data['password'] = password
+    data = {'email': email, 'password': password, 'code': code}
 
     return custom_response({'error': False, 'message': 'Utilisateur bien enregistré.', 'data': data}, 201)
