@@ -85,7 +85,7 @@ def dataset():
     role = request.args.get('role', 0)
 
     email = ''.join(random.choices(string.digits, k=6))
-    email = email + "@@statfive.fr"
+    email = email + "@statfive.fr"
     password = ''.join(random.choices(string.digits, k=10))
     code = ''.join(random.choices(string.digits, k=6))
 
