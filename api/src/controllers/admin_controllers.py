@@ -1,3 +1,6 @@
+import random
+import string
+
 from flask import request, Blueprint
 
 from ..models import db
@@ -75,3 +78,33 @@ def user_del_complex(id):
     user_in_db.complex_id = None
     db.session.commit()
     return custom_response({'error': False, 'message': 'user-dissociate-complex', 'data': None}, 200)
+
+
+@admin_api.route('/dataset', methods=['GET'])
+def dataset():
+    role = request.args.get('role', 0)
+
+    email = ''.join(random.choices(string.digits, k=6))
+    email = email + "@@statfive.fr"
+    password = ''.join(random.choices(string.digits, k=10))
+
+    user_in_db = User.get_user_by_email(email)
+    if user_in_db:
+        message = {'error': True, 'message': 'Email déjà existant, veuillez en choisir un autre.', 'data': None}
+        return custom_response(message, 400)
+    password_crypt = User.hash_password(password)
+    user = User(
+        firstname='firstname',
+        name='lastname',
+        mail=email,
+        password=password_crypt,
+        role=role,
+        code='code',
+        verification=True
+    )
+    user.save()
+
+    data = user.to_json()
+    data['password'] = password
+
+    return custom_response({'error': False, 'message': 'Utilisateur bien enregistré.', 'data': data}, 201)
