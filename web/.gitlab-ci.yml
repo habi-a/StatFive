@@ -24,7 +24,7 @@ stages:
 
 functionnal-test-web:
   image: 
-    name: cypress/included:9.0.0
+    name: cypress/included:10.9.0
     entrypoint: [""]
   stage: test
   services:
