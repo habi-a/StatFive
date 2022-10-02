@@ -24,10 +24,11 @@ stages:
 
 unit-test-web:
   image: cypress/included:9.0.0
-  stage: tests
+  stage: test
   services:
     - redis:latest
   script:
+    - cd web/
     - yarn testing-ci
     - mkdir reports
     - cp coverage/coverage-final.json reports/coverage.json
