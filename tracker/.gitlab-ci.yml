@@ -38,7 +38,7 @@ lint-tracker:
     - pip install -r requirements.txt
   script:
     - echo "Running lint"
-    - pylint run.py app/* instance/* tests/*
+    - pylint server.py src/*.py
 
 
 pull-tracker-git:
