@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
- 
+# pylint: disable=no-member,invalid-name,line-too-long,too-many-arguments,too-many-locals,unused-variable
+
+"""Module for drawing in image"""
+
 import math
+import cv2
 
-from src.ball import *
-from src.teams import *
+from src.ball import detect_ball_on_image
+from src.teams import detect_team_on_image
 
 
-def draw_detections_on_image(image, detections, labels, goal_t1, goal_t2, loc, loc_foot, loc_ball, ball_visible, show):
+def draw_detections_on_image(image,detections, labels, goal_t1, goal_t2, loc, loc_foot, loc_ball, ball_visible, show):
+    """Function to draw rectangles on the image"""
     image_with_detections = image
     height, width, channels = image_with_detections.shape
 
@@ -31,7 +36,7 @@ def draw_detections_on_image(image, detections, labels, goal_t1, goal_t2, loc, l
             coords = (x1, y1)
             yaverage = int((y1 + y2) / 2)
             xaverage = int((x1 + x2) / 2)
-            
+
             detect_team_on_image(image_with_detections, detection_label, x1, x2, y1, y2, loc, loc_foot, xaverage)
             detect_ball_on_image(detection_label, loc_ball, ball_visible, xaverage, yaverage)
 
@@ -43,7 +48,7 @@ def draw_detections_on_image(image, detections, labels, goal_t1, goal_t2, loc, l
                     color,
                     3
                 )
-  
+
                 # Draw feet
                 image_with_detections = cv2.rectangle(
                     image_with_detections,
@@ -70,9 +75,9 @@ def draw_detections_on_image(image, detections, labels, goal_t1, goal_t2, loc, l
                     image_with_detections,
                     loc[coords],
                     (x1, y1 - 20),
-                    cv2.FONT_HERSHEY_SIMPLEX, 
-                    0.50, 
-                    (255, 0, 0), 
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.50,
+                    (255, 0, 0),
                     2
                 )
 

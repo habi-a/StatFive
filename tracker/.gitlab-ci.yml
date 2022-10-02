@@ -22,87 +22,77 @@ stages:
     - ssh "$PREPROD_GITUSER"@"$PREPROD_SERVER_IP" "cd $PATH_GPE_DIR; $COMMAND"
 
 
-functionnal-test-web:
-  image: 
-    name: cypress/included:10.9.0
-    entrypoint: [""]
+lint-tracker:
+  image: python:3.7
   stage: test
-  variables:
-    API_URL: "https://api.preprod.statfive.fr/api"
+  before_script:
+    - cd tracker/
+    - python -V
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
   script:
-    - cd web/
-    - npm install --force
-    - yarn build
-    - yarn testing-ci
-    - mkdir reports
-    - cp coverage/coverage-final.json reports/coverage-final.json
-  artifacts:
-    when: always
-    name: "coverage-$CI_COMMIT_REF_NAME"
-    paths:
-      - web/reports
-      - web/cypress/videos//*.mp4
-      - web/cypress/screenshots//*.png
-    expire_in: 1 week
-
-lint-web:
-  image: node
-  stage: test
-  script:
-    - cd web/
-    - npm i --force eslint
-    - yarn lint
+    - echo "Running lint"
+    - pylint server.py src/*.py
 
 
-pull-web-git:
+pull-tracker-git:
   stage: setup
   extends: .ssh-connect-preprod
   variables:
-    COMMAND: "cd web/ && sudocgit pull origin staging"
-  needs: [functionnal-test-web, lint-web]
+    COMMAND: "cd tracker/ && sudo git pull origin staging"
+  needs: [lint-tracker]
   only:
     refs:
       - staging
 
 
-build-web:
+build-tracker:
   stage: build
   extends: .ssh-connect-preprod
   variables:
-    COMMAND: "sudo docker-compose build web"
-  needs: [pull-web-git]
+    COMMAND: "sudo docker-compose build tracker-app"
+  needs: [pull-tracker-git]
   only:
     refs:
       - staging
 
 
-publish-web:
+publish-tracker:
   stage: publish
   extends: .ssh-connect-preprod
   variables:
-    COMMAND: "sudo docker push acalhabi/statfive_web"
+    COMMAND: "sudo docker push acalhabi/statfive_tracker"
   only:
     refs:
       - master
 
 
-deploy-preprod-web:
+deploy-preprod-tracker:
   stage: deploy
   extends: .ssh-connect-preprod
   variables:
     COMMAND: "sudo docker-compose up -d"
-  needs: [build-web]
+  needs: [build-tracker]
   only:
     refs:
       - staging
 
-deploy-prod-web:
+deploy-prod-tracker-app:
   stage: deploy
   extends: .ssh-connect-preprod
   variables:
-    COMMAND: "kubectl rollout restart deployment web -n statfive"
-  needs: [publish-web]
+    COMMAND: "kubectl rollout restart deployment tracker-app -n statfive"
+  needs: [publish-tracker]
   only:
     refs:
       - master
 
+deploy-prod-tracker-worker:
+  stage: deploy
+  extends: .ssh-connect-preprod
+  variables:
+    COMMAND: "kubectl rollout restart deployment tracker-worker -n statfive"
+  needs: [publish-tracker]
+  only:
+    refs:
+      - master
