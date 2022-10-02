@@ -23,7 +23,9 @@ stages:
 
 
 unit-test-web:
-  image: cypress/included:9.0.0
+  image: 
+    name: cypress/included:9.0.0
+    entrypoint: [""]
   stage: test
   services:
     - redis:latest
