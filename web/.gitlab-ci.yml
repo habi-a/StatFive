@@ -31,9 +31,9 @@ functionnal-test-web:
     - redis:latest
   script:
     - cd web/
-    - npm install --force
-    - yarn build
-    - yarn testing-ci
+#    - npm install --force
+#    - yarn build
+#    - yarn testing-ci
     - mkdir reports
     - cp coverage/coverage-final.json reports/coverage-final.json
     - rm -Rf cypress/videos
@@ -52,7 +52,7 @@ lint-web:
   script:
     - cd web/
     - npm i --force eslint
-    - node_modules/eslint/bin/eslint.js .
+    - yarn lint
 
 
 pull-web-git:
