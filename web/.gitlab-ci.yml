@@ -40,9 +40,9 @@ functionnal-test-web:
     when: always
     name: "coverage-$CI_COMMIT_REF_NAME"
     paths:
-      - reports
-      - cypress/videos//*.mp4
-      - cypress/screenshots//*.png
+      - web/reports
+      - web/cypress/videos//*.mp4
+      - web/cypress/screenshots//*.png
     expire_in: 1 week
 
 lint-web:
