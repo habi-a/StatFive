@@ -23,10 +23,23 @@ stages:
 
 
 unit-test-web:
-  stage: test
+  image: cypress/included:9.0.0
+  stage: tests
+  services:
+    - redis:latest
   script:
-    - echo "Running unit tests... This will take about 1 seconds."
-    - echo "Code coverage is 90%"
+    - yarn testing-ci
+    - mkdir reports
+    - cp coverage/coverage-final.json reports/coverage.json
+    - rm -Rf cypress/videos
+  artifacts:
+    when: always
+    name: "coverage-$CI_COMMIT_REF_NAME"
+    paths:
+      - reports
+      - cypress/videos//*.mp4
+      - cypress/screenshots//*.png
+    expire_in: 1 day
 
 lint-web:
   image: node
