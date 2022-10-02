@@ -33,7 +33,7 @@ lint-web:
   stage: test
   script:
     - cd web/
-    - npm i eslint
+    - npm i --force eslint
     - node_modules/eslint/bin/eslint.js .
 
 
