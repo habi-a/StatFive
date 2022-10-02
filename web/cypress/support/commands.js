@@ -42,7 +42,7 @@ Cypress.Commands.add("login", (CREDENTIALS) => {
   cy.fixture(CREDENTIALS).then((credentials) => {
     cy.get("input").eq(0).clear().type(`${credentials.code}`);
   });
-  cy.wait(5000);
+  cy.wait(10000);
   cy.url().should("include", "/accueil");
 });
 
@@ -54,8 +54,6 @@ Cypress.Commands.add("getElement", (elem) => {
   });
   return cy.get(elem);
 });
-
-
 
 Cypress.Commands.add("fetchCredentials", (fileName, nb = 0) => {
   cy.request({

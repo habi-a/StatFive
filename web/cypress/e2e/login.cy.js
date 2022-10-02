@@ -29,11 +29,11 @@ describe("Connexion", () => {
     cy.getElement("input").eq(0).clear().type("000000");
     cy.wait(1000);
     cy.getElement('[datatestid="verification_error"]').should("be.visible");
-    for (let i = 0; i <= 5; i++) {
+    for (let i = 0; i <= 6; i++) {
       cy.getElement(`input:eq(${i})`).clear();
     }
     cy.fixture(CREDENTIALS).then((credentials) => {
-      cy.getElement(`input:eq(0)`).type(`${credentials.code}`);
+      cy.getElement(`input:eq(0)`).clear().type(`${credentials.code}`);
     });
     cy.wait(3000);
     cy.url().should("include", "/accueil");
