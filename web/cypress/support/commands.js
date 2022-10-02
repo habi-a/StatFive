@@ -55,7 +55,6 @@ Cypress.Commands.add("getElement", (elem) => {
   return cy.get(elem);
 });
 
-
 Cypress.Commands.add("fetchCredentials", (fileName, nb = 0) => {
   cy.request({
     url: `https://api.preprod.statfive.fr/api/admin/dataset?role=${nb}`,
