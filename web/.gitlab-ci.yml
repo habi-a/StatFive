@@ -27,8 +27,8 @@ functionnal-test-web:
     name: cypress/included:10.9.0
     entrypoint: [""]
   stage: test
-  services:
-    - redis:latest
+  variables:
+    API_URL: "https://api.preprod.statfive.fr/api"
   script:
     - cd web/
     - npm install --force
