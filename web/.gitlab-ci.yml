@@ -42,7 +42,7 @@ pull-web-git:
   extends: .ssh-connect-preprod
   variables:
     COMMAND: "cd web/ && git pull origin master"
-  needs: [unit-test-web, lint-test-web]
+  needs: [unit-test-web, lint-web]
   only:
     refs:
       - staging
