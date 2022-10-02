@@ -31,7 +31,7 @@ functionnal-test-web:
     - redis:latest
   script:
     - cd web/
-    - npm i --force
+    - yarn build
     - yarn testing-ci
     - mkdir reports
     - cp coverage/coverage-final.json reports/coverage-final.json
