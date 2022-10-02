@@ -29,10 +29,11 @@ unit-test-web:
     - echo "Code coverage is 90%"
 
 lint-test-web:
+  image: node
   stage: test
   script:
-    - echo "Linting code... This will take about 1 seconds."
-    - echo "No lint issues found."
+    - npm i eslint
+    - node_modules/eslint/bin/eslint.js .
 
 
 pull-web-git:
