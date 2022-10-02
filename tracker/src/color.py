@@ -1,13 +1,19 @@
 #!/usr/bin/env python3
+# pylint: disable=no-member
+
+"""Color detection Module"""
+
 
 import cv2
 import numpy as np
 
 def count_nonblack_np(img):
+    """Helper function to count non black np"""
     return img.any(axis=-1).sum()
 
 
 def detect_color(image):
+    """Function to detect if the color is red or blue"""
     # define the list of boundaries
     i = 0
     boundaries = [
@@ -29,8 +35,7 @@ def detect_color(image):
         ratio = color_pix/tot_pix
         if ratio > 0.01 and i == 0:
             return 'red'
-        elif ratio > 0.01 and i == 1:
+        if ratio > 0.01 and i == 1:
             return 'blue'
         i += 1
-
     return 'not_sure'
