@@ -45,7 +45,7 @@ pull-tracker-git:
   stage: setup
   extends: .ssh-connect-preprod
   variables:
-    COMMAND: "cd tracker/ && git pull origin master"
+    COMMAND: "cd tracker/ && sudo git pull origin staging"
   needs: [unit-test-tracker, lint-tracker]
   only:
     refs:

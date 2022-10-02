@@ -36,7 +36,6 @@ functionnal-test-web:
 #    - yarn testing-ci
     - mkdir reports
     - cp coverage/coverage-final.json reports/coverage-final.json
-    - rm -Rf cypress/videos
   artifacts:
     when: always
     name: "coverage-$CI_COMMIT_REF_NAME"
@@ -44,7 +43,7 @@ functionnal-test-web:
       - reports
       - cypress/videos//*.mp4
       - cypress/screenshots//*.png
-    expire_in: 1 day
+    expire_in: 1 week
 
 lint-web:
   image: node
@@ -59,7 +58,7 @@ pull-web-git:
   stage: setup
   extends: .ssh-connect-preprod
   variables:
-    COMMAND: "cd web/ && git pull origin master"
+    COMMAND: "cd web/ && sudocgit pull origin staging"
   needs: [functionnal-test-web, lint-web]
   only:
     refs:
