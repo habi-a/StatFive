@@ -25,6 +25,9 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 import "cypress-file-upload";
+import "cypress-wait-until";
+
+
 
 Cypress.Commands.add("login", (CREDENTIALS) => {
   cy.fixture(CREDENTIALS).then((credentials) => {
@@ -41,6 +44,16 @@ Cypress.Commands.add("login", (CREDENTIALS) => {
   });
   cy.wait(5000);
 });
+
+Cypress.Commands.add("getElement", (elem) => {
+  cy.waitUntil(() => Cypress.$(elem).length > 0, {
+    errorMsg: `${elem} not found`, // overrides the default error message
+    timeout: 30000, // waits up to 30000 ms, default to 5000
+    interval: 300, // performs the check every 1000 ms, default to 200
+  });
+  return cy.get(elem);
+});
+
 
 Cypress.Commands.add("fetchCredentials", (fileName, nb = 0) => {
   cy.request({

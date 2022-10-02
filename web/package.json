@@ -20,6 +20,7 @@
     "@react-native-async-storage/async-storage": "^1.17.10",
     "axios": "0.27.2",
     "cypress-file-upload": "^5.0.8",
+    "cypress-wait-until": "^1.7.2",
     "framer-motion": "^6.5.1",
     "next": "12.2.3",
     "react": "18.2.0",

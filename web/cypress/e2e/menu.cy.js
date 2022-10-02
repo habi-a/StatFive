@@ -12,18 +12,16 @@ describe("Connexion", () => {
   it("Menu pour role 0", () => {
     cy.fetchCredentials(CREDENTIALS);
     cy.login(CREDENTIALS);
-    cy.get('[datatestid="menu_url"]').should("have.length", 5);
+    cy.getElement('[datatestid="menu_url"]').should("have.length", 5);
   });
   it("Menu pour role 1", () => {
     cy.fetchCredentials(CREDENTIALS_ONE, 1);
     cy.login(CREDENTIALS_ONE);
-    cy.wait(5000);
-    cy.get('[datatestid="menu_url"]').should("have.length", 7);
+    cy.getElement('[datatestid="menu_url"]').should("have.length", 7);
   });
   it("Menu pour role 2", () => {
     cy.fetchCredentials(CREDENTIALS_TWO, 2);
     cy.login(CREDENTIALS_TWO);
-    cy.wait(5000);
-    cy.get('[datatestid="menu_url"]').should("have.length", 8);
+    cy.getElement('[datatestid="menu_url"]').should("have.length", 8);
   });
 });
