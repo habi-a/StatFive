@@ -43,7 +43,6 @@ Cypress.Commands.add("login", (CREDENTIALS) => {
     cy.get("input").eq(0).clear().type(`${credentials.code}`);
   });
   cy.wait(10000);
-  cy.url().should("include", "/accueil");
 });
 
 Cypress.Commands.add("getElement", (elem) => {
