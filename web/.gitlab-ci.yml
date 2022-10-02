@@ -31,9 +31,10 @@ functionnal-test-web:
     - redis:latest
   script:
     - cd web/
+    - npm i --force
     - yarn testing-ci
     - mkdir reports
-    - cp coverage/coverage-final.json reports/coverage.json
+    - cp coverage/coverage-final.json reports/coverage-final.json
     - rm -Rf cypress/videos
   artifacts:
     when: always
