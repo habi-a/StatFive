@@ -23,7 +23,6 @@ const Profil = () => {
 
   const getUser = async () => {
     const result = await getMe();
-    console.log("ici getMe", result);
     if (!result?.data.error) {
       setUser(result.data.data);
     }

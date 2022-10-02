@@ -24,8 +24,25 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import "cypress-file-upload";
+
+Cypress.Commands.add("login", (CREDENTIALS) => {
+  cy.fixture(CREDENTIALS).then((credentials) => {
+    cy.get('[datatestid="login_mail"').clear().type(`${credentials.email}`);
+    cy.get('[datatestid="login_password"')
+      .clear()
+      .type(`${credentials.password}`);
+  });
+  cy.get('[datatestid="login_button').click();
+  cy.url().should("include", "/verification");
+  cy.wait(500);
+  cy.fixture(CREDENTIALS).then((credentials) => {
+    cy.get("input").eq(0).clear().type(`${credentials.code}`);
+  });
+  cy.wait(5000);
+});
+
 Cypress.Commands.add("fetchCredentials", (fileName, nb = 0) => {
-  const baseURL = Cypress.env("apiUrl");
   cy.request({
     url: `https://api.preprod.statfive.fr/api/admin/dataset?role=${nb}`,
     header: {

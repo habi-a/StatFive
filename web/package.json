@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "start-ci": "next start",
+    "testing-ci": "start-server-and-test start-ci 3000 'yarn cypress run --spec $(node ./scripts/cypress-critical-parallel.js)'"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.4",
@@ -17,6 +19,7 @@
     "@mokhta_s/react-statfive-api": "^3.2.6",
     "@react-native-async-storage/async-storage": "^1.17.10",
     "axios": "0.27.2",
+    "cypress-file-upload": "^5.0.8",
     "framer-motion": "^6.5.1",
     "next": "12.2.3",
     "react": "18.2.0",
@@ -24,6 +27,7 @@
     "react-dropzone": "^14.2.2",
     "react-icons": "^4.4.0",
     "react-select": "^5.4.0",
+    "start-server-and-test": "^1.14.0",
     "zustand": "^4.0.0"
   },
   "devDependencies": {

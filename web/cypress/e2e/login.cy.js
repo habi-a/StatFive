@@ -13,7 +13,7 @@ describe("Connexion", () => {
     cy.get('[datatestid="login_error"]').should("be.visible");
   });
 
-  it("Connection with fail otp", () => {
+  it("Connection with fail otp and otp valid", () => {
     cy.visit("/");
     cy.fixture(CREDENTIALS).then((credentials) => {
       cy.get('[datatestid="login_mail"').clear().type(`${credentials.email}`);

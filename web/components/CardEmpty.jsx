@@ -4,7 +4,6 @@ import {
     Center,
     Flex,
     Button,
-    useColorModeValue,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -18,7 +17,7 @@ import Card  from './Card'
 import {useStore} from "../pages/index"
 import { getAllUser } from "@mokhta_s/react-statfive-api"
   
-  export default function CardEmpty() {
+  export default function CardEmpty({numberID}) {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [userList, setUserList] = useState([]);
   const [player, setPlayer] = useState(false);
@@ -57,6 +56,7 @@ import { getAllUser } from "@mokhta_s/react-statfive-api"
           overflow='hidden'
           h="360px">
               <Button
+              datatestid={`equipe_new_player-${numberID}`}
               onClick={openModal}
               bg="#151f21"
               color='white'
@@ -76,8 +76,8 @@ import { getAllUser } from "@mokhta_s/react-statfive-api"
             <ModalBody>
               <Heading>Liste des joueurs</Heading>
                   {
-                    userList.map((elm) => {
-                      return <Box key={i} mb="10px" mt="10px" p="10px" cursor="pointer">{elm.firstname} | {elm.lastname} <Button position="absolute" right="25px" colorScheme="teal" size="xs" onClick={() => {setPlayer(!player); setPlayerInfo(elm); addTeam(elm.id)}}>Ajouter</Button><hr/></Box>
+                    userList.map((elm, i) => {
+                      return <Box key={i} mb="10px" mt="10px" p="10px" cursor="pointer">{elm.firstname} | {elm.lastname} <Button datatestid={`new_player_${i}`} position="absolute" right="25px" colorScheme="teal" size="xs" onClick={() => {setPlayer(!player); setPlayerInfo(elm); addTeam(elm.id)}}>Ajouter</Button><hr/></Box>
                     })
                   }
             </ModalBody>

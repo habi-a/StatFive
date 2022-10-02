@@ -57,7 +57,7 @@ const Parametre = () => {
 
   const logout = async () => {
     await AsyncStorage.clear();
-    router.push("/verification");
+    router.push("/");
   };
 
   return (
@@ -89,12 +89,14 @@ const Parametre = () => {
             <Flex flexDir="column" mb="25px">
               <Heading>Modifier mes informations :</Heading>
               <Textarea
+                datatestid="profil_textarea"
                 placeholder="Ajouter une description"
                 value={description && description.length > 0 ? description : ""}
                 onChange={(e) => setDescription(e.target.value)}
                 mt="25px"
               />
               <Select
+                datatestid="profil_select"
                 placeholder="Choisissez votre poste"
                 value={poste && poste.length > 0 ? poste : ""}
                 onChange={(e) => setPoste(e.target.value)}
@@ -104,7 +106,11 @@ const Parametre = () => {
                 <option value="Défenseur">Défenseur</option>
                 <option value="Gardien">Gardien</option>
               </Select>
-              <Button onClick={() => updateProfilUser()} mt="25px">
+              <Button
+                datatestid="profil_button"
+                onClick={() => updateProfilUser()}
+                mt="25px"
+              >
                 Enregistrer mes modifications
               </Button>
             </Flex>
