@@ -23,16 +23,34 @@ stages:
 
 
 unit-test-web:
+  image: 
+    name: cypress/included:9.0.0
+    entrypoint: [""]
   stage: test
+  services:
+    - redis:latest
   script:
-    - echo "Running unit tests... This will take about 1 seconds."
-    - echo "Code coverage is 90%"
+    - cd web/
+    - yarn testing-ci
+    - mkdir reports
+    - cp coverage/coverage-final.json reports/coverage.json
+    - rm -Rf cypress/videos
+  artifacts:
+    when: always
+    name: "coverage-$CI_COMMIT_REF_NAME"
+    paths:
+      - reports
+      - cypress/videos//*.mp4
+      - cypress/screenshots//*.png
+    expire_in: 1 day
 
-lint-test-web:
+lint-web:
+  image: node
   stage: test
   script:
-    - echo "Linting code... This will take about 1 seconds."
-    - echo "No lint issues found."
+    - cd web/
+    - npm i --force eslint
+    - node_modules/eslint/bin/eslint.js .
 
 
 pull-web-git:
@@ -40,7 +58,7 @@ pull-web-git:
   extends: .ssh-connect-preprod
   variables:
     COMMAND: "cd web/ && git pull origin master"
-  needs: [unit-test-web, lint-test-web]
+  needs: [unit-test-web, lint-web]
   only:
     refs:
       - staging
