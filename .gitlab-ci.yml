@@ -17,3 +17,11 @@ statfive_web:
   rules:
     - changes:
         - web/*
+
+statfive_tracker:
+  stage: triggers
+  trigger:
+    include: tracker/.gitlab-ci.yml
+  rules:
+    - changes:
+        - tracker/*
