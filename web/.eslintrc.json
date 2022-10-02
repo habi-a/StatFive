@@ -3,6 +3,7 @@
   "rules": {
     "react/display-name": "off",
     "react/no-unescaped-entities": "off",
-    "react-hooks/exhaustive-deps": "off"
+    "react-hooks/exhaustive-deps": "off",
+    "security/detect-non-literal-fs-filename": "off"
   }
 }
