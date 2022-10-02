@@ -26,10 +26,10 @@ describe("Connexion", () => {
     cy.getElement('[datatestid="login_button').click();
     cy.url().should("include", "/verification");
     cy.wait(500);
-    cy.getElement("input").eq(0).clear().type("000000");
-    cy.wait(1000);
+    cy.getElement("input").eq(0).type("000000");
+    cy.wait(2000);
     cy.getElement('[datatestid="verification_error"]').should("be.visible");
-    for (let i = 0; i <= 6; i++) {
+    for (let i = 0; i <= 5; i++) {
       cy.getElement(`input:eq(${i})`).clear();
     }
     cy.fixture(CREDENTIALS).then((credentials) => {
