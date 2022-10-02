@@ -22,12 +22,6 @@ stages:
     - ssh "$PREPROD_GITUSER"@"$PREPROD_SERVER_IP" "cd $PATH_GPE_DIR; $COMMAND"
 
 
-unit-test-tracker:
-  stage: test
-  script:
-    - echo "Running unit tests... This will take about 1 seconds."
-    - echo "Code coverage is 90%"
-
 lint-tracker:
   image: python:3.7
   stage: test
@@ -46,7 +40,7 @@ pull-tracker-git:
   extends: .ssh-connect-preprod
   variables:
     COMMAND: "cd tracker/ && sudo git pull origin staging"
-  needs: [unit-test-tracker, lint-tracker]
+  needs: [lint-tracker]
   only:
     refs:
       - staging
@@ -56,7 +50,7 @@ build-tracker:
   stage: build
   extends: .ssh-connect-preprod
   variables:
-    COMMAND: "sudo docker-compose build tracker"
+    COMMAND: "sudo docker-compose build tracker-app"
   needs: [pull-tracker-git]
   only:
     refs:
