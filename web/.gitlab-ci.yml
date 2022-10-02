@@ -22,7 +22,7 @@ stages:
     - ssh "$PREPROD_GITUSER"@"$PREPROD_SERVER_IP" "cd $PATH_GPE_DIR; $COMMAND"
 
 
-unit-test-web:
+functionnal-test-web:
   image: 
     name: cypress/included:9.0.0
     entrypoint: [""]
@@ -58,7 +58,7 @@ pull-web-git:
   extends: .ssh-connect-preprod
   variables:
     COMMAND: "cd web/ && git pull origin master"
-  needs: [unit-test-web, lint-web]
+  needs: [functionnal-test-web, lint-web]
   only:
     refs:
       - staging
