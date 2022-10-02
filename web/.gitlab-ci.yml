@@ -35,7 +35,6 @@ functionnal-test-web:
     - yarn build
     - yarn testing-ci
     - mkdir reports
-    - cp coverage/coverage-final.json reports/coverage-final.json
   artifacts:
     when: always
     name: "coverage-$CI_COMMIT_REF_NAME"
