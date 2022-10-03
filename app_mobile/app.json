@@ -29,7 +29,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./public/StatFiveV3.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.mokhtarisofiane93.StatFiveV3"
     },
     "web": {
       "favicon": "./public/StatFive-nobg.png"
