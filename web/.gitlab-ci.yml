@@ -110,4 +110,3 @@ deploy-prod-web:
   only:
     refs:
       - master
-

@@ -19,6 +19,8 @@ statfive_web:
   rules:
     - changes:
         - web/*
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
 
 statfive_tracker:
   stage: triggers
@@ -27,3 +29,5 @@ statfive_tracker:
   rules:
     - changes:
         - tracker/*
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
