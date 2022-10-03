@@ -42,7 +42,7 @@ const VerificationScreen = () => {
                 </Text>
                 <OTPInputView
                     style={{width: '100%', height: 150}}
-                    pinCount={4}
+                    pinCount={6}
                     autoFocusOnLoad
                     placeholderCharacter="0"
                     codeInputFieldStyle={style.underlineStyleBase}

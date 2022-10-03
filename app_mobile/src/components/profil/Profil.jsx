@@ -70,7 +70,6 @@ const ProfilScreen = () => {
           <View style={style.body}>
             <View style={style.bodyContent}>
               <Text style={style.name}>{user?.firstname} {user?.lastname}</Text>
-              <Text style={style.info}>Super-Admin</Text>
               <Text style={style.description}>{user?.description}</Text>
               <Text style={style.email}>{user?.email}</Text>
             </View>
