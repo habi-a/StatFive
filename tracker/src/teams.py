@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
+# pylint: disable=invalid-name,too-many-arguments
 
-from src.color import *
+"""Color detection Module"""
+
+from src.color import detect_color
 
 
 def detect_team_on_image(image, detection_label, x1, x2, y1, y2, loc, loc_foot, xaverage):
+    """Function to detect a team"""
     coords = (x1, y1)
 
     if detection_label == "person":
@@ -19,4 +23,3 @@ def detect_team_on_image(image, detection_label, x1, x2, y1, y2, loc, loc_foot, 
             loc[coords] = 'not_sure'
     else:
         loc[coords] = ""
-    return

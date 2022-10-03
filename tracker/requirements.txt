@@ -1,0 +1,8 @@
+tensorflow
+requests
+numpy
+pylint
+flask
+redis
+rq
+opencv-python

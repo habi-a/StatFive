@@ -39,7 +39,7 @@ pull-api-git:
   stage: setup
   extends: .ssh-connect-preprod
   variables:
-    COMMAND: "cd api/ && git pull origin master"
+    COMMAND: "cd api/ && sudo git pull origin staging"
   needs: [unit-test-api, lint-test-api]
   only:
     refs:

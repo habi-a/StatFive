@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
+"""Goals definitions"""
+
 def define_goals(width, height):
+    """Define goalss"""
     goal_t1 = {
         "x1": int(width * 0.01),
         "y1": int(height * 0.69),

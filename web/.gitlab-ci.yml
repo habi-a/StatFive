@@ -22,25 +22,49 @@ stages:
     - ssh "$PREPROD_GITUSER"@"$PREPROD_SERVER_IP" "cd $PATH_GPE_DIR; $COMMAND"
 
 
-unit-test-web:
+functionnal-test-web:
+  image: 
+    name: cypress/included:10.9.0
+    entrypoint: [""]
   stage: test
+  variables:
+    API_URL: "https://api.preprod.statfive.fr/api"
   script:
-    - echo "Running unit tests... This will take about 1 seconds."
-    - echo "Code coverage is 90%"
+    - cd web/
+    - npm install --force
+    - yarn build
+    - yarn testing-ci
+    - mkdir reports
+  artifacts:
+    when: always
+    name: "coverage-$CI_COMMIT_REF_NAME"
+    paths:
+      - web/reports
+      - web/cypress/videos//*.mp4
+      - web/cypress/screenshots//*.png
+    expire_in: 1 week
+  only:
+    refs:
+      - staging
 
-lint-test-web:
+lint-web:
+  image: node
   stage: test
   script:
-    - echo "Linting code... This will take about 1 seconds."
-    - echo "No lint issues found."
+    - cd web/
+    - npm i --force eslint
+    - yarn lint
+  only:
+    refs:
+      - staging
 
 
 pull-web-git:
   stage: setup
   extends: .ssh-connect-preprod
   variables:
-    COMMAND: "cd web/ && git pull origin master"
-  needs: [unit-test-web, lint-test-web]
+    COMMAND: "cd web/ && sudo git pull origin staging"
+  needs: [functionnal-test-web, lint-web]
   only:
     refs:
       - staging
@@ -86,4 +110,3 @@ deploy-prod-web:
   only:
     refs:
       - master
-
