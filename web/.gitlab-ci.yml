@@ -43,6 +43,9 @@ functionnal-test-web:
       - web/cypress/videos//*.mp4
       - web/cypress/screenshots//*.png
     expire_in: 1 week
+  only:
+    refs:
+      - staging
 
 lint-web:
   image: node
@@ -51,13 +54,16 @@ lint-web:
     - cd web/
     - npm i --force eslint
     - yarn lint
+  only:
+    refs:
+      - staging
 
 
 pull-web-git:
   stage: setup
   extends: .ssh-connect-preprod
   variables:
-    COMMAND: "cd web/ && sudocgit pull origin staging"
+    COMMAND: "cd web/ && sudo git pull origin staging"
   needs: [functionnal-test-web, lint-web]
   only:
     refs:
