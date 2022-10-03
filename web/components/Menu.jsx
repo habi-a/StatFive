@@ -28,6 +28,8 @@ import {
     MdAdminPanelSettings
   } from 'react-icons/md'
 import {useStore} from "../pages/index"
+import { useState, useEffect } from 'react';
+import { getMe } from "@mokhta_s/react-statfive-api";
 
   export default function SimpleSidebar({ children }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -60,7 +62,19 @@ import {useStore} from "../pages/index"
   }
   
   const SidebarContent = ({ onClose, ...rest }) => {
+    const [user, setUser] = useState(null)
     const data = useStore((state) => state.data)
+
+    const getUser = async () => {
+      const result = await getMe();
+      if (!result?.data.error) {
+        setUser(result.data.data);
+      }
+    };
+
+    useEffect(() => {
+      getUser()
+    }, [])
 
     const LinkItems = [
       { name: 'Accueil', href: "/accueil", icon: FiHome },
@@ -70,11 +84,11 @@ import {useStore} from "../pages/index"
       { name: 'Paramètres', href: "/parametre", icon: FiSettings },
     ];
     
-    if(data && data.role >= 1 ) {
+    if(user && user.role >= 1 ) {
       LinkItems.push({ name: "Création d'équipe", href: "/equipe", icon: RiFootballFill }) 
       LinkItems.push({ name: 'Création de match', href: "/creation-match", icon: RiAdminLine })
     }
-    if(data && data.role === 2) {
+    if(user && user.role === 2) {
       LinkItems.push({ name: 'Admin', href: "/admin", icon: MdAdminPanelSettings })
     }
 
@@ -94,7 +108,7 @@ import {useStore} from "../pages/index"
           <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
         </Flex>
         {LinkItems.map((link) => (
-          <NavItem key={link.name} icon={link.icon} href={link.href}>
+          <NavItem datatestid="menu_url" key={link.name} icon={link.icon} href={link.href}>
             {link.name}
           </NavItem>
         ))}

@@ -22,67 +22,77 @@ stages:
     - ssh "$PREPROD_GITUSER"@"$PREPROD_SERVER_IP" "cd $PATH_GPE_DIR; $COMMAND"
 
 
-unit-test-api:
+lint-tracker:
+  image: python:3.7
   stage: test
+  before_script:
+    - cd tracker/
+    - python -V
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
   script:
-    - echo "Running unit tests... This will take about 1 seconds."
-    - echo "Code coverage is 90%"
-
-lint-test-api:
-  stage: test
-  script:
-    - echo "Linting code... This will take about 1 seconds."
-    - echo "No lint issues found."
+    - echo "Running lint"
+    - pylint server.py src/*.py
 
 
-pull-api-git:
+pull-tracker-git:
   stage: setup
   extends: .ssh-connect-preprod
   variables:
-    COMMAND: "cd api/ && sudo git pull origin staging"
-  needs: [unit-test-api, lint-test-api]
+    COMMAND: "cd tracker/ && sudo git pull origin staging"
+  needs: [lint-tracker]
   only:
     refs:
       - staging
 
 
-build-api:
+build-tracker:
   stage: build
   extends: .ssh-connect-preprod
   variables:
-    COMMAND: "sudo docker-compose build api"
-  needs: [pull-api-git]
+    COMMAND: "sudo docker-compose build tracker-app"
+  needs: [pull-tracker-git]
   only:
     refs:
       - staging
 
 
-publish-api:
+publish-tracker:
   stage: publish
   extends: .ssh-connect-preprod
   variables:
-    COMMAND: "sudo docker push acalhabi/statfive_api"
+    COMMAND: "sudo docker push acalhabi/statfive_tracker"
   only:
     refs:
       - master
 
 
-deploy-preprod-api:
+deploy-preprod-tracker:
   stage: deploy
   extends: .ssh-connect-preprod
   variables:
     COMMAND: "sudo docker-compose up -d"
-  needs: [build-api]
+  needs: [build-tracker]
   only:
     refs:
       - staging
 
-deploy-prod-api:
+deploy-prod-tracker-app:
   stage: deploy
   extends: .ssh-connect-preprod
   variables:
-    COMMAND: "kubectl rollout restart deployment api -n statfive"
-  needs: [publish-api]
+    COMMAND: "kubectl rollout restart deployment tracker-app -n statfive"
+  needs: [publish-tracker]
+  only:
+    refs:
+      - master
+
+deploy-prod-tracker-worker:
+  stage: deploy
+  extends: .ssh-connect-preprod
+  variables:
+    COMMAND: "kubectl rollout restart deployment tracker-worker -n statfive"
+  needs: [publish-tracker]
   only:
     refs:
       - master

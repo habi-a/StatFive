@@ -9,6 +9,8 @@ statfive_api:
   rules:
     - changes:
         - api/*
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
 
 statfive_web:
   stage: triggers
@@ -17,3 +19,15 @@ statfive_web:
   rules:
     - changes:
         - web/*
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
+
+statfive_tracker:
+  stage: triggers
+  trigger:
+    include: tracker/.gitlab-ci.yml
+  rules:
+    - changes:
+        - tracker/*
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
