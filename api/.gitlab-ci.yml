@@ -23,24 +23,26 @@ stages:
 
 
 unit-test-api:
+  image: python:3.9
   stage: test
+  before_script:
+    - cd api/
+    - python -V
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
   script:
-    - echo "Running unit tests... This will take about 1 seconds."
-    - echo "Code coverage is 90%"
-
-lint-test-api:
-  stage: test
-  script:
-    - echo "Linting code... This will take about 1 seconds."
-    - echo "No lint issues found."
-
+    - echo "Running unit test"
+    - python route.py
+  only:
+    refs:
+      - staging
 
 pull-api-git:
   stage: setup
   extends: .ssh-connect-preprod
   variables:
     COMMAND: "cd api/ && sudo git pull origin staging"
-  needs: [unit-test-api, lint-test-api]
+  needs: [unit-test-api]
   only:
     refs:
       - staging
