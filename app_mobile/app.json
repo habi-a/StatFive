@@ -9,9 +9,9 @@
     ],
     "version": "3.0.0",
     "orientation": "portrait",
-    "icon": "./assets/StatFiveV3.png",
+    "icon": "./public/StatFiveV3.png",
     "splash": {
-      "image": "./assets/Splash-StatFiveV3.png",
+      "image": "./public/Splash-StatFiveV3.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
@@ -22,16 +22,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mokhtarisofiane93.StatFiveV3"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/StatFiveV3.png",
+        "foregroundImage": "./public/StatFiveV3.png",
         "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
-      "favicon": "./assets/StatFive-nobg.png"
+      "favicon": "./public/StatFive-nobg.png"
     }
   }
 }

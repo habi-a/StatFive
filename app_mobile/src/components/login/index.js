@@ -1,0 +1,62 @@
+export default {
+  containerView: {
+    flex: 1,
+    height: "100%",
+    justifyContent: "space-around",
+    width: "100%",
+    backgroundColor: "#f6f6f6",
+  },
+  loginScreenContainer: {
+    flex: 1,
+  },
+  loginFormView: {
+    flex: 1,
+  },
+  loginFormTextInput: {
+    height: 44,
+    fontSize: 18,
+    borderRadius: 8,
+    borderWidth: 1.2,
+    borderColor: "#000000",
+    backgroundColor: "#f6f6f6",
+    marginLeft: 35,
+    marginRight: 35,
+    marginTop: 5,
+    marginBottom: 5,
+    opacity: 0.8,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  loginButton: {
+    width: "50%",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: "#0090F8",
+    marginTop: 25,
+  },
+  MainContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  TextStyle: {
+    color: "#E91E63",
+    fontSize: 18,
+    textDecorationLine: "underline",
+  },
+  loginButtonText: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: "bold",
+    letterSpacing: 0.25,
+    color: "white",
+  },
+  centerDiv: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+};
