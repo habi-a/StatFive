@@ -12,7 +12,7 @@ class Complex(db.Model):
     __tablename__ = 'complex'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True)
+    name = db.Column(db.String(200), unique=True)
     phone = db.Column(db.String, nullable=True)
     address = db.Column(db.String, nullable=True)
 
