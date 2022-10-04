@@ -37,7 +37,7 @@ unit-test-api:
     - pip install --upgrade pip
     - pip install -r requirements.txt
   script:
-    - echo "Running tests"
+    - echo "Running unit tests"
     - python src/route.py
   only:
     refs:
