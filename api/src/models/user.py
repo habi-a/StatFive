@@ -96,8 +96,8 @@ class UserPending(db.Model):
     __tablename__ = 'pending'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    type = db.Column(db.String)
-    code = db.Column(db.String)
+    type = db.Column(db.String(200))
+    code = db.Column(db.String(200))
     expired = db.Column(db.Boolean)
     created_at = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
