@@ -26,13 +26,11 @@ unit-test-api:
   image: python:3.9
   stage: test
   services:
-    - name: mysql:5.7
+    - name: mariadb:latest
       alias: mariadb
       variables:
         MYSQL_DATABASE: statfive
-        MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-        MYSQL_USER: statfive_user
-        MYSQL_PASSWORD: $MYSQL_USER_PASSWORD
+        MYSQL_ROOT_PASSWORD: root
   before_script:
     - cd api/
     - python -V
