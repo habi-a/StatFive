@@ -39,6 +39,7 @@ unit-test-api:
     - pip install --upgrade pip
     - pip install -r requirements.txt
   script:
+    - sleep 10
     - echo "Running unit test"
     - python src/route.py
   only:

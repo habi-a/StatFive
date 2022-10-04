@@ -14,7 +14,7 @@ class Test:
     MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD', 'root')
     MYSQL_HOST = os.environ.get('MYSQL_HOST', 'mariadb')
     MYSQL_DB = os.environ.get('MYSQL_DB', 'statfive')
-    SQLALCHEMY_DATABASE_URI = f"mysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DB}"
+    SQLALCHEMY_DATABASE_URI = f"mysql://{MYSQL_USER}:{MYSQL_PASSWORD}@localhost/{MYSQL_DB}"
     SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get('SQLALCHEMY_DATABASE_URI', False)
 
     MAIL_SERVER = os.environ.get('MAIL_SERVER', 'ssl0.ovh.net')
