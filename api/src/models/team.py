@@ -9,7 +9,7 @@ class Team(db.Model):
     __tablename__ = 'team'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String(200), nullable=False)
 
     def save(self):
         db.session.add(self)
