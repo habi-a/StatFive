@@ -1,22 +1,23 @@
-# Zustand Example
+# StatFive Mobile Application
+#
+## Necessity to start at 0
 
-<p>
-  <!-- iOS -->
-  <img alt="Supports Expo iOS" longdesc="Supports Expo iOS" src="https://img.shields.io/badge/iOS-4630EB.svg?style=flat-square&logo=APPLE&labelColor=999999&logoColor=fff" />
-  <!-- Android -->
-  <img alt="Supports Expo Android" longdesc="Supports Expo Android" src="https://img.shields.io/badge/Android-4630EB.svg?style=flat-square&logo=ANDROID&labelColor=A4C639&logoColor=fff" />
-  <!-- Web -->
-  <img alt="Supports Expo Web" longdesc="Supports Expo Web" src="https://img.shields.io/badge/web-4630EB.svg?style=flat-square&logo=GOOGLE-CHROME&labelColor=4285F4&logoColor=fff" />
-</p>
+#### _In order to make our program work, we need :_
 
-Zustand is a fast state manager with a user-friendly API.
-This example implements a basic store and list using the `zustand` library.
+- **[Node](https://nodejs.org/fr/download/)**
+- **[Expo](https://docs.expo.dev/get-started/installation/)**
 
-## 🚀 How to use
+#### _Installation of the project :_
 
-- Install with `yarn` or `npm install`.
-- Run [`expo start`](https://docs.expo.dev/versions/latest/workflow/expo-cli/), try it out.
+- **$> git clone git@rendu-git.etna-alternance.net:module-7883/activity-46046/group-903362**
+- **$> cd app_mobile/**
+- **$> npm i**
 
-## 📝 Notes
+#### _Launch Expo :_
 
-- [Zustand docs](https://github.com/pmndrs/zustand)
+- **$> expo start**
+
+#### _Downloadable APK :_
+
+- **[Téléchargement](https://fromsmash.com/4nWJC7xo9p-ct)**
+
