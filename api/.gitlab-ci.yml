@@ -25,6 +25,13 @@ stages:
 unit-test-api:
   image: python:3.9
   stage: test
+  services:
+    - name: mysql
+      alias: mysql
+      variables:
+        MONGO_INITDB_DATABASE: statfive
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
   before_script:
     - cd api/
     - python -V
@@ -32,7 +39,7 @@ unit-test-api:
     - pip install -r requirements.txt
   script:
     - echo "Running unit test"
-    - python route.py
+    - python src/route.py
   only:
     refs:
       - staging

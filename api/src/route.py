@@ -2,11 +2,11 @@ import random
 import string
 import unittest
 
-from ..models import db, user
-from ..models.team import Team
-from ..models.user import UserHasTeam
+from models import db, user
+from models.team import Team
+from models.user import UserHasTeam
 from flask import Flask
-from .. import config
+import config
 
 
 def create_app(config_key='development'):
