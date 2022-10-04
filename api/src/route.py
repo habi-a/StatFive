@@ -14,7 +14,7 @@ from models.user import UserHasTeam
 import config
 
 
-def create_app(config_key='development'):
+def create_app(config_key='docker'):
     """Create a test application"""
     app = Flask(__name__)
     app.config.from_object(config.app_config[config_key])
@@ -25,7 +25,7 @@ def create_app(config_key='development'):
 class UserModelCase(unittest.TestCase):
     """Test user module"""
     def setUp(self) -> None:
-        self.app = create_app('development')
+        self.app = create_app('docker')
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
@@ -83,7 +83,7 @@ class UserModelCase(unittest.TestCase):
 class TeamModelCase(unittest.TestCase):
     """Test team module"""
     def setUp(self) -> None:
-        self.app = create_app('test')
+        self.app = create_app('docker')
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()

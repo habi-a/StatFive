@@ -14,7 +14,7 @@ from .models import db, mail
 from . import config
 
 
-def create_app(config_key='docker'):
+def create_app(config_key='development'):
     """Function to init application"""
     app = Flask(__name__)
 
