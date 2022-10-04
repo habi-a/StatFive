@@ -13,8 +13,8 @@ class Complex(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), unique=True)
-    phone = db.Column(db.String, nullable=True)
-    address = db.Column(db.String, nullable=True)
+    phone = db.Column(db.String(20), nullable=True)
+    address = db.Column(db.String(200), nullable=True)
 
     def save(self):
         db.session.add(self)
