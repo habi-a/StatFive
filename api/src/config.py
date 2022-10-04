@@ -10,8 +10,8 @@ class Test:
     TESTING = True
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'secret!')
     SECRET_KEY = os.environ.get('SECRET_KEY', 'secret!')
-    MYSQL_USER = os.environ.get('MYSQL_USER', 'statfive_user')
-    MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD', 'statfive_password')
+    MYSQL_USER = os.environ.get('MYSQL_USER', 'root')
+    MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD', 'root')
     MYSQL_HOST = os.environ.get('MYSQL_HOST', 'mariadb')
     MYSQL_DB = os.environ.get('MYSQL_DB', 'statfive')
     SQLALCHEMY_DATABASE_URI = f"mysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DB}"
@@ -84,6 +84,7 @@ class Kubernetes:
 
 app_config = {
     'development': Development,
+    'test': Test,
     'docker': Docker,
     'kubernetes': Kubernetes
 }
