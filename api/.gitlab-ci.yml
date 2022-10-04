@@ -27,7 +27,7 @@ unit-test-api:
   stage: test
   services:
     - name: mysql
-      alias: mysql
+      alias: mariadb
       variables:
         MONGO_INITDB_DATABASE: statfive
         MONGO_INITDB_ROOT_USERNAME: root

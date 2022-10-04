@@ -1,15 +1,21 @@
+# pylint: disable=import-error,import-outside-toplevel
+
+"""Unit Test"""
+
+
 import random
 import string
 import unittest
 
+from flask import Flask
 from models import db, user
 from models.team import Team
 from models.user import UserHasTeam
-from flask import Flask
 import config
 
 
 def create_app(config_key='development'):
+    """Create a test application"""
     app = Flask(__name__)
     app.config.from_object(config.app_config[config_key])
     db.init_app(app)
@@ -17,6 +23,7 @@ def create_app(config_key='development'):
 
 
 class UserModelCase(unittest.TestCase):
+    """Test user module"""
     def setUp(self) -> None:
         self.app = create_app('development')
         self.app_context = self.app.app_context()
@@ -74,6 +81,7 @@ class UserModelCase(unittest.TestCase):
 
 
 class TeamModelCase(unittest.TestCase):
+    """Test team module"""
     def setUp(self) -> None:
         self.app = create_app('test')
         self.app_context = self.app.app_context()
