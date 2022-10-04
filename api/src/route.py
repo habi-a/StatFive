@@ -49,7 +49,7 @@ class UserModelCase(unittest.TestCase):
         m_user1 = user.User(
             firstname='firstname1',
             name='lastname1',
-            mail='email1@gmail.com',
+            mail=email1,
             password=password,
             role=0,
             code=code,
@@ -62,7 +62,7 @@ class UserModelCase(unittest.TestCase):
         m_user2 = user.User(
             firstname='firstname2',
             name='lastname2',
-            mail='email2@gmail.com',
+            mail=email2,
             password=password,
             role=1,
             code=code,
