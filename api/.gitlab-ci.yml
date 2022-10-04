@@ -27,22 +27,21 @@ unit-test-api:
   stage: test
   variables:
     MYSQL_USER: statfive_user
-    MYSQL_PASSWORD: ${MYSQL_USER_PASSWORD}
+    MYSQL_PASSWORD: $MYSQL_USER_PASSWORD
   services:
     - name: mariadb
       alias: mariadb
       variables:
         MYSQL_DATABASE: statfive
-        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
         MYSQL_USER: statfive_user
-        MYSQL_PASSWORD: ${MYSQL_USER_PASSWORD}
+        MYSQL_PASSWORD: $MYSQL_USER_PASSWORD
   before_script:
     - cd api/
     - python -V
     - pip install --upgrade pip
     - pip install -r requirements.txt
   script:
-    - echo "${MYSQL_USER_PASSWORD}"
     - echo "Running unit test"
     - python src/route.py
   only:
@@ -60,7 +59,7 @@ lint-api:
     - pip install pytest
   script:
     - echo "Running lint"
-    - pytest app.py src/*.py
+    - pylint app.py src/*.py
   only:
     refs:
       - staging
