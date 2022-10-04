@@ -29,7 +29,7 @@ unit-test-api:
     MYSQL_USER: statfive_user
     MYSQL_PASSWORD: $MYSQL_USER_PASSWORD
   services:
-    - name: mariadb
+    - name: mysql:5.7
       alias: mariadb
       variables:
         MYSQL_DATABASE: statfive
@@ -56,7 +56,7 @@ lint-api:
     - python -V
     - pip install --upgrade pip
     - pip install -r requirements.txt
-    - pip install pytest
+    - pip install pylint
   script:
     - echo "Running lint"
     - pylint app.py src/*.py
