@@ -25,9 +25,6 @@ stages:
 unit-test-api:
   image: python:3.9
   stage: test
-  variables:
-    MYSQL_USER: statfive_user
-    MYSQL_PASSWORD: $MYSQL_USER_PASSWORD
   services:
     - name: mysql:5.7
       alias: mariadb
