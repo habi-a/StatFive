@@ -37,12 +37,28 @@ unit-test-api:
     refs:
       - staging
 
+lint-api:
+  image: python:3.9
+  stage: test
+  before_script:
+    - cd api/
+    - python -V
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+    - pip install pytest
+  script:
+    - echo "Running lint"
+    - pytest app.py src/*.py
+  only:
+    refs:
+      - staging
+
 pull-api-git:
   stage: setup
   extends: .ssh-connect-preprod
   variables:
     COMMAND: "cd api/ && sudo git pull origin staging"
-  needs: [unit-test-api]
+  needs: [unit-test-api, lint-api]
   only:
     refs:
       - staging

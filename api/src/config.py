@@ -1,7 +1,12 @@
+# pylint: disable=too-few-public-methods
+
+"""Config Module"""
+
 import os
 
 
 class Development:
+    """Developpement config"""
     DEBUG = False
     TESTING = False
     JWT_SECRET_KEY = "secret"
@@ -22,6 +27,7 @@ class Development:
 
 
 class Docker:
+    """Preprod config"""
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'secret!')
     SECRET_KEY = os.environ.get('SECRET_KEY', 'secret!')
     MYSQL_USER = os.environ.get('MYSQL_USER', 'statfive_user')
@@ -40,6 +46,7 @@ class Docker:
 
 
 class Kubernetes:
+    """Prod config"""
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'secret!')
     SECRET_KEY = os.environ.get('SECRET_KEY', 'secret!')
     MYSQL_USER = os.environ.get('MYSQL_USER', 'statfive_user')

@@ -1,17 +1,21 @@
-import mimetypes
+# pylint: disable=import-error,import-outside-toplevel
+
+"""Launcher module"""
+
 import os
 
-from flask import Flask, jsonify, redirect, url_for, Response, send_file
-from flasgger import Swagger, swag_from
+from pathlib import Path
+from flask import Flask, redirect, url_for, Response, send_file
+from flasgger import Swagger
 from flask_cors import CORS
 from flask_mail import Mail
-from pathlib import Path
 
 from .models import db, mail
 from . import config
 
 
 def create_app(config_key='development'):
+    """Function to init application"""
     app = Flask(__name__)
 
     app.config.from_object(config.app_config[config_key])
