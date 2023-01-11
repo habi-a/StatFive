@@ -9,10 +9,10 @@ class Match(db.Model):
     __tablename__ = 'match_played'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
-    duration = db.Column(db.String, nullable=False)
+    name = db.Column(db.String(200), nullable=False)
+    duration = db.Column(db.String(200), nullable=False)
     ground = db.Column(db.Integer, nullable=False)
-    path = db.Column(db.String, nullable=False)
+    path = db.Column(db.String(200), nullable=False)
     finish = db.Column(db.Boolean, nullable=False, default=False)
     complex_id = db.Column(db.Integer, db.ForeignKey('complex.id'), nullable=True)
     complex: Complex = db.relationship(Complex)

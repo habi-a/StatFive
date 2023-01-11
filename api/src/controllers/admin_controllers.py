@@ -1,9 +1,11 @@
 import random
 import string
 
+from flasgger import swag_from
 from flask import request, Blueprint
 
 from ..models import db
+from ..specs import specs_admin
 from ..models.user import User
 from ..models.complex import Complex
 from ..auth.authentication import Auth
@@ -16,6 +18,7 @@ admin_api = Blueprint('admin', __name__)
 
 @admin_api.route('/create-complex', methods=['POST'])
 @Auth.super_admin_required
+@swag_from(specs_admin.create_complex)
 def create_complex():
     req_data = request.get_json()
 
@@ -31,6 +34,7 @@ def create_complex():
 
 @admin_api.route('/make-admin/<int:id>', methods=['GET'])
 @Auth.super_admin_required
+@swag_from(specs_admin.make_admin)
 def make_admin(id):
     user_in_db = User.query.filter_by(id=id).first()
     if not user_in_db:
@@ -43,6 +47,7 @@ def make_admin(id):
 
 @admin_api.route('/list-complex', methods=['GET'])
 @Auth.super_admin_required
+@swag_from(specs_admin.all_complex)
 def list_complex():
     li_complex_m = Complex.query.all()
     li_complex = []
@@ -54,6 +59,7 @@ def list_complex():
 
 @admin_api.route('/user-to-complex/<int:id>/<int:complex_id>', methods=['GET'])
 @Auth.super_admin_required
+@swag_from(specs_admin.user_to_complex)
 def user_to_complex(id, complex_id):
     user_in_db = User.query.filter_by(id=id).first()
     if not user_in_db:
@@ -70,6 +76,7 @@ def user_to_complex(id, complex_id):
 
 @admin_api.route('/user-dissociate-complex/<int:id>', methods=['DEL'])
 @Auth.super_admin_required
+@swag_from(specs_admin.user_del_complex)
 def user_del_complex(id):
     user_in_db = User.query.filter_by(id=id).first()
     if not user_in_db:

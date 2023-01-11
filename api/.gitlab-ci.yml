@@ -25,14 +25,36 @@ stages:
 unit-test-api:
   image: python:3.9
   stage: test
+  services:
+    - name: mariadb:latest
+      alias: mariadb
+      variables:
+        MYSQL_DATABASE: statfive
+        MYSQL_ROOT_PASSWORD: root
   before_script:
     - cd api/
     - python -V
     - pip install --upgrade pip
     - pip install -r requirements.txt
   script:
-    - echo "Running unit test"
-    - python route.py
+    - echo "Running unit tests"
+    - python src/route.py
+  only:
+    refs:
+      - staging
+
+lint-api:
+  image: python:3.9
+  stage: test
+  before_script:
+    - cd api/
+    - python -V
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+    - pip install pylint
+  script:
+    - echo "Running lint"
+    - pylint app.py src/*.py
   only:
     refs:
       - staging
@@ -42,7 +64,7 @@ pull-api-git:
   extends: .ssh-connect-preprod
   variables:
     COMMAND: "cd api/ && sudo git pull origin staging"
-  needs: [unit-test-api]
+  needs: [unit-test-api, lint-api]
   only:
     refs:
       - staging

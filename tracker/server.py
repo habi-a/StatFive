@@ -34,7 +34,7 @@ def analyse():
     show = request_data['show']
     callback = request_data['callback']
 
-    job = q.enqueue(tracker.tracker, match_id, id_red, id_blue, video_match, show, callback)
+    job = q.enqueue(tracker.tracker, args=(match_id, id_red, id_blue, video_match, show, callback), timeout=500)
     task = job.get_id()
     result = {
         "Task": task,

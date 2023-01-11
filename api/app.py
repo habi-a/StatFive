@@ -1,3 +1,5 @@
+"""Main Module"""
+
 from src.launcher import create_app
 
 if __name__ == '__main__':

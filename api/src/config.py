@@ -1,7 +1,31 @@
+# pylint: disable=too-few-public-methods
+
+"""Config Module"""
+
 import os
 
+class Test:
+    """Testing config"""
+    DEBUG = True
+    TESTING = True
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'secret!')
+    SECRET_KEY = os.environ.get('SECRET_KEY', 'secret!')
+    MYSQL_USER = os.environ.get('MYSQL_USER', 'root')
+    MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD', 'root')
+    MYSQL_HOST = os.environ.get('MYSQL_HOST', 'mariadb')
+    MYSQL_DB = os.environ.get('MYSQL_DB', 'statfive')
+    SQLALCHEMY_DATABASE_URI = f"mysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DB}"
+    SQLALCHEMY_TRACK_MODIFICATIONS = os.environ.get('SQLALCHEMY_DATABASE_URI', False)
+
+    MAIL_SERVER = os.environ.get('MAIL_SERVER', 'ssl0.ovh.net')
+    MAIL_PORT = os.environ.get('MAIL_PORT', 465)
+    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', False)
+    MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL', True)
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', 'xAx3s&4Dj4#@J7?j')
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME', 'noreply@statfive.fr')
 
 class Development:
+    """Developpement config"""
     DEBUG = False
     TESTING = False
     JWT_SECRET_KEY = "secret"
@@ -22,6 +46,7 @@ class Development:
 
 
 class Docker:
+    """Preprod config"""
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'secret!')
     SECRET_KEY = os.environ.get('SECRET_KEY', 'secret!')
     MYSQL_USER = os.environ.get('MYSQL_USER', 'statfive_user')
@@ -40,6 +65,7 @@ class Docker:
 
 
 class Kubernetes:
+    """Prod config"""
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'secret!')
     SECRET_KEY = os.environ.get('SECRET_KEY', 'secret!')
     MYSQL_USER = os.environ.get('MYSQL_USER', 'statfive_user')
@@ -58,6 +84,7 @@ class Kubernetes:
 
 app_config = {
     'development': Development,
+    'test': Test,
     'docker': Docker,
     'kubernetes': Kubernetes
 }

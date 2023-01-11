@@ -1,15 +1,21 @@
+# pylint: disable=import-error,import-outside-toplevel
+
+"""Unit Test"""
+
+
 import random
 import string
 import unittest
 
-from ..models import db, user
-from ..models.team import Team
-from ..models.user import UserHasTeam
 from flask import Flask
-from .. import config
+from models import db, user
+from models.team import Team
+from models.user import UserHasTeam
+import config
 
 
-def create_app(config_key='development'):
+def create_app(config_key='test'):
+    """Create a test application"""
     app = Flask(__name__)
     app.config.from_object(config.app_config[config_key])
     db.init_app(app)
@@ -17,8 +23,9 @@ def create_app(config_key='development'):
 
 
 class UserModelCase(unittest.TestCase):
+    """Test user module"""
     def setUp(self) -> None:
-        self.app = create_app('development')
+        self.app = create_app('test')
         self.app_context = self.app.app_context()
         self.app_context.push()
         db.create_all()
@@ -42,7 +49,7 @@ class UserModelCase(unittest.TestCase):
         m_user1 = user.User(
             firstname='firstname1',
             name='lastname1',
-            mail='email1@gmail.com',
+            mail=email1,
             password=password,
             role=0,
             code=code,
@@ -55,7 +62,7 @@ class UserModelCase(unittest.TestCase):
         m_user2 = user.User(
             firstname='firstname2',
             name='lastname2',
-            mail='email2@gmail.com',
+            mail=email2,
             password=password,
             role=1,
             code=code,
@@ -74,6 +81,7 @@ class UserModelCase(unittest.TestCase):
 
 
 class TeamModelCase(unittest.TestCase):
+    """Test team module"""
     def setUp(self) -> None:
         self.app = create_app('test')
         self.app_context = self.app.app_context()
