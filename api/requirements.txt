@@ -28,5 +28,5 @@ PyYAML==5.4.1
 six==1.16.0
 SQLAlchemy==1.4.22
 webargs==8.0.0
-Werkzeug==2.0.1
+Werkzeug==2.2.3
 requests==2.28.1
