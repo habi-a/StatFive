@@ -1,4 +1,5 @@
 # StatFive
+![statfive](https://github.com/user-attachments/assets/e3777b19-1f2e-4e58-90fd-476de6cdb9f9)
 
 ## Start the project
 
